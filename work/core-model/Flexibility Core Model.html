@@ -1,0 +1,663 @@
+<title>Flexibility Core Model</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a technical reference. Left rail of sections on wide screens, one reading column; each model layer keeps one colour everywhere. */
+:root {
+  --bg: #f4f6f9; --surface: #ffffff; --sunk: #eef1f5; --ink: #142030; --muted: #566273; --line: #d6dce5;
+  --measure: #1d67a8; --control: #b26f06; --asset: #7247ad; --who: #1b7f52; --objective: #46566b;
+  --measure-soft: #e3eef8; --control-soft: #f8eedb; --asset-soft: #efe8f8; --who-soft: #e1f2e9; --objective-soft: #e8ecf1;
+  --ok: #1b7f52; --bad: #b8322f; --warn: #a65307;
+  --sel1: #1d67a8; --sel2: #b8322f;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --radius: 6px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e131a; --surface: #151c26; --sunk: #111821; --ink: #e5eaf1; --muted: #9ba7b7; --line: #2a3442;
+  --measure: #62a8e6; --control: #e0a542; --asset: #ad8ce4; --who: #50c48e; --objective: #a3b1c4;
+  --measure-soft: #16283a; --control-soft: #2e2413; --asset-soft: #241c33; --who-soft: #132a20; --objective-soft: #1c2430;
+  --ok: #50c48e; --bad: #f07a77; --warn: #f0a35e; --sel1: #62a8e6; --sel2: #f07a77; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0e131a; --surface: #151c26; --sunk: #111821; --ink: #e5eaf1; --muted: #9ba7b7; --line: #2a3442;
+  --measure: #62a8e6; --control: #e0a542; --asset: #ad8ce4; --who: #50c48e; --objective: #a3b1c4;
+  --measure-soft: #16283a; --control-soft: #2e2413; --asset-soft: #241c33; --who-soft: #132a20; --objective-soft: #1c2430;
+  --ok: #50c48e; --bad: #f07a77; --warn: #f0a35e; --sel1: #62a8e6; --sel2: #f07a77; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 var(--body); margin: 0; }
+a { color: var(--measure); }
+:focus-visible { outline: 2px solid var(--measure); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.2; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 1.45rem; font-weight: 600; }
+h3 { font-size: 1.05rem; font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+.eyebrow { font: 500 0.72rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+.wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.top { background: var(--surface); border-bottom: 1px solid var(--line); }
+header.top .wrap { padding-block: 28px 22px; display: grid; gap: 14px; max-width: 1240px; margin: 0 auto; }
+.lede { color: var(--muted); font-size: 1.02rem; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font: 500 0.8rem/1.6 var(--body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+.l-measure { --c: var(--measure); --cs: var(--measure-soft); }
+.l-control { --c: var(--control); --cs: var(--control-soft); }
+.l-asset { --c: var(--asset); --cs: var(--asset-soft); }
+.l-who { --c: var(--who); --cs: var(--who-soft); }
+.l-objective, .l-base { --c: var(--objective); --cs: var(--objective-soft); }
+.dot { background: var(--c, var(--muted)); }
+
+.layout { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 32px; }
+nav.rail { position: sticky; top: env(safe-area-inset-top, 0px); align-self: start; padding-block: 24px; display: grid; gap: 2px; }
+nav.rail a { color: var(--muted); text-decoration: none; padding: 5px 10px; border-radius: var(--radius); font-size: 0.9rem; }
+nav.rail a:hover { background: var(--sunk); color: var(--ink); }
+main { min-width: 0; padding-block: 24px 64px; display: grid; gap: 44px; }
+section { display: grid; gap: 16px; scroll-margin-top: 16px; }
+.sec-head { display: grid; gap: 6px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; min-width: 0; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.muted { color: var(--muted); }
+.small { font-size: 0.85rem; }
+
+@media (max-width: 860px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  nav.rail { position: static; display: flex; overflow-x: auto; gap: 4px; padding-block: 12px 0; }
+  nav.rail a { white-space: nowrap; border: 1px solid var(--line); background: var(--surface); }
+}
+
+/* choices */
+ol.choices { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; max-width: 75ch; }
+
+/* model map */
+.map { overflow-x: auto; }
+.map svg { display: block; min-width: 760px; width: 100%; height: auto; }
+.map text { font-family: var(--body); fill: var(--ink); }
+.map .lbl { font-size: 12px; fill: var(--muted); }
+.map .zone { fill: var(--cs); stroke: none; }
+.map .zt { font: 600 11px var(--mono); letter-spacing: 0.06em; fill: var(--c); }
+.map .node { fill: var(--surface); stroke: var(--c); stroke-width: 1.5; }
+.map .edge { stroke: var(--muted); stroke-width: 1.2; fill: none; }
+.map .edge.dash { stroke-dasharray: 4 3; }
+.map .arrowhead { fill: var(--muted); }
+
+/* explorer */
+.explorer { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 980px) { .explorer { grid-template-columns: minmax(0, 1fr); } }
+.pickers { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.picker { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; display: grid; gap: 8px; background: var(--surface); }
+.picker.p1 { border-top: 3px solid var(--sel1); }
+.picker.p2 { border-top: 3px dashed var(--sel2); }
+label.f { display: grid; gap: 3px; font-size: 0.8rem; color: var(--muted); }
+select, input[type="search"] { font: 0.9rem var(--body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; width: 100%; }
+.presets { display: flex; flex-wrap: wrap; gap: 6px; }
+button { font: 500 0.84rem var(--body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 5px 10px; cursor: pointer; }
+button:hover { background: var(--sunk); }
+button[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+
+.site { display: grid; gap: 10px; }
+.box { border: 1.5px solid var(--measure); border-radius: 8px; padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; position: relative; background: color-mix(in srgb, var(--measure-soft) 55%, transparent); }
+.box > .bl { width: 100%; font: 500 0.74rem var(--mono); color: var(--measure); display: flex; justify-content: space-between; gap: 8px; }
+.box.root { border-width: 2px; background: var(--surface); }
+.box.inner { flex: 1 1 150px; }
+.box.hl1 { box-shadow: 0 0 0 3px color-mix(in srgb, var(--sel1) 45%, transparent); }
+.box.hl2 { outline: 3px dashed color-mix(in srgb, var(--sel2) 70%, transparent); outline-offset: 2px; }
+.tr { position: relative; display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 6px; font-size: 0.84rem; border: 1.5px solid var(--line); background: var(--surface); }
+.tr .gs { width: 10px; height: 10px; border-radius: 2px; background: var(--g, var(--muted)); flex: none; }
+.tr.in1 { border-color: var(--sel1); border-width: 2.5px; }
+.tr.in2 { border-color: var(--sel2); border-style: dashed; border-width: 2.5px; }
+.tr.in1.in2 { border-style: solid; border-color: var(--sel2); box-shadow: 0 0 0 3px var(--sel1); }
+.tr .flag { font: 600 0.7rem var(--mono); color: var(--bad); }
+.glegend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 0.8rem; color: var(--muted); }
+.glegend span { display: inline-flex; gap: 5px; align-items: center; }
+.glegend i { width: 10px; height: 10px; border-radius: 2px; background: var(--g); display: inline-block; }
+
+.tree svg { width: 100%; max-width: 360px; height: auto; display: block; }
+.tree text { font: 500 12px var(--mono); fill: var(--ink); }
+.tree .tn { fill: var(--surface); stroke: var(--measure); stroke-width: 1.5; }
+.tree .tn.h1 { stroke: var(--sel1); stroke-width: 3; }
+.tree .tn.h2 { stroke: var(--sel2); stroke-width: 3; stroke-dasharray: 5 3; }
+.tree .tn.sub { fill: var(--sunk); }
+.tree line { stroke: var(--muted); stroke-width: 1.2; }
+
+.verdict { display: grid; gap: 10px; }
+.vrow { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 10px; font-size: 0.9rem; align-items: baseline; }
+@media (max-width: 480px) { .vrow { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+.vrow > b { font-weight: 500; color: var(--muted); font-size: 0.82rem; }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font: 600 0.74rem/1.7 var(--mono); }
+.pill.ok { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
+.pill.bad { background: color-mix(in srgb, var(--bad) 15%, transparent); color: var(--bad); }
+.pill.warn { background: color-mix(in srgb, var(--warn) 15%, transparent); color: var(--warn); }
+.pill.k { background: var(--sunk); color: var(--muted); }
+.big { font: 600 1.1rem var(--display); }
+.setlist { font-family: var(--mono); font-size: 0.84rem; }
+
+/* who chain */
+.chain { display: flex; flex-wrap: wrap; gap: 0; align-items: stretch; }
+.step { flex: 1 1 150px; min-width: 0; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--who); padding: 10px 12px; display: grid; gap: 4px; align-content: start; margin: 0 14px 10px 0; position: relative; border-radius: 4px; }
+.step::after { content: "→"; position: absolute; right: -13px; top: 12px; color: var(--muted); font-size: 0.9rem; }
+.step:last-child::after { content: ""; }
+.step h3 { font-size: 0.95rem; }
+.step .r { font: 0.74rem var(--mono); color: var(--muted); }
+
+/* timelines */
+.tl { overflow-x: auto; }
+table.grid { border-collapse: collapse; font-size: 0.84rem; min-width: 640px; width: 100%; font-variant-numeric: tabular-nums; }
+table.grid th, table.grid td { border: 1px solid var(--line); padding: 6px 8px; text-align: center; }
+table.grid th:first-child, table.grid td:first-child { text-align: left; white-space: nowrap; }
+table.grid thead th { background: var(--sunk); font-weight: 500; }
+td.cell button { width: 100%; min-width: 34px; padding: 4px 0; border-radius: 3px; }
+td.cell button[aria-pressed="true"] { background: var(--measure); border-color: var(--measure); color: var(--surface); }
+td.calc { font-family: var(--mono); font-size: 0.78rem; }
+td.on { background: color-mix(in srgb, var(--measure) 18%, transparent); }
+td.note { color: var(--warn); font-weight: 600; }
+.formula { font-family: var(--mono); font-size: 0.84rem; background: var(--sunk); padding: 8px 10px; border-radius: 4px; overflow-x: auto; white-space: pre; }
+
+.switch svg { width: 100%; min-width: 600px; height: auto; display: block; }
+.switch text { font-family: var(--body); font-size: 12px; fill: var(--ink); }
+.switch .ax { stroke: var(--muted); }
+.switch .al1 { fill: color-mix(in srgb, var(--who) 30%, transparent); stroke: var(--who); }
+.switch .al2 { fill: color-mix(in srgb, var(--asset) 30%, transparent); stroke: var(--asset); }
+.switch .pt { fill: var(--surface); stroke: var(--ink); stroke-width: 1; }
+
+/* expressions */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+.filters .f { min-width: 160px; flex: 1 1 160px; }
+.cards { display: grid; gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--c); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 8px; min-width: 0; scroll-margin-top: 16px; }
+.card.flash, tr.flash { animation: flash 1.6s ease-out; }
+@keyframes flash { from { background: color-mix(in srgb, var(--measure) 22%, var(--surface)); } to { background: var(--surface); } }
+@media (prefers-reduced-motion: reduce) { .card.flash, tr.flash { animation: none; outline: 2px solid var(--measure); } }
+.card .ch { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; }
+.card .id { font: 600 0.85rem var(--mono); color: var(--c); }
+.card .nm { font-weight: 600; }
+.card .tex { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
+.card .tex mjx-container { margin: 0 !important; }
+.card .nt { color: var(--muted); font-size: 0.88rem; max-width: 80ch; }
+.srefs { display: flex; flex-wrap: wrap; gap: 4px; }
+.sref { font: 500 0.74rem var(--mono); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); background: var(--surface); cursor: pointer; }
+.k-Def { color: var(--measure); } .k-Rule { color: var(--control); } .k-Derived { color: var(--who); } .k-Open { color: var(--bad); }
+.kind { font: 600 0.7rem var(--mono); text-transform: uppercase; letter-spacing: 0.05em; }
+.sechead { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.sechead h3 { font-size: 1rem; }
+.count { color: var(--muted); font-size: 0.85rem; }
+
+table.st { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+table.st td, table.st th { border-bottom: 1px solid var(--line); padding: 7px 8px; vertical-align: top; text-align: left; }
+table.st th { color: var(--muted); font-weight: 500; font-size: 0.8rem; }
+table.st td:first-child { font-family: var(--mono); color: var(--muted); }
+table.st tr { scroll-margin-top: 16px; }
+.xlink { font: 500 0.76rem var(--mono); margin-right: 6px; cursor: pointer; color: var(--measure); background: none; border: 0; padding: 0; text-decoration: underline; }
+.tblwrap { overflow-x: auto; }
+
+.finds { display: grid; gap: 10px; }
+.find { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; }
+.find .fid { font: 600 0.9rem var(--mono); color: var(--warn); }
+.find .fx { color: var(--muted); font-size: 0.88rem; }
+footer { color: var(--muted); font-size: 0.8rem; padding-block: 24px 40px; border-top: 1px solid var(--line); }
+.mjfail .tex { font-family: var(--mono); font-size: 0.8rem; white-space: pre-wrap; }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <span class="eyebrow" id="ver">Draft</span>
+    <h1>Flexibility Core Model</h1>
+    <p class="lede">The 99 consolidated statements on boundary metering, Site Configurations, TR control and FSP authority, written as a core set of expressions in notation aligned with BSC Annex X-2. Each colour below marks one layer of the model and keeps that meaning throughout the page.</p>
+    <div class="legend" aria-label="Model layers">
+      <span class="chip l-measure"><span class="dot"></span>Measurement</span>
+      <span class="chip l-control"><span class="dot"></span>Control</span>
+      <span class="chip l-asset"><span class="dot"></span>Assets and overlap</span>
+      <span class="chip l-who"><span class="dot"></span>Authority, allocation, participation</span>
+      <span class="chip l-objective"><span class="dot"></span>Objectives</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="layout">
+  <nav class="rail" aria-label="Sections">
+    <a href="#overview">Overview</a>
+    <a href="#explorer">Metering tree explorer</a>
+    <a href="#who">Who can act</a>
+    <a href="#differencing">Differencing</a>
+    <a href="#switching">Switching</a>
+    <a href="#core">The core</a>
+    <a href="#expressions">All expressions</a>
+    <a href="#statements">Statements</a>
+    <a href="#findings">Findings</a>
+  </nav>
+
+  <main>
+    <section id="overview">
+      <div class="sec-head"><span class="eyebrow">Overview</span><h2>The model at a glance</h2>
+        <p class="muted">Logical metering identities carry the measurement. Control groups carry the flexibility. An Asset is a control group seen through one measurement arrangement. Allocation and participation say who may use it, and where.</p></div>
+      <div class="panel map" role="img" aria-label="Object map: Boundary Point, MSID Pair, Site Configuration, AMSID Pairs and Asset Meters on the measurement side; TRs, control groups, residual group and Load Controller on the control side; Assets join a group to an arrangement; CFPC, delegation, registration, allocation, participation and Unit say who may use an Asset.">
+        <svg viewBox="0 0 960 380" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+          <g class="l-measure"><rect class="zone" x="10" y="10" width="300" height="360" rx="8"/><text class="zt" x="24" y="32">MEASUREMENT</text>
+            <rect class="node" x="30" y="50" width="120" height="40" rx="5"/><text x="90" y="75" text-anchor="middle">Boundary Point b</text>
+            <rect class="node" x="170" y="50" width="120" height="40" rx="5"/><text x="230" y="75" text-anchor="middle">MSID Pair M_b</text>
+            <rect class="node" x="30" y="125" width="260" height="44" rx="5"/><text x="160" y="145" text-anchor="middle">Site Configuration c</text><text class="lbl" x="160" y="161" text-anchor="middle">MSIDs · AMSID Pairs · nesting (immutable ID)</text>
+            <rect class="node" x="170" y="200" width="120" height="36" rx="5"/><text x="230" y="223" text-anchor="middle">Site w</text>
+            <rect class="node" x="30" y="268" width="120" height="40" rx="5"/><text x="90" y="293" text-anchor="middle">AMSID Pair A</text>
+            <rect class="node" x="170" y="268" width="120" height="40" rx="5"/><text x="230" y="293" text-anchor="middle">Asset Meter m</text>
+            <line class="edge" x1="150" y1="70" x2="170" y2="70"/>
+            <line class="edge" x1="230" y1="125" x2="230" y2="92" marker-end="url(#ah)"/><text class="lbl" x="236" y="113">root</text>
+            <line class="edge" x1="90" y1="169" x2="90" y2="266" marker-end="url(#ah)"/><text class="lbl" x="96" y="222">nests (tree)</text>
+            <line class="edge dash" x1="230" y1="200" x2="230" y2="171" marker-end="url(#ah)"/><text class="lbl" x="236" y="190">groups</text>
+            <line class="edge" x1="150" y1="288" x2="168" y2="288" marker-end="url(#ah)"/><text class="lbl" x="160" y="332" text-anchor="middle">Asset Meter Allocation (A → m)</text>
+          </g>
+          <g class="l-control"><rect class="zone" x="330" y="10" width="290" height="170" rx="8"/><text class="zt" x="344" y="32">CONTROL</text>
+            <rect class="node" x="345" y="50" width="120" height="40" rx="5"/><text x="405" y="75" text-anchor="middle">TRs r</text>
+            <rect class="node" x="485" y="50" width="120" height="40" rx="5"/><text x="545" y="75" text-anchor="middle">Residual group R</text>
+            <rect class="node" x="345" y="120" width="120" height="40" rx="5"/><text x="405" y="145" text-anchor="middle">Control group g</text>
+            <rect class="node" x="485" y="120" width="120" height="40" rx="5"/><text x="545" y="145" text-anchor="middle">Load Controller</text>
+            <line class="edge" x1="405" y1="90" x2="405" y2="118" marker-end="url(#ah)"/>
+            <line class="edge" x1="465" y1="70" x2="483" y2="70" marker-end="url(#ah)"/><text class="lbl" x="545" y="104" text-anchor="middle">no Load Controller</text>
+            <line class="edge" x1="465" y1="140" x2="483" y2="140" marker-end="url(#ah)"/><text class="lbl" x="474" y="174" text-anchor="middle">exactly one</text>
+          </g>
+          <g class="l-asset"><rect class="zone" x="330" y="195" width="290" height="175" rx="8"/><text class="zt" x="344" y="217">ASSETS</text>
+            <rect class="node" x="345" y="235" width="260" height="44" rx="5"/><text x="475" y="255" text-anchor="middle">Asset a = (g, x)</text><text class="lbl" x="475" y="271" text-anchor="middle">siblings share g, differ in x</text>
+            <rect class="node" x="345" y="310" width="260" height="44" rx="5"/><text x="475" y="330" text-anchor="middle">Arrangement x</text><text class="lbl" x="475" y="346" text-anchor="middle">Bnd · Ast(A) · Res(X)</text>
+            <line class="edge" x1="475" y1="279" x2="475" y2="308" marker-end="url(#ah)"/>
+          </g>
+          <g class="l-who"><rect class="zone" x="640" y="10" width="310" height="360" rx="8"/><text class="zt" x="654" y="32">WHO</text>
+            <rect class="node" x="660" y="48" width="120" height="36" rx="5"/><text x="720" y="71" text-anchor="middle">CFPC φ</text>
+            <rect class="node" x="810" y="48" width="125" height="36" rx="5"/><text x="872" y="71" text-anchor="middle">Delegation δ</text>
+            <rect class="node" x="660" y="112" width="275" height="36" rx="5"/><text x="797" y="135" text-anchor="middle">Registration κ → Assignment</text>
+            <rect class="node" x="660" y="176" width="275" height="40" rx="5"/><text x="797" y="196" text-anchor="middle">Allocation λ (to the group)</text><text class="lbl" x="797" y="210" text-anchor="middle">cross-market, held in FMAR</text>
+            <rect class="node" x="660" y="244" width="275" height="40" rx="5"/><text x="797" y="264" text-anchor="middle">Participation π (per sub-market)</text><text class="lbl" x="797" y="278" text-anchor="middle">BSC: MSID / AMSID Pair Allocation</text>
+            <rect class="node" x="660" y="312" width="275" height="40" rx="5"/><text x="797" y="337" text-anchor="middle">Unit u · Secondary BM Unit i2</text>
+            <line class="edge" x1="780" y1="66" x2="808" y2="66" marker-end="url(#ah)"/>
+            <line class="edge" x1="720" y1="84" x2="720" y2="110" marker-end="url(#ah)"/>
+            <line class="edge" x1="872" y1="84" x2="872" y2="110" marker-end="url(#ah)"/>
+            <line class="edge" x1="797" y1="148" x2="797" y2="174" marker-end="url(#ah)"/>
+            <line class="edge" x1="797" y1="216" x2="797" y2="242" marker-end="url(#ah)"/>
+            <line class="edge" x1="797" y1="284" x2="797" y2="310" marker-end="url(#ah)"/>
+          </g>
+          <path class="edge dash" d="M370 50 C 330 18, 140 18, 108 48" marker-end="url(#ah)"/><text class="lbl" x="240" y="26" text-anchor="middle">behind (at most one, E8)</text>
+          <path class="edge" d="M345 332 H320 V147 H292" marker-end="url(#ah)"/><text class="lbl" x="318" y="240" text-anchor="middle" transform="rotate(-90 318 240)">lies in c</text>
+          <line class="edge" x1="405" y1="160" x2="420" y2="233" marker-end="url(#ah)"/>
+          <line class="edge" x1="660" y1="200" x2="430" y2="162" marker-end="url(#ah)"/><text class="lbl" x="606" y="186" text-anchor="end">allocates g</text>
+          <line class="edge" x1="660" y1="264" x2="607" y2="257" marker-end="url(#ah)"/>
+        </svg>
+      </div>
+      <div class="panel"><h3>Choices behind the model</h3><ol class="choices" id="choices"></ol></div>
+    </section>
+
+    <section id="explorer">
+      <div class="sec-head"><span class="eyebrow">Measurement · Assets</span><h2>Metering tree explorer</h2>
+        <p class="muted">An example Site Configuration with three AMSID Pairs. Pick two Assets, each a group seen through an arrangement. The page works out each perimeter from the TR sets (D12), and separately from the metering tree alone (E29), and shows whether the two agree (E30).</p></div>
+      <div class="presets" role="group" aria-label="Examples">
+        <button data-preset="0">Asset beside Residual (56)</button>
+        <button data-preset="1">Boundary overlaps all (54)</button>
+        <button data-preset="2">Nested AMSIDs (55)</button>
+        <button data-preset="3">Inclusive measurement (43–44)</button>
+        <button data-preset="4">Siblings (45, 47)</button>
+        <button data-preset="5">Invalid Residual (37)</button>
+      </div>
+      <div class="explorer">
+        <div class="panel site">
+          <div class="pickers">
+            <div class="picker p1"><span class="eyebrow">Asset 1 · solid</span>
+              <label class="f" for="g1">Group<select id="g1"></select></label>
+              <label class="f" for="x1">Arrangement<select id="x1"></select></label></div>
+            <div class="picker p2"><span class="eyebrow">Asset 2 · dashed</span>
+              <label class="f" for="g2">Group<select id="g2"></select></label>
+              <label class="f" for="x2">Arrangement<select id="x2"></select></label></div>
+          </div>
+          <div id="boxes" aria-label="Reach of each metering identity, drawn as nested boxes"></div>
+          <div class="glegend" id="glegend"></div>
+        </div>
+        <div class="panel verdict" aria-live="polite">
+          <div class="tree" id="tree"></div>
+          <div id="verdict"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="who">
+      <div class="sec-head"><span class="eyebrow">Authority · Allocation · Participation</span><h2>Who can act</h2>
+        <p class="muted">Allocation is held in FMAR and is cross-market. Participation is each sub-market’s own record. Every participation must trace back to an allocation (E41); the dotted delegation route is finding F6.</p></div>
+      <div class="chain" id="chain"></div>
+    </section>
+
+    <section id="differencing">
+      <div class="sec-head"><span class="eyebrow">Measurement · BSC settlement</span><h2>Differencing in BSC settlement</h2>
+        <p class="muted">Click a cell to switch an AMSID Pair Allocation on or off in a Settlement Period. The MSID Pair is differenced whenever any AMSID Pair in the configuration participates (E45). Only the outermost participating AMSIDs are subtracted (E46), so A2 is never subtracted while A1 also participates. A change caused by another party notifies the MSID Pair participant (E47).</p></div>
+      <div class="panel tl"><table class="grid" id="difftable"></table></div>
+      <div class="formula" id="diffformula"></div>
+    </section>
+
+    <section id="switching">
+      <div class="sec-head"><span class="eyebrow">Allocation · Objectives</span><h2>Switching without gaps</h2>
+        <p class="muted">Re-allocation at t* ends one allocation and starts the next at the same instant (D29, O3). Each participation sits inside the allocation it traces to (E41).</p></div>
+      <div class="panel switch tl" role="img" aria-label="Timeline: allocation λ1 to FSP A until t*, then λ2 to FSP B from t*. Participations in the BM and in a DNO market sit inside each allocation.">
+        <svg viewBox="0 0 760 190" xmlns="http://www.w3.org/2000/svg">
+          <line class="ax" x1="80" y1="160" x2="740" y2="160"/>
+          <text x="80" y="178">t₀</text><text x="402" y="178" text-anchor="middle">t*</text><text x="740" y="178" text-anchor="end">t₁</text>
+          <line class="ax" x1="402" y1="20" x2="402" y2="162" stroke-dasharray="3 3"/>
+          <text x="8" y="44">group g</text>
+          <rect class="al1" x="80" y="28" width="322" height="26" rx="3"/><text x="92" y="46">λ₁ → FSP A</text>
+          <rect class="al2" x="402" y="28" width="338" height="26" rx="3"/><text x="414" y="46">λ₂ → FSP B</text>
+          <text x="8" y="92">BM</text>
+          <rect class="pt" x="110" y="76" width="250" height="22" rx="3"/><text x="120" y="92">π: A, AMSID Pair Allocation</text>
+          <rect class="pt" x="430" y="76" width="280" height="22" rx="3"/><text x="440" y="92">π: B, AMSID Pair Allocation</text>
+          <text x="8" y="132">DNO</text>
+          <rect class="pt" x="160" y="116" width="242" height="22" rx="3"/><text x="170" y="132">π: A, unit membership</text>
+          <rect class="pt" x="470" y="116" width="200" height="22" rx="3"/><text x="480" y="132">π: B, unit membership</text>
+        </svg>
+      </div>
+    </section>
+
+    <section id="core">
+      <div class="sec-head"><span class="eyebrow">The core</span><h2>The core on one page</h2>
+        <p class="muted">These expressions carry the structure. The rest of the model adds detail to them.</p></div>
+      <div class="cards" id="corecards"></div>
+    </section>
+
+    <section id="expressions">
+      <div class="sec-head"><span class="eyebrow">Catalogue</span><h2>All expressions</h2>
+        <p class="muted" id="exsummary"></p></div>
+      <div class="filters panel">
+        <label class="f" for="fsearch">Search names, IDs or statement numbers<input type="search" id="fsearch" placeholder="e.g. reach, E29 or 56"></label>
+        <label class="f" for="fsec">Section<select id="fsec"><option value="">All sections</option></select></label>
+        <div class="f" role="group" aria-label="Kind"><span class="small muted">Kind</span>
+          <div class="presets" id="fkind"></div></div>
+      </div>
+      <div class="cards" id="allcards"></div>
+    </section>
+
+    <section id="statements">
+      <div class="sec-head"><span class="eyebrow">Coverage</span><h2>The 99 statements</h2>
+        <p class="muted">Every statement maps to at least one expression. Select an expression ID to jump to it.</p></div>
+      <div class="panel tblwrap"><table class="st" id="sttable"></table></div>
+    </section>
+
+    <section id="findings">
+      <div class="sec-head"><span class="eyebrow">For review</span><h2>Findings and open questions</h2>
+        <p class="muted">Points the notation exposed while formalising, with a suggested resolution for each.</p></div>
+      <div class="finds" id="finds"></div>
+      <div class="panel"><h3>Still open</h3><ul id="stillopen" class="choices"></ul></div>
+      <div class="panel"><h3>Notation register</h3><div class="tblwrap"><table class="st" id="notation"></table></div></div>
+    </section>
+
+    <footer>Generated from <code>work/core-model/model.py</code> by <code>build.py</code>. Not BSC text.</footer>
+  </main>
+</div>
+</div>
+
+<script>
+window.MODEL = {"version": "Draft v0.3", "date": "2026-11-20", "sections": {"1": "Basic sets", "2": "Boundary points and metering identities", "3": "Site Configuration and the metering tree", "4": "TRs and control", "5": "Reach and measurement arrangements", "6": "Assets", "7": "Overlap, compatibility and consolidation", "8": "Authority and delegation", "9": "Registration, allocation and participation", "10": "Differencing in the BSC", "11": "Units", "12": "The objectives as properties"}, "layer": {"1": "base", "2": "measure", "3": "measure", "4": "control", "5": "measure", "6": "asset", "7": "asset", "8": "who", "9": "who", "10": "measure", "11": "who", "12": "objective"}, "statements": [{"n": 1, "tag": "Def", "sec": 1, "text": "There is a set of Boundary Points: points of connection to the network."}, {"n": 2, "tag": "Def", "sec": 1, "text": "There is a set of Metering Systems (MSIDs), which identify boundary metering."}, {"n": 3, "tag": "Def", "sec": 1, "text": "There is a set of Asset Metering Systems (AMSIDs), which identify asset metering."}, {"n": 4, "tag": "Def", "sec": 1, "text": "There is a set of Asset Meters: the physical devices."}, {"n": 5, "tag": "Def", "sec": 1, "text": "There is a set of Technical Resources (TRs)."}, {"n": 6, "tag": "Def", "sec": 1, "text": "There is a set of parties. A party can hold one or more roles: Load Controller, FSP, CFPC holder (Primary), Secondary FSP, Supplier, or BSC Party operating BM Units."}, {"n": 7, "tag": "Def", "sec": 1, "text": "There are sets of customers, sub-markets and periods. The Balancing Mechanism and the wholesale market are sub-markets."}, {"n": 8, "tag": "Rule", "sec": 2, "text": "Each MSID belongs to exactly one Boundary Point."}, {"n": 9, "tag": "Def", "sec": 2, "text": "An MSID Pair is a BSC process construct grouping a Boundary Point’s import MSID with its export MSID, if there is one."}, {"n": 10, "tag": "Def", "sec": 2, "text": "An AMSID Pair groups an import AMSID with its export AMSID, if there is one, measuring the same equipment."}, {"n": 11, "tag": "Rule", "sec": 2, "text": "Each AMSID is served by exactly one Asset Meter at any time, recorded as an Asset Meter Allocation."}, {"n": 12, "tag": "Derived", "sec": 2, "text": "Replacing a physical Asset Meter changes its Asset Meter Allocation, not the AMSID."}, {"n": 13, "tag": "Def", "sec": 3, "text": "A Site Configuration is an effective-dated record with an immutable ID, stating three things: which MSIDs at one Boundary Point are related; which AMSIDs are related to them; how those AMSIDs are nested."}, {"n": 14, "tag": "Rule", "sec": 3, "text": "Each Boundary Point has at most one effective Site Configuration at any time."}, {"n": 15, "tag": "Rule", "sec": 3, "text": "Each AMSID belongs to exactly one effective Site Configuration at any time."}, {"n": 16, "tag": "Rule", "sec": 3, "text": "Any change to the MSIDs, the AMSIDs or their nesting creates a new Site Configuration with a new ID, replacing the old one from its effective date."}, {"n": 17, "tag": "Def", "sec": 3, "text": "The metering tree of a Site Configuration has the Boundary Point’s MSIDs at its root. Each AMSID has exactly one parent: either the boundary, or another AMSID it sits behind."}, {"n": 18, "tag": "Def", "sec": 3, "text": "A Site groups one or more Site Configurations."}, {"n": 19, "tag": "Rule", "sec": 3, "text": "Changing which Site a Site Configuration belongs to doesn’t create a new Site Configuration."}, {"n": 20, "tag": "Rule", "sec": 4, "text": "Each TR is located behind exactly one Boundary Point at any time."}, {"n": 21, "tag": "Rule", "sec": 4, "text": "A mobile TR, such as an EV, may be behind different Boundary Points at different times, but behind at most one in any period."}, {"n": 22, "tag": "Def", "sec": 4, "text": "A control assignment links a TR to the party acting as its Load Controller for a period."}, {"n": 23, "tag": "Rule", "sec": 4, "text": "Each actively controlled TR has exactly one Load Controller at any time."}, {"n": 24, "tag": "Def", "sec": 4, "text": "A TR control group is a non-empty set of TRs, all behind the same Boundary Point, which share one Load Controller and can be instructed by it as one."}, {"n": 25, "tag": "Rule", "sec": 4, "text": "Each actively controlled TR belongs to exactly one control group at any time."}, {"n": 26, "tag": "Def", "sec": 4, "text": "The residual group of a Boundary Point is every TR behind it that isn’t in a control group. That includes appliances used through customer behaviour, which have no Load Controller."}, {"n": 27, "tag": "Derived", "sec": 4, "text": "The control groups and the residual group at a Boundary Point together cover every TR there, with no TR in two of them."}, {"n": 28, "tag": "Rule", "sec": 4, "text": "An FSP may offer flexibility from a control group only if it is the group’s Load Controller or has a control agreement with it."}, {"n": 29, "tag": "Rule", "sec": 4, "text": "Where several FSPs offer the same control group (options 1a and 1b), all their instructions reach it through its one Load Controller, which applies an agreed order of precedence."}, {"n": 30, "tag": "Rule", "sec": 4, "text": "Statements 28 and 29 don’t apply to a residual group. An FSP influences a residual group through the customer, not through a Load Controller."}, {"n": 31, "tag": "Def", "sec": 5, "text": "The reach of a metering identity is the set of TRs whose energy flow it records."}, {"n": 32, "tag": "Rule", "sec": 5, "text": "The reach of a Boundary Point’s MSIDs is every TR behind that Boundary Point."}, {"n": 33, "tag": "Rule", "sec": 5, "text": "The reach of an AMSID is contained within the reach of its parent in the metering tree."}, {"n": 34, "tag": "Rule", "sec": 5, "text": "Two AMSIDs in the same metering tree, neither of which sits behind the other, have reaches with no TR in common."}, {"n": 35, "tag": "Def", "sec": 5, "text": "A measurement arrangement lies within one Site Configuration and has one of three types: Boundary: the MSID Pair alone; Asset: one AMSID Pair; Residual: the MSID Pair, net of one or more AMSID Pairs (differencing)."}, {"n": 36, "tag": "Def", "sec": 5, "text": "The measurement perimeter of an arrangement depends on its type: Boundary: the reach of the MSIDs; Asset: the reach of the AMSID; Residual: the reach of the MSIDs, minus the combined reach of the AMSIDs it subtracts."}, {"n": 37, "tag": "Rule", "sec": 5, "text": "The AMSIDs a Residual arrangement subtracts must have reaches with no TR in common, so that no nested meter is subtracted twice."}, {"n": 38, "tag": "Rule", "sec": 5, "text": "A Residual arrangement can exist only if at least one Asset arrangement in the same Site Configuration is in use."}, {"n": 39, "tag": "Rule", "sec": 5, "text": "Residual arrangements are accepted only in sub-markets that accept differencing. Today that’s the Balancing Mechanism and the wholesale market, for AMVLPs under P375."}, {"n": 40, "tag": "Def", "sec": 6, "text": "A Flexibility Asset is one control group, or the residual group, measured through one arrangement in the same Site Configuration."}, {"n": 41, "tag": "Rule", "sec": 6, "text": "An Asset is measurable only if its perimeter contains every TR in its group."}, {"n": 42, "tag": "Def", "sec": 6, "text": "An Asset is exactly measured if its perimeter equals its group."}, {"n": 43, "tag": "Def", "sec": 6, "text": "An Asset is inclusively measured if its perimeter also contains TRs outside its group."}, {"n": 44, "tag": "Derived", "sec": 6, "text": "An inclusively measured Asset is exposed to the compensation effect: TRs inside its perimeter that it doesn’t control can counteract its delivery."}, {"n": 45, "tag": "Def", "sec": 6, "text": "Sibling Assets are Assets with the same control group but different arrangements."}, {"n": 46, "tag": "Rule", "sec": 6, "text": "Sibling Assets are always allocated to the same FSP or FSP group."}, {"n": 47, "tag": "Rule", "sec": 6, "text": "Sibling Assets are never entered into the same sub-market in the same period."}, {"n": 48, "tag": "Def", "sec": 6, "text": "A residual Asset is the residual group measured through a Residual arrangement."}, {"n": 49, "tag": "Derived", "sec": 6, "text": "The control group, not the Asset, is the unique object of flexibility. Assets are its views through different measurements."}, {"n": 50, "tag": "Def", "sec": 7, "text": "Two Assets in the same Site Configuration, belonging to different groups, overlap if their perimeters have at least one TR in common."}, {"n": 51, "tag": "Derived", "sec": 7, "text": "Different groups never share a TR (statement 25), so any overlap between them is an overlap in measurement, not in composition."}, {"n": 52, "tag": "Def", "sec": 7, "text": "An identity conflict exists when two declared control groups turn out, or are suspected, to contain the same TR."}, {"n": 53, "tag": "Rule", "sec": 7, "text": "Identity conflicts are resolved, by correcting or merging the declared groups, before compatibility is assessed."}, {"n": 54, "tag": "Derived", "sec": 7, "text": "A Boundary arrangement overlaps every Asset of another group in the same Site Configuration."}, {"n": 55, "tag": "Derived", "sec": 7, "text": "Two Asset arrangements overlap if, and only if, one AMSID sits behind the other."}, {"n": 56, "tag": "Derived", "sec": 7, "text": "An Asset arrangement and a Residual arrangement don’t overlap if the Residual subtracts that AMSID or one of its ancestors in the metering tree. Otherwise they overlap."}, {"n": 57, "tag": "Derived", "sec": 7, "text": "Two Assets with the same arrangement always overlap."}, {"n": 58, "tag": "Derived", "sec": 7, "text": "Apart from identity conflicts, overlap can be determined from the metering tree alone, without knowing TR identities."}, {"n": 59, "tag": "Def", "sec": 7, "text": "The Assets in a Site Configuration are compatible if no two Assets of different groups that are in use at the same time overlap."}, {"n": 60, "tag": "Rule", "sec": 7, "text": "Compatibility is assessed across every Asset in the Site Configuration, whichever sub-markets they’re used in."}, {"n": 61, "tag": "Def", "sec": 7, "text": "Reconfiguration removes an overlap by changing an Asset’s arrangement, which can mean adding metering through a new Site Configuration, or by regrouping its TRs."}, {"n": 62, "tag": "Def", "sec": 7, "text": "A set of overlapping Assets is reconcilable if some choice of arrangements, using existing or added metering, removes every overlap between different groups."}, {"n": 63, "tag": "Def", "sec": 7, "text": "Otherwise the set is irreconcilable."}, {"n": 64, "tag": "Derived", "sec": 7, "text": "Two groups whose TRs can only be measured at the boundary are irreconcilable unless metering is added."}, {"n": 65, "tag": "Def", "sec": 7, "text": "Consolidation merges irreconcilable groups into one control group, measured as one Asset."}, {"n": 66, "tag": "Rule", "sec": 7, "text": "A consolidated group must have a single Load Controller, agreed between the parties."}, {"n": 67, "tag": "Open", "sec": 7, "text": "The alternative to statement 66: allow an Asset to hold several control groups with different Load Controllers, coordinated at site level. That is currently future scope."}, {"n": 68, "tag": "Def", "sec": 8, "text": "A customer flexibility purchase contract (CFPC) is granted by the customer at a Boundary Point to a holder. It covers a stated set of TRs for a period."}, {"n": 69, "tag": "Rule", "sec": 8, "text": "A CFPC covers either every TR in a control group or none of them."}, {"n": 70, "tag": "Open", "sec": 8, "text": "How far a CFPC’s exclusivity reaches: 0a: no limit; 1a: at most one CFPC per TR per sub-market; 1b and 2: at most one per TR across all in-scope sub-markets."}, {"n": 71, "tag": "Def", "sec": 8, "text": "A delegation is a grant from a CFPC holder (the Primary) to a Secondary FSP, for one sub-market and a period. It doesn’t transfer the CFPC."}, {"n": 72, "tag": "Rule", "sec": 8, "text": "A delegation ends when the CFPC it derives from ends."}, {"n": 73, "tag": "Rule", "sec": 8, "text": "A change of customer at a Boundary Point ends every CFPC for the TRs behind it, and every delegation derived from them."}, {"n": 74, "tag": "Def", "sec": 9, "text": "A registration (claim) is an FSP’s record that it may offer a named Asset in a named sub-market for a period."}, {"n": 75, "tag": "Rule", "sec": 9, "text": "A registration is valid only if both of these hold for that sub-market and period: the FSP holds a CFPC or a delegation covering the Asset’s TRs; statement 28 is satisfied."}, {"n": 76, "tag": "Rule", "sec": 9, "text": "Registrations by different FSPs for the same Asset, or for sibling Assets, in the same sub-market and period always compete."}, {"n": 77, "tag": "Open", "sec": 9, "text": "Whether registrations by different FSPs in different sub-markets compete: 2 and 0b: always; 1a: only if the FSPs aren’t in the coordinating group; 1b: only if one of the FSPs lacks a delegation from the Primary; 0a: decided by each sub-market."}, {"n": 78, "tag": "Def", "sec": 9, "text": "Assignment decides which FSP, FSP group or Primary prevails among competing registrations."}, {"n": 79, "tag": "Def", "sec": 9, "text": "An allocation links one control group, and with it all its sibling Assets, to an FSP or FSP group for a period."}, {"n": 80, "tag": "Rule", "sec": 9, "text": "Only control groups whose Assets are compatible can be allocated."}, {"n": 81, "tag": "Rule", "sec": 9, "text": "Each control group has at most one allocation at any time."}, {"n": 82, "tag": "Def", "sec": 9, "text": "Re-allocation replaces an allocation from a given time onwards, with no gap and no overlap between the old and the new."}, {"n": 83, "tag": "Def", "sec": 9, "text": "A participation is a sub-market’s own record that an FSP is using an Asset there. In the BSC it’s an MSID Pair Allocation or an AMSID Pair Allocation to a BM Unit; on other platforms, membership of a unit."}, {"n": 84, "tag": "Rule", "sec": 9, "text": "Every participation must trace back to the FSP’s allocation, or its delegation, for that Asset and sub-market."}, {"n": 85, "tag": "Rule", "sec": 9, "text": "In the BSC, an Asset arrangement participates through an AMSID Pair Allocation. Boundary and Residual arrangements participate through an MSID Pair Allocation."}, {"n": 86, "tag": "Rule", "sec": 9, "text": "An MSID Pair Allocation and an AMSID Pair Allocation in the same Site Configuration may be held by different parties."}, {"n": 87, "tag": "Derived", "sec": 9, "text": "Statement 86 is consistent with compatibility: an Asset arrangement and a Residual that subtracts it don’t overlap (statement 56)."}, {"n": 88, "tag": "Rule", "sec": 10, "text": "In BSC settlement, an MSID Pair participation is differenced in a period if, and only if, at least one AMSID Pair in the same Site Configuration has an active participation in that period."}, {"n": 89, "tag": "Derived", "sec": 10, "text": "The volume subtracted is the sum over the outermost participating AMSIDs: those with no participating ancestor. That avoids subtracting nested volume twice."}, {"n": 90, "tag": "Rule", "sec": 10, "text": "When differencing starts or stops because of another party’s AMSID participation, the MSID Pair participant is notified."}, {"n": 91, "tag": "Derived", "sec": 10, "text": "Differencing removes the overlap between Boundary and Asset arrangements within BSC settlement only."}, {"n": 92, "tag": "Derived", "sec": 10, "text": "Sub-markets that use the boundary without differencing keep that overlap, and FMAR flags it."}, {"n": 93, "tag": "Def", "sec": 11, "text": "A Unit belongs to one FSP and one sub-market. In the BSC that’s a Secondary BM Unit."}, {"n": 94, "tag": "Rule", "sec": 11, "text": "A Unit contains only Assets for which its FSP holds a valid participation."}, {"n": 95, "tag": "Rule", "sec": 11, "text": "An Asset is in at most one Unit per sub-market per period."}, {"n": 96, "tag": "Derived", "sec": 12, "text": "O1, avoided duplication: two conditions hold together. In any sub-market and period, no TR lies within the perimeters of two participating Assets from different groups. Sibling Assets never participate in the same sub-market in the same period."}, {"n": 97, "tag": "Derived", "sec": 12, "text": "O2, clear accountability: every participation traces to exactly one allocation; within an FSP group, each sub-market traces to exactly one FSP."}, {"n": 98, "tag": "Derived", "sec": 12, "text": "O3, fair and efficient switching: successive allocations of a control group follow on with no gap and no overlap."}, {"n": 99, "tag": "Derived", "sec": 12, "text": "O4, coordinated participation: every allocation, delegation and participation is recorded with effective dates and visible to the parties entitled to see it."}], "expressions": [{"id": "D1", "sec": 1, "kind": "Def", "name": "Universe of objects", "tex": "\\mathcal{B},\\ \\mathcal{K}^{M},\\ \\mathcal{K}^{A},\\ \\mathcal{M},\\ \\mathcal{R},\\ \\mathcal{P},\\ \\mathcal{U},\\ \\mathcal{S} \\ni \\mathrm{BM}, \\mathrm{WM},\\ \\mathcal{T}", "stmts": [1, 2, 3, 4, 5, 7], "note": "Boundary Points, MSIDs, AMSIDs, Asset Meters, TRs, parties, customers, sub-markets, periods.", "core": false, "plain": null}, {"id": "D2", "sec": 1, "kind": "Def", "name": "Roles are time-dependent", "tex": "\\operatorname{roles}(p,t) \\subseteq \\{\\mathrm{LC},\\ \\mathrm{FSP},\\ \\mathrm{PRI},\\ \\mathrm{SEC},\\ \\mathrm{SUP},\\ \\mathrm{BMP}\\}", "stmts": [6], "note": "Load Controller, FSP, CFPC holder (Primary), Secondary FSP, Supplier, BSC Party operating BM Units.", "core": false, "plain": null}, {"id": "E1", "sec": 2, "kind": "Rule", "name": "Each MSID belongs to one Boundary Point", "tex": "\\operatorname{bp} : \\mathcal{K}^{M} \\to \\mathcal{B}", "stmts": [8], "note": "A function: exactly one Boundary Point per MSID.", "core": false, "plain": null}, {"id": "D3", "sec": 2, "kind": "Def", "name": "Pairs", "tex": "\\begin{gathered}\nM_b = \\big(K^{M}_{\\mathrm{imp}},\\ K^{M}_{\\mathrm{exp}}\\big) \\\\\nA = \\big(K^{A}_{\\mathrm{imp}},\\ K^{A}_{\\mathrm{exp}}\\big) \\\\\nK_{\\mathrm{exp}} \\text{ optional}\n\\end{gathered}", "stmts": [9, 10], "note": "An AMSID Pair measures one piece of equipment, so its two identities share one reach (D10).", "core": false, "plain": null}, {"id": "E2", "sec": 2, "kind": "Rule", "name": "Asset Meter Allocation", "tex": "\\operatorname{AMA} : \\mathcal{K}^{A} \\times t \\to \\mathcal{M}", "stmts": [11], "note": "A total function in time: exactly one Asset Meter serves each AMSID at any t.", "core": false, "plain": null}, {"id": "E3", "sec": 2, "kind": "Derived", "name": "Meter replacement is invisible above the identity", "tex": "\\begin{gathered} \\operatorname{AMA}(K, t_1) \\ne \\operatorname{AMA}(K, t_2) \\\\ \\text{changes no expression below, since none takes } m \\text{ as an argument} \\end{gathered}", "stmts": [12], "note": "Everything in sections 3 to 12 is keyed on K, never on m (choice 1).", "core": true, "plain": null}, {"id": "D4", "sec": 3, "kind": "Def", "name": "Site Configuration record", "tex": "\\begin{gathered}\nc = \\big(\\operatorname{id}(c),\\ b_c,\\ \\mathcal{K}^{M}_c,\\ \\mathcal{A}_c,\\ \\operatorname{par}_c,\\ I(c)\\big) \\\\\n\\mathcal{K}^{M}_c \\subseteq \\operatorname{bp}^{-1}(b_c)\n\\end{gathered}", "stmts": [13], "note": "Which MSIDs (at one Boundary Point), which AMSID Pairs, and how they nest (par_c).", "core": true, "plain": null}, {"id": "E4", "sec": 3, "kind": "Rule", "name": "At most one live configuration per Boundary Point", "tex": "\\sum_{c} \\big[b_c = b\\big]\\,\\big[\\operatorname{live}_t(c)\\big] \\le 1", "stmts": [14], "note": null, "core": false, "plain": null}, {"id": "E5", "sec": 3, "kind": "Rule", "name": "Each AMSID in exactly one live configuration", "tex": "\\begin{gathered}\n\\sum_{c} \\big[K \\in \\mathcal{A}_c\\big]\\,\\big[\\operatorname{live}_t(c)\\big] = 1 \\\\\n\\forall K \\in \\mathcal{K}^{A}\n\\end{gathered}", "stmts": [15], "note": "K ∈ 𝒜_c means K is one of the identities of a pair in 𝒜_c.", "core": false, "plain": null}, {"id": "E6", "sec": 3, "kind": "Rule", "name": "Content changes make a new configuration", "tex": "\\begin{gathered} \\operatorname{content}(c) \\text{ is constant on } I(c) \\\\ \\text{a change at } t^{*} \\Rightarrow \\operatorname{to}(c) = t^{*} = \\operatorname{from}(c'),\\ \\ \\operatorname{id}(c') \\ne \\operatorname{id}(c) \\end{gathered}", "stmts": [16], "note": "content(c) = (𝒦ᴹ_c, 𝒜_c, par_c).", "core": false, "plain": null}, {"id": "D5", "sec": 3, "kind": "Def", "name": "Metering tree", "tex": "\\begin{gathered}\n\\operatorname{par}_c : \\mathcal{A}_c \\to \\mathcal{A}_c \\cup \\{\\top_c\\}, \\quad \\top_c = M_{b_c}, \\quad \\text{acyclic} \\\\\nA \\sqsubset A' \\iff A' \\text{ is reached by repeating } \\operatorname{par}_c \\text{ from } A\n\\end{gathered}", "stmts": [17], "note": "The root ⊤ is the boundary. ⊑ is ⊏ or equal.", "core": true, "plain": null}, {"id": "D6", "sec": 3, "kind": "Def", "name": "Site", "tex": "\\begin{gathered}\nw \\subseteq \\mathcal{C} \\\\\n\\operatorname{site}(c, t) = w\n\\end{gathered}", "stmts": [18], "note": null, "core": false, "plain": null}, {"id": "E7", "sec": 3, "kind": "Rule", "name": "Moving a configuration between Sites keeps its ID", "tex": "\\operatorname{site}(c, t_1) \\ne \\operatorname{site}(c, t_2) \\ \\not\\Rightarrow\\ \\text{a new } c", "stmts": [19], "note": "site is not part of content(c), so E6 does not fire.", "core": false, "plain": null}, {"id": "E8", "sec": 4, "kind": "Rule", "name": "A TR is behind at most one Boundary Point at a time", "tex": "\\sum_{b} \\big[\\operatorname{loc}(r,t) = b\\big] \\le 1", "stmts": [20], "note": "Statement 20 says “exactly one”. Kept as “at most one”, as agreed for v0.1/v0.2, so that an EV in transit is behind none (finding F1).", "core": false, "plain": null}, {"id": "E9", "sec": 4, "kind": "Rule", "name": "Mobile TRs: at most one Boundary Point per period", "tex": "\\begin{gathered}\n\\sum_{b} \\max_{t \\in \\tau} \\big[\\operatorname{loc}(r,t) = b\\big] \\le 1 \\\\\n\\mathcal{R}_{b,\\tau} = \\{\\, r : \\exists t \\in \\tau,\\ \\operatorname{loc}(r,t) = b \\,\\}\n\\end{gathered}", "stmts": [21], "note": "max as Annex X-2 1.2.1(e).", "core": false, "plain": null}, {"id": "D7", "sec": 4, "kind": "Def", "name": "Control assignment", "tex": "\\begin{gathered}\n\\operatorname{ca} = \\big(r,\\ p,\\ I(\\operatorname{ca})\\big) \\\\\n\\operatorname{LC}(r,t) = p \\iff \\exists \\operatorname{ca} = (r, p, \\cdot) \\text{ live at } t\n\\end{gathered}", "stmts": [22], "note": null, "core": false, "plain": null}, {"id": "E10", "sec": 4, "kind": "Rule", "name": "Exactly one Load Controller for a controlled TR", "tex": "\\sum_{p} \\big[\\operatorname{LC}(r,t) = p\\big] = \\big[\\, r \\in \\mathrm{ACT}_t \\,\\big]", "stmts": [23], "note": "1 for an actively controlled TR, 0 otherwise.", "core": false, "plain": null}, {"id": "D8", "sec": 4, "kind": "Def", "name": "Control group", "tex": "\\begin{gathered}\n\\varnothing \\ne g \\subseteq \\mathcal{R}_{b,t} \\\\\n\\forall r \\in g:\\ \\operatorname{LC}(r,t) = \\operatorname{LC}(g,t) \\\\\n\\operatorname{one}(g,t)\n\\end{gathered}", "stmts": [24], "note": "one(g,t): the Load Controller can instruct g as one. 𝒢_{b,t} is the set of control groups at b.", "core": true, "plain": null}, {"id": "E11", "sec": 4, "kind": "Rule", "name": "Each controlled TR is in exactly one group", "tex": "\\begin{gathered}\n\\sum_{g \\in \\mathcal{G}_{b,t}} \\big[r \\in g\\big] = 1 \\\\\n\\forall r \\in \\mathrm{ACT}_t \\cap \\mathcal{R}_{b,t}\n\\end{gathered}", "stmts": [25], "note": null, "core": false, "plain": null}, {"id": "D9", "sec": 4, "kind": "Def", "name": "Residual group", "tex": "R_{b,t} = \\mathcal{R}_{b,t} \\setminus \\bigcup_{g \\in \\mathcal{G}_{b,t}} g", "stmts": [26], "note": "By E11 these are exactly the TRs with no Load Controller.", "core": false, "plain": null}, {"id": "E12", "sec": 4, "kind": "Derived", "name": "Groups and residual partition the Boundary Point", "tex": "\\mathcal{R}_{b,t} = R_{b,t}\\ \\sqcup \\bigsqcup_{g \\in \\mathcal{G}_{b,t}} g", "stmts": [27], "note": "⊔ is a union of sets with no TR in common.", "core": true, "plain": null}, {"id": "E13", "sec": 4, "kind": "Rule", "name": "Who may offer a control group", "tex": "\\operatorname{offers}(p, g, t) \\Rightarrow p = \\operatorname{LC}(g,t)\\ \\lor\\ \\operatorname{agr}\\big(p, \\operatorname{LC}(g,t), t\\big)", "stmts": [28], "note": "agr = a control agreement.", "core": true, "plain": null}, {"id": "E14", "sec": 4, "kind": "Rule", "name": "Several FSPs: one Load Controller, one order", "tex": "\\begin{gathered} \\big|\\{p : \\operatorname{offers}(p,g,t)\\}\\big| \\ge 2 \\Rightarrow \\\\ \\text{every instruction to } g \\text{ passes } \\operatorname{LC}(g,t), \\text{ ordered by } \\succ_{g,t} \\end{gathered}", "stmts": [29], "note": "≻_{g,t}: the agreed order of precedence (options 1a and 1b).", "core": false, "plain": null}, {"id": "E15", "sec": 4, "kind": "Rule", "name": "The residual group is influenced through the customer", "tex": "\\begin{gathered}\n\\operatorname{offers}(p, R_{b,t}, t) \\Rightarrow \\operatorname{agr}\\big(p, \\operatorname{cust}(b,t), t\\big) \\\\\n\\text{E13, E14 do not apply to } R_{b,t}\n\\end{gathered}", "stmts": [30], "note": null, "core": false, "plain": null}, {"id": "D10", "sec": 5, "kind": "Def", "name": "Reach", "tex": "\\begin{gathered}\n\\operatorname{reach}_t(K) \\subseteq \\mathcal{R} \\\\\n\\operatorname{reach}_t(A) = \\operatorname{reach}_t(K^{A}_{\\mathrm{imp}}) = \\operatorname{reach}_t(K^{A}_{\\mathrm{exp}})\n\\end{gathered}", "stmts": [31], "note": null, "core": false, "plain": null}, {"id": "E16", "sec": 5, "kind": "Rule", "name": "The boundary reaches everything behind it", "tex": "\\operatorname{reach}_t(M_b) = \\mathcal{R}_{b,t}", "stmts": [32], "note": null, "core": false, "plain": null}, {"id": "E17", "sec": 5, "kind": "Rule", "name": "A child reaches less than its parent", "tex": "\\operatorname{reach}_t(A) \\subseteq \\operatorname{reach}_t\\big(\\operatorname{par}_c(A)\\big)", "stmts": [33], "note": null, "core": false, "plain": null}, {"id": "E18", "sec": 5, "kind": "Rule", "name": "Side-by-side meters reach different TRs", "tex": "A \\not\\sqsubseteq A' \\ \\land\\ A' \\not\\sqsubseteq A \\ \\Rightarrow\\ \\operatorname{reach}_t(A) \\cap \\operatorname{reach}_t(A') = \\varnothing", "stmts": [34], "note": "With E17 the reaches nest like boxes inside boxes (a laminar family): any two are nested or disjoint.", "core": true, "plain": null}, {"id": "D11", "sec": 5, "kind": "Def", "name": "Three kinds of arrangement", "tex": "\\mathcal{X}_c = \\{\\mathrm{Bnd}\\}\\ \\cup\\ \\{\\mathrm{Ast}(A) : A \\in \\mathcal{A}_c\\}\\ \\cup\\ \\{\\mathrm{Res}(X) : \\varnothing \\ne X \\subseteq \\mathcal{A}_c\\}", "stmts": [35], "note": "Boundary, Asset and Residual. X is the set of AMSID Pairs subtracted.", "core": true, "plain": null}, {"id": "D12", "sec": 5, "kind": "Def", "name": "Measurement perimeter", "tex": "\\begin{aligned} \\operatorname{per}_t(\\mathrm{Bnd}) &= \\operatorname{reach}_t(M_b) \\\\ \\operatorname{per}_t(\\mathrm{Ast}(A)) &= \\operatorname{reach}_t(A) \\\\ \\operatorname{per}_t(\\mathrm{Res}(X)) &= \\operatorname{reach}_t(M_b) \\setminus \\bigcup_{A \\in X} \\operatorname{reach}_t(A) \\end{aligned}", "stmts": [36], "note": null, "core": true, "plain": null}, {"id": "E19", "sec": 5, "kind": "Rule", "name": "A Residual subtracts an antichain", "tex": "\\mathrm{Res}(X) \\in \\mathcal{X}_c \\Rightarrow \\forall A \\ne A' \\in X:\\ A \\not\\sqsubset A' \\iff \\operatorname{reach}_t(A) \\cap \\operatorname{reach}_t(A') = \\varnothing", "stmts": [37], "note": "By E17 and E18, “no two nested” and “no TR in common” say the same thing.", "core": false, "plain": null}, {"id": "E20", "sec": 5, "kind": "Rule", "name": "A Residual needs an Asset arrangement in use", "tex": "\\operatorname{inUse}_t(\\mathrm{Res}(X)) \\Rightarrow \\exists A \\in \\mathcal{A}_c:\\ \\operatorname{inUse}_t(\\mathrm{Ast}(A))", "stmts": [38], "note": "inUse_t(x): some Asset with arrangement x has a live participation at t (finding F3).", "core": false, "plain": null}, {"id": "E21", "sec": 5, "kind": "Rule", "name": "Residuals only where differencing is accepted", "tex": "\\operatorname{arr}(a) = \\mathrm{Res}(X)\\ \\land\\ \\operatorname{part}(a, s, t) \\Rightarrow s \\in \\mathcal{S}^{\\mathrm{DIFF}} = \\{\\mathrm{BM}, \\mathrm{WM}\\}", "stmts": [39], "note": "Today: AMVLPs under P375.", "core": false, "plain": null}, {"id": "V1", "sec": 5, "kind": "Def", "name": "Volume of an arrangement (BSC form)", "tex": "\\begin{gathered}\nQMA_{\\mathrm{Bnd},j} = QM_{M_b j} \\\\\nQMA_{\\mathrm{Ast}(A),j} = QM_{Aj} \\\\\nQMA_{\\mathrm{Res}(X),j} = QM_{M_b j} - \\sum_{A \\in X} QM_{Aj}\n\\end{gathered}", "stmts": [35, 36], "note": "Signed sum of metered volumes, as AMMC_{Kj} = Σ_{KJ} AMRC_{KJj} in Annex S-2 3.5.3A.", "core": false, "plain": null}, {"id": "V2", "sec": 5, "kind": "Derived", "name": "Volume matches perimeter", "tex": "QM_{Kj} = \\sum_{r \\in \\operatorname{reach}(K)} QTR_{rj} \\ \\Rightarrow\\ QMA_{x,j} = \\sum_{r \\in \\operatorname{per}(x)} QTR_{rj}", "stmts": [37], "note": "Holds because of E19: no TR is subtracted twice. QTR_{rj} is the (unmetered) net flow of TR r.", "core": false, "plain": null}, {"id": "D13", "sec": 6, "kind": "Def", "name": "Flexibility Asset", "tex": "\\begin{gathered}\na = (g, x) \\\\\ng \\in \\mathcal{G}_{b,t} \\cup \\{R_{b,t}\\},\\ \\ x \\in \\mathcal{X}_c,\\ \\ b_c = b,\\ \\operatorname{live}_t(c) \\\\\n\\operatorname{grp}(a) = g,\\ \\operatorname{arr}(a) = x\n\\end{gathered}", "stmts": [40], "note": "𝓕_c is the set of Assets in c.", "core": true, "plain": null}, {"id": "E22", "sec": 6, "kind": "Rule", "name": "Measurable", "tex": "\\begin{gathered}\n\\operatorname{meas}_t(a) \\iff \\operatorname{grp}(a) \\subseteq \\operatorname{per}_t(\\operatorname{arr}(a)) \\\\\n\\text{every Asset is measurable}\n\\end{gathered}", "stmts": [41], "note": "The second half was accepted for drafting in v0.2 (S29a) and is kept for review (finding F7).", "core": false, "plain": null}, {"id": "D14", "sec": 6, "kind": "Def", "name": "Exactly and inclusively measured", "tex": "\\begin{gathered}\n\\operatorname{exact}_t(a) \\iff \\operatorname{per}_t(\\operatorname{arr}(a)) = \\operatorname{grp}(a) \\\\\n\\operatorname{incl}_t(a) \\iff \\operatorname{grp}(a) \\subsetneq \\operatorname{per}_t(\\operatorname{arr}(a))\n\\end{gathered}", "stmts": [42, 43], "note": null, "core": false, "plain": null}, {"id": "D15", "sec": 6, "kind": "Def", "name": "Exposure set", "tex": "E_t(a) = \\operatorname{per}_t(\\operatorname{arr}(a)) \\setminus \\operatorname{grp}(a)", "stmts": [43, 44], "note": "A new term: the TRs an Asset is measured on but does not control.", "core": false, "plain": null}, {"id": "E23", "sec": 6, "kind": "Derived", "name": "Compensation effect", "tex": "\\begin{gathered}\nQMA_{\\operatorname{arr}(a),j} = \\underbrace{\\sum_{r \\in \\operatorname{grp}(a)} QTR_{rj}}_{\\text{delivered}} + \\underbrace{\\sum_{r \\in E(a)} QTR_{rj}}_{\\text{exposure}} \\\\\n\\operatorname{incl}(a) \\iff E(a) \\ne \\varnothing\n\\end{gathered}", "stmts": [44], "note": "From V2: the exposure term can counteract delivery.", "core": true, "plain": null}, {"id": "D16", "sec": 6, "kind": "Def", "name": "Sibling Assets", "tex": "a \\sim a' \\iff \\operatorname{grp}(a) = \\operatorname{grp}(a')\\ \\land\\ \\operatorname{arr}(a) \\ne \\operatorname{arr}(a')", "stmts": [45], "note": null, "core": false, "plain": null}, {"id": "E24", "sec": 6, "kind": "Derived", "name": "Siblings share their allocation", "tex": "a \\sim a' \\Rightarrow \\operatorname{alloc}(a, t) = \\operatorname{alloc}(a', t)", "stmts": [46], "note": "Tagged [Rule] in the statements; it follows from D29, where an allocation is made to the group (finding F2).", "core": false, "plain": null}, {"id": "E25", "sec": 6, "kind": "Rule", "name": "Siblings never share a sub-market", "tex": "\\begin{gathered}\n\\sum_{a :\\ \\operatorname{grp}(a) = g} \\big[\\operatorname{part}(a, s, t)\\big] \\le 1 \\\\\n\\forall g, s, t\n\\end{gathered}", "stmts": [47], "note": null, "core": true, "plain": null}, {"id": "D17", "sec": 6, "kind": "Def", "name": "Residual Asset", "tex": "a_{R} = \\big(R_{b,t},\\ \\mathrm{Res}(X)\\big)", "stmts": [48], "note": null, "core": false, "plain": null}, {"id": "E26", "sec": 6, "kind": "Derived", "name": "The group is the unique object", "tex": "\\begin{gathered}\n[g] = \\{\\, a : \\operatorname{grp}(a) = g \\,\\} \\\\\n\\text{the classes } [g] \\text{ partition the Assets of } b\n\\end{gathered}", "stmts": [49], "note": "Assets are views of g; everything that must be unique (allocation, authority) is keyed on g.", "core": false, "plain": null}, {"id": "D18", "sec": 7, "kind": "Def", "name": "Overlap", "tex": "\\operatorname{ov}_t(a, a') \\iff \\operatorname{grp}(a) \\ne \\operatorname{grp}(a')\\ \\land\\ \\operatorname{per}_t(\\operatorname{arr}(a)) \\cap \\operatorname{per}_t(\\operatorname{arr}(a')) \\ne \\varnothing", "stmts": [50], "note": null, "core": true, "plain": null}, {"id": "E27", "sec": 7, "kind": "Derived", "name": "Overlap is always in measurement", "tex": "\\operatorname{grp}(a) \\ne \\operatorname{grp}(a') \\Rightarrow \\operatorname{grp}(a) \\cap \\operatorname{grp}(a') = \\varnothing", "stmts": [51], "note": "From E12.", "core": false, "plain": null}, {"id": "D19", "sec": 7, "kind": "Def", "name": "Identity conflict", "tex": "\\operatorname{idc}(g, g') \\iff g \\ne g'\\ \\land\\ \\big(g \\cap g' \\ne \\varnothing\\ \\lor\\ \\operatorname{suspected}(g, g')\\big)", "stmts": [52], "note": null, "core": false, "plain": null}, {"id": "E28", "sec": 7, "kind": "Rule", "name": "Resolve identity conflicts first", "tex": "\\operatorname{assess}(c, t) \\Rightarrow \\nexists\\, g, g' \\in \\mathcal{G}_{b_c,t}:\\ \\operatorname{idc}(g, g')", "stmts": [53], "note": null, "core": false, "plain": null}, {"id": "E29", "sec": 7, "kind": "Derived", "name": "Overlap from the metering tree alone", "tex": "\\operatorname{ov}^{\\mathrm{tree}}(x, x') = \\begin{cases} 1 & x = \\mathrm{Bnd}\\ \\text{or}\\ x' = \\mathrm{Bnd}\\ \\text{or}\\ x = x' \\\\ [A \\sqsubseteq A' \\lor A' \\sqsubseteq A] & x = \\mathrm{Ast}(A),\\ x' = \\mathrm{Ast}(A') \\\\ 1 - [\\exists A'' \\in X : A \\sqsubseteq A''] & x = \\mathrm{Ast}(A),\\ x' = \\mathrm{Res}(X) \\\\ 1 & x = \\mathrm{Res}(X),\\ x' = \\mathrm{Res}(X')\\ ^{\\dagger} \\end{cases}", "stmts": [54, 55, 56, 57], "note": "† unless the subtracted meters together reach every TR, which the tree alone cannot show; treated as overlapping. Statement 55 omits the case A = A′; statement 57 covers it.", "core": true, "plain": null}, {"id": "E30", "sec": 7, "kind": "Derived", "name": "Tree and perimeter agree", "tex": "\\begin{gathered} \\text{no identity conflict, non-empty reaches} \\Rightarrow \\\\ \\operatorname{ov}_t(a, a') = \\operatorname{ov}^{\\mathrm{tree}}\\big(\\operatorname{arr}(a), \\operatorname{arr}(a')\\big) \\cdot \\big[\\operatorname{grp}(a) \\ne \\operatorname{grp}(a')\\big] \\end{gathered}", "stmts": [58], "note": "Proof: E16 to E18 make reaches a laminar family, so every intersection in D12 is decided by ⊑.", "core": false, "plain": null}, {"id": "D20", "sec": 7, "kind": "Def", "name": "Compatibility", "tex": "\\operatorname{compat}(c, t) \\iff \\forall a, a' \\in \\mathcal{F}_c:\\ \\operatorname{inUse}_t(a) \\land \\operatorname{inUse}_t(a') \\Rightarrow \\neg\\operatorname{ov}_t(a, a')", "stmts": [59], "note": null, "core": true, "plain": null}, {"id": "E31", "sec": 7, "kind": "Rule", "name": "Compatibility ignores sub-market boundaries", "tex": "\\operatorname{compat}(c, t) \\text{ ranges over all of } \\mathcal{F}_c, \\text{ whatever } s \\text{ each Asset is used in}", "stmts": [60], "note": null, "core": false, "plain": null}, {"id": "D21", "sec": 7, "kind": "Def", "name": "Reconfiguration", "tex": "\\begin{gathered}\na = (g, x) \\to (g, x'),\\ x' \\in \\mathcal{X}_c \\cup \\mathcal{X}_{c'} \\quad \\text{or} \\quad g \\to g^{*} \\\\\n\\text{removing } \\operatorname{ov}(a, \\cdot)\n\\end{gathered}", "stmts": [61], "note": "c′ is a successor configuration with added metering (E6).", "core": false, "plain": null}, {"id": "D22", "sec": 7, "kind": "Def", "name": "Reconcilable and irreconcilable", "tex": "\\begin{gathered} \\operatorname{rec}(F) \\iff \\exists\\, \\chi : F \\to \\mathcal{X}_c \\cup \\mathcal{X}_{c'}\\ \\ \\forall a, a' \\in F: \\\\ \\neg \\operatorname{ov}\\big((\\operatorname{grp}(a), \\chi(a)),\\ (\\operatorname{grp}(a'), \\chi(a'))\\big) \\\\ \\operatorname{irr}(F) \\iff \\neg\\operatorname{rec}(F) \\end{gathered}", "stmts": [62, 63], "note": "χ chooses an arrangement for each Asset, using existing or added metering.", "core": false, "plain": null}, {"id": "E32", "sec": 7, "kind": "Derived", "name": "Boundary-only groups need new metering", "tex": "\\begin{gathered} \\nexists A \\in \\mathcal{A}_c:\\ g \\subseteq \\operatorname{reach}(A),\\ g' \\cap \\operatorname{reach}(A) = \\varnothing \\ \\ (\\text{or with } g, g' \\text{ swapped}) \\\\ \\Rightarrow \\operatorname{irr}_{c}(\\{g, g'\\}) \\end{gathered}", "stmts": [64], "note": "Without an AMSID that separates them, only Bnd or overlapping Residuals remain.", "core": false, "plain": null}, {"id": "D23", "sec": 7, "kind": "Def", "name": "Consolidation", "tex": "\\operatorname{irr}(\\{g, g'\\}) \\Rightarrow g^{*} = g \\cup g' \\in \\mathcal{G}_{b,t}", "stmts": [65], "note": null, "core": false, "plain": null}, {"id": "E33", "sec": 7, "kind": "Rule", "name": "One Load Controller after consolidation", "tex": "\\exists!\\, p:\\ \\operatorname{LC}(g^{*}, t) = p, \\ \\text{agreed between } \\operatorname{LC}(g,t) \\text{ and } \\operatorname{LC}(g',t)", "stmts": [66], "note": null, "core": false, "plain": null}, {"id": "O67", "sec": 7, "kind": "Open", "name": "Alternative: multi-group Asset", "tex": "\\begin{gathered}\na = (\\{g_1, \\dots, g_n\\},\\ x) \\\\\n\\operatorname{LC}(g_i, t) \\text{ may differ, coordinated at site level}\n\\end{gathered}", "stmts": [67], "note": "Future scope.", "core": false, "plain": null}, {"id": "D24", "sec": 8, "kind": "Def", "name": "CFPC", "tex": "\\begin{gathered}\n\\varphi = \\big(\\operatorname{cust}(\\varphi),\\ b_\\varphi,\\ \\operatorname{holder}(\\varphi),\\ \\operatorname{trs}(\\varphi) \\subseteq \\mathcal{R}_{b_\\varphi},\\ I(\\varphi)\\big) \\\\\n\\operatorname{cust}(\\varphi) = \\operatorname{cust}(b_\\varphi, t)\\ \\ \\forall t \\in I(\\varphi)\n\\end{gathered}", "stmts": [68], "note": null, "core": false, "plain": null}, {"id": "E34", "sec": 8, "kind": "Rule", "name": "A CFPC covers whole groups", "tex": "\\begin{gathered}\n\\operatorname{trs}(\\varphi) \\cap g \\in \\{\\varnothing,\\ g\\} \\\\\n\\forall g \\in \\mathcal{G}_{b_\\varphi, t}\n\\end{gathered}", "stmts": [69], "note": null, "core": true, "plain": null}, {"id": "O70", "sec": 8, "kind": "Open", "name": "CFPC exclusivity", "tex": "\\begin{aligned} \\text{0a:}\\ & \\text{no limit} \\\\ \\text{1a:}\\ & \\sum_{\\varphi} \\big[r \\in \\operatorname{trs}(\\varphi)\\big]\\big[s \\in \\operatorname{sm}(\\varphi)\\big]\\big[\\operatorname{live}_t(\\varphi)\\big] \\le 1 \\\\ \\text{1b, 2:}\\ & \\sum_{\\varphi} \\big[r \\in \\operatorname{trs}(\\varphi)\\big]\\big[\\operatorname{live}_t(\\varphi)\\big] \\le 1 \\end{aligned}", "stmts": [70], "note": "sm(φ): the sub-markets a CFPC covers; needed for 1a.", "core": false, "plain": null}, {"id": "D25", "sec": 8, "kind": "Def", "name": "Delegation", "tex": "\\begin{gathered}\n\\delta = \\big(\\varphi_\\delta,\\ \\operatorname{sec}(\\delta),\\ s_\\delta,\\ I(\\delta)\\big) \\\\\n\\operatorname{sec}(\\delta) \\ne \\operatorname{holder}(\\varphi_\\delta)\n\\end{gathered}", "stmts": [71], "note": "The CFPC stays with its holder (the Primary).", "core": false, "plain": null}, {"id": "E35", "sec": 8, "kind": "Rule", "name": "A delegation ends with its CFPC", "tex": "I(\\delta) \\subseteq I(\\varphi_\\delta)", "stmts": [72], "note": null, "core": false, "plain": null}, {"id": "E36", "sec": 8, "kind": "Rule", "name": "A change of customer ends CFPCs and delegations", "tex": "\\operatorname{cust}(b, t) \\ne \\operatorname{cust}(\\varphi) \\Rightarrow \\neg\\operatorname{live}_t(\\varphi)\\ \\land\\ \\neg\\operatorname{live}_t(\\delta)\\ \\ \\forall \\delta : \\varphi_\\delta = \\varphi", "stmts": [73], "note": "Follows from D24 and E35 once the customer changes.", "core": false, "plain": null}, {"id": "D26", "sec": 9, "kind": "Def", "name": "Registration (claim)", "tex": "\\kappa = \\big(\\operatorname{fsp}(\\kappa),\\ a_\\kappa,\\ s_\\kappa,\\ I(\\kappa)\\big)", "stmts": [74], "note": null, "core": false, "plain": null}, {"id": "E37", "sec": 9, "kind": "Rule", "name": "Valid registration", "tex": "\\operatorname{valid}(\\kappa) \\iff \\forall t \\in I(\\kappa):\\ \\operatorname{auth}\\big(\\operatorname{fsp}(\\kappa), \\operatorname{grp}(a_\\kappa), s_\\kappa, t\\big)\\ \\land\\ \\text{E13 holds}", "stmts": [75], "note": "auth(p,g,s,t): p holds a live CFPC covering g, or a live delegation for s from one.", "core": false, "plain": null}, {"id": "E38", "sec": 9, "kind": "Rule", "name": "Competing registrations", "tex": "\\begin{gathered} \\operatorname{fsp}(\\kappa) \\ne \\operatorname{fsp}(\\kappa'),\\ \\ \\operatorname{grp}(a_\\kappa) = \\operatorname{grp}(a_{\\kappa'}),\\ \\ s_\\kappa = s_{\\kappa'},\\ \\ I(\\kappa) \\cap I(\\kappa') \\ne \\varnothing \\\\ \\Rightarrow \\operatorname{cmp}(\\kappa, \\kappa') \\end{gathered}", "stmts": [76], "note": "Same group covers both “same Asset” and “sibling Assets”.", "core": false, "plain": null}, {"id": "O77", "sec": 9, "kind": "Open", "name": "Competition across sub-markets", "tex": "s_\\kappa \\ne s_{\\kappa'}:\\quad \\operatorname{cmp} = \\begin{cases} 1 & \\text{2, 0b} \\\\ 1 - [\\,p, p' \\in \\mathrm{COORD}\\,] & \\text{1a} \\\\ 1 - \\operatorname{del}(p)\\operatorname{del}(p') & \\text{1b} \\\\ \\operatorname{rule}_{s} & \\text{0a} \\end{cases}", "stmts": [77], "note": "del(p) = 1 if p is the Primary or holds its delegation.", "core": false, "plain": null}, {"id": "D27", "sec": 9, "kind": "Def", "name": "Assignment", "tex": "\\operatorname{asg}(g, t) \\in \\{\\operatorname{fsp}(\\kappa) : \\operatorname{cmp}\\} \\cup \\{\\text{FSP groups}\\} \\cup \\{\\operatorname{holder}(\\varphi)\\}", "stmts": [78], "note": null, "core": false, "plain": null}, {"id": "D28", "sec": 9, "kind": "Def", "name": "Allocation (to the group)", "tex": "\\begin{gathered}\n\\lambda = \\big(g_\\lambda,\\ F_\\lambda \\subseteq \\mathcal{P},\\ I(\\lambda)\\big) \\\\\n\\operatorname{alloc}(a, t) = \\lambda \\iff \\operatorname{grp}(a) = g_\\lambda \\land \\operatorname{live}_t(\\lambda)\n\\end{gathered}", "stmts": [79], "note": "One allocation covers all of [g] (E26).", "core": true, "plain": null}, {"id": "E39", "sec": 9, "kind": "Rule", "name": "Only compatible groups are allocated", "tex": "\\operatorname{live}_t(\\lambda) \\Rightarrow \\operatorname{compat}(c, t) \\text{ for the } c \\text{ holding } g_\\lambda", "stmts": [80], "note": null, "core": false, "plain": null}, {"id": "E40", "sec": 9, "kind": "Rule", "name": "At most one allocation per group", "tex": "\\sum_{\\lambda} \\big[g_\\lambda = g\\big]\\big[\\operatorname{live}_t(\\lambda)\\big] \\le 1", "stmts": [81], "note": null, "core": true, "plain": null}, {"id": "D29", "sec": 9, "kind": "Def", "name": "Re-allocation", "tex": "\\lambda \\to \\lambda' \\text{ at } t^{*}: \\quad \\operatorname{to}(\\lambda) = t^{*} = \\operatorname{from}(\\lambda'), \\quad g_{\\lambda'} = g_\\lambda", "stmts": [82], "note": null, "core": false, "plain": null}, {"id": "D30", "sec": 9, "kind": "Def", "name": "Participation", "tex": "\\begin{gathered}\n\\pi = \\big(\\operatorname{fsp}(\\pi),\\ a_\\pi,\\ s_\\pi,\\ I(\\pi)\\big) \\\\\n\\operatorname{part}(a, s, t) \\iff \\exists \\pi: a_\\pi = a,\\ s_\\pi = s,\\ \\operatorname{live}_t(\\pi)\n\\end{gathered}", "stmts": [83], "note": "In the BSC: MSID Pair Allocation (P0278) or AMSID Pair Allocation (P0306) to a Secondary BM Unit i2.", "core": false, "plain": null}, {"id": "E41", "sec": 9, "kind": "Rule", "name": "Every participation traces to an allocation", "tex": "\\begin{aligned} \\forall \\pi:\\ & \\exists!\\, \\lambda:\\ g_\\lambda = \\operatorname{grp}(a_\\pi),\\ \\operatorname{fsp}(\\pi) \\in F_\\lambda,\\ I(\\pi) \\subseteq I(\\lambda) \\\\ \\text{or}\\ & \\exists \\delta:\\ \\operatorname{sec}(\\delta) = \\operatorname{fsp}(\\pi),\\ s_\\delta = s_\\pi,\\ I(\\pi) \\subseteq I(\\delta) \\end{aligned}", "stmts": [84], "note": "The delegation route is finding F6.", "core": true, "plain": null}, {"id": "E42", "sec": 9, "kind": "Rule", "name": "BSC participation by arrangement type", "tex": "\\begin{gathered}\n\\operatorname{arr}(a_\\pi) = \\mathrm{Ast}(A) \\Rightarrow \\pi \\text{ is an AMSID Pair Allocation of } A \\\\\n\\operatorname{arr}(a_\\pi) \\in \\{\\mathrm{Bnd}, \\mathrm{Res}(X)\\} \\Rightarrow \\pi \\text{ is an MSID Pair Allocation of } M_b\n\\end{gathered}", "stmts": [85], "note": null, "core": false, "plain": null}, {"id": "E43", "sec": 9, "kind": "Rule", "name": "Different parties may hold the two kinds", "tex": "\\operatorname{fsp}(\\pi_{M}) \\ne \\operatorname{fsp}(\\pi_{A}) \\text{ is allowed within one } c", "stmts": [86], "note": null, "core": false, "plain": null}, {"id": "E44", "sec": 9, "kind": "Derived", "name": "Consistent with compatibility", "tex": "A \\in X \\Rightarrow \\operatorname{ov}^{\\mathrm{tree}}\\big(\\mathrm{Ast}(A), \\mathrm{Res}(X)\\big) = 0", "stmts": [87], "note": "From E29, third case.", "core": false, "plain": null}, {"id": "E45", "sec": 10, "kind": "Rule", "name": "When an MSID Pair is differenced", "tex": "\\mathrm{DIFF}_{cj} = \\Big[\\, \\exists A \\in \\mathcal{A}_c:\\ \\operatorname{part}^{\\mathrm{BSC}}(A, j) \\,\\Big]", "stmts": [88], "note": "part^BSC(A, j): A has a live AMSID Pair Allocation in Settlement Period j.", "core": true, "plain": null}, {"id": "E46", "sec": 10, "kind": "Derived", "name": "Subtract only the outermost participating AMSIDs", "tex": "\\begin{aligned} \\mathrm{PA}_{cj} &= \\{A : \\operatorname{part}^{\\mathrm{BSC}}(A, j)\\} \\\\ \\mathrm{OUT}_{cj} &= \\{A \\in \\mathrm{PA}_{cj} : \\nexists A' \\in \\mathrm{PA}_{cj},\\ A \\sqsubset A'\\} \\\\ QSUB_{cj} &= \\sum_{A \\in \\mathrm{OUT}_{cj}} QM_{Aj} \\end{aligned}", "stmts": [89], "note": "OUT is an antichain by construction, so E19 holds automatically and nothing is subtracted twice. Compare ΣKDiff in Table X-5.", "core": true, "plain": null}, {"id": "V3", "sec": 10, "kind": "Derived", "name": "Differenced MSID Pair volume", "tex": "QRES_{cj} = QM_{M_b j} - \\mathrm{DIFF}_{cj} \\cdot QSUB_{cj} = QMA_{\\mathrm{Res}(\\mathrm{OUT}_{cj}),\\,j}", "stmts": [88, 89], "note": "In the BSC the Residual arrangement is derived each period: X = OUT_{cj}.", "core": false, "plain": null}, {"id": "E47", "sec": 10, "kind": "Rule", "name": "Notify the MSID Pair participant", "tex": "\\mathrm{DIFF}_{cj} \\ne \\mathrm{DIFF}_{c,j-1}\\ \\land\\ \\operatorname{fsp}(\\pi_{A}) \\ne \\operatorname{fsp}(\\pi_{M}) \\Rightarrow \\operatorname{notify}\\big(\\operatorname{fsp}(\\pi_{M}), j\\big)", "stmts": [90], "note": "Existing flows: P0309 Notification of use of AMSID Pair by another AMVLP; P0320 Loss of AMSID Pair Allocation Notification.", "core": false, "plain": null}, {"id": "E48", "sec": 10, "kind": "Derived", "name": "Differencing removes the overlap, in BSC settlement only", "tex": "\\begin{gathered} s = \\mathrm{BM}:\\ \\operatorname{per}(\\pi_M) = \\operatorname{per}\\big(\\mathrm{Res}(\\mathrm{OUT}_{cj})\\big) \\\\ \\Rightarrow \\neg\\operatorname{ov}\\big(a_{\\pi_M}, a_{\\pi_A}\\big)\\ \\ \\forall \\pi_A \\text{ with } A \\in \\mathrm{PA}_{cj} \\end{gathered}", "stmts": [91], "note": "Every participating A equals or sits behind a member of OUT, so E29 gives no overlap.", "core": false, "plain": null}, {"id": "E49", "sec": 10, "kind": "Derived", "name": "Elsewhere the overlap stays and is flagged", "tex": "\\begin{gathered} s \\notin \\mathcal{S}^{\\mathrm{DIFF}}\\ \\land\\ \\operatorname{arr}(a) = \\mathrm{Bnd} \\\\ \\Rightarrow \\operatorname{ov}(a, a') \\text{ for every } a' \\text{ of another group in use};\\ \\ \\operatorname{flag}(a, a') \\end{gathered}", "stmts": [92], "note": "Finding F4: this conflicts with E31 + E39 unless flagged overlaps are allowed.", "core": false, "plain": null}, {"id": "D31", "sec": 11, "kind": "Def", "name": "Unit", "tex": "\\begin{gathered}\nu = \\big(\\operatorname{fsp}(u),\\ s_u,\\ \\mathcal{F}_{u,t}\\big) \\\\\ns_u = \\mathrm{BM} \\Rightarrow u \\text{ is a Secondary BM Unit } i2\n\\end{gathered}", "stmts": [93], "note": null, "core": false, "plain": null}, {"id": "E50", "sec": 11, "kind": "Rule", "name": "Units hold only validly participating Assets", "tex": "a \\in \\mathcal{F}_{u,t} \\Rightarrow \\exists \\pi:\\ a_\\pi = a,\\ \\operatorname{fsp}(\\pi) = \\operatorname{fsp}(u),\\ s_\\pi = s_u,\\ \\operatorname{live}_t(\\pi)", "stmts": [94], "note": null, "core": false, "plain": null}, {"id": "E51", "sec": 11, "kind": "Rule", "name": "One Unit per Asset per sub-market", "tex": "\\sum_{u :\\ s_u = s} \\big[a \\in \\mathcal{F}_{u,t}\\big] \\le 1", "stmts": [95], "note": "Cf. S10.1A.3: an AMSID Pair may not be allocated to more than one Secondary BM Unit at a time.", "core": false, "plain": null}, {"id": "O1", "sec": 12, "kind": "Derived", "name": "Avoided duplication", "tex": "\\begin{gathered}\n\\forall s, t, r:\\ \\sum_{g} \\Big[\\, \\exists a \\in [g]:\\ \\operatorname{part}(a,s,t)\\ \\land\\ r \\in \\operatorname{per}_t(\\operatorname{arr}(a)) \\,\\Big] \\le 1 \\\\\n\\text{and E25}\n\\end{gathered}", "stmts": [96], "note": "Holds from E41 → E39 → D20 (no overlap in use), E9 (different Boundary Points are disjoint) and E25. Gaps: F4, F6.", "core": true, "plain": null}, {"id": "O2", "sec": 12, "kind": "Derived", "name": "Clear accountability", "tex": "\\begin{gathered}\n\\forall \\pi:\\ \\sum_{\\lambda} \\big[\\pi \\text{ traces to } \\lambda\\big] = 1 \\\\\n\\forall \\lambda, s, t:\\ \\sum_{p \\in F_\\lambda} \\big[\\exists \\pi: \\operatorname{fsp}(\\pi) = p,\\ s_\\pi = s,\\ \\operatorname{live}_t(\\pi)\\big] \\le 1\n\\end{gathered}", "stmts": [97], "note": "First half from E41 and E40; the second half needs a rule inside FSP groups (finding F8).", "core": false, "plain": null}, {"id": "O3", "sec": 12, "kind": "Derived", "name": "Fair and efficient switching", "tex": "\\lambda_1, \\lambda_2 \\text{ successive for } g:\\ \\operatorname{to}(\\lambda_1) = \\operatorname{from}(\\lambda_2)", "stmts": [98], "note": "From D29 and E40.", "core": false, "plain": null}, {"id": "O4", "sec": 12, "kind": "Derived", "name": "Coordinated participation", "tex": "\\forall e \\in \\{\\lambda, \\delta, \\pi\\}:\\ I(e) \\text{ recorded}\\ \\land\\ \\operatorname{vis}(e) \\supseteq \\operatorname{entitled}(e)", "stmts": [99], "note": "A recording requirement rather than a property of the maths; vis and entitled are new.", "core": false, "plain": null}], "notation": [{"sym": "t,\\ \\tau,\\ j", "reads": "spot time; a period; a Settlement Period", "bsc": "t as Annex X-2 4.4; j as Tables X-1/X-4; j ∈ τ as j∈D in 1.2.1(b)"}, {"sym": "b \\in \\mathcal{B}", "reads": "a Boundary Point", "bsc": "BSC Boundary Point"}, {"sym": "K \\in \\mathcal{K}^{M} \\cup \\mathcal{K}^{A}", "reads": "a metering identity: an MSID or an AMSID", "bsc": "K, Table X-4 (SVA Metering System and/or Asset Metering System)"}, {"sym": "M_b", "reads": "the MSID Pair of Boundary Point b", "bsc": "MSID Pair (S10.1)"}, {"sym": "A \\in \\mathcal{A}", "reads": "an AMSID Pair", "bsc": "AMSID Pair (S10.1A)"}, {"sym": "m \\in \\mathcal{M}", "reads": "a physical Asset Meter", "bsc": "Asset Meter (BSCP603)"}, {"sym": "c \\in \\mathcal{C}", "reads": "a Site Configuration", "bsc": "new: proposed BSC Site Configuration"}, {"sym": "w \\in \\mathcal{W}", "reads": "a Site (a set of Site Configurations)", "bsc": "new"}, {"sym": "r \\in \\mathcal{R}", "reads": "a Technical Resource (TR)", "bsc": "new (CAA)"}, {"sym": "g \\in \\mathcal{G}_{b,t}", "reads": "a TR control group at b", "bsc": "new (CAA)"}, {"sym": "R_{b,t}", "reads": "the residual group at b", "bsc": "new"}, {"sym": "x \\in \\mathcal{X}_c", "reads": "a measurement arrangement in c", "bsc": "new; Res(X) ≈ Asset Differencing, S10.1A.2(e)(ii)"}, {"sym": "a = (g, x)", "reads": "a Flexibility Asset: a group seen through an arrangement", "bsc": "new (CAA)"}, {"sym": "p \\in \\mathcal{P}", "reads": "a party", "bsc": "p, Table X-1"}, {"sym": "s \\in \\mathcal{S}", "reads": "a sub-market", "bsc": "new; BM and wholesale (WM) are members"}, {"sym": "\\varphi,\\ \\delta,\\ \\kappa,\\ \\lambda,\\ \\pi", "reads": "a CFPC, a delegation, a registration, an allocation, a participation", "bsc": "new; π in the BSC is an MSID or AMSID Pair Allocation"}, {"sym": "u", "reads": "a Unit", "bsc": "Secondary BM Unit i2 in the BSC (Table X-4)"}, {"sym": "I(e) = [\\operatorname{from}(e), \\operatorname{to}(e))", "reads": "the effective interval of a record e", "bsc": "effective from / to dates"}, {"sym": "\\operatorname{live}_t(e) \\iff t \\in I(e)", "reads": "record e is in force at t", "bsc": "new"}, {"sym": "\\operatorname{loc}(r,t)", "reads": "the Boundary Point that TR r is behind at t", "bsc": "new"}, {"sym": "\\operatorname{LC}(r,t)", "reads": "the Load Controller of r at t", "bsc": "new"}, {"sym": "\\operatorname{par}_c(A)", "reads": "the parent of A in the metering tree of c", "bsc": "new"}, {"sym": "A \\sqsubset A'", "reads": "A sits behind A' (A' is an ancestor of A)", "bsc": "new; ⊑ also allows A = A'"}, {"sym": "\\operatorname{reach}_t(K)", "reads": "the TRs whose flow K records", "bsc": "new"}, {"sym": "\\operatorname{per}_t(x)", "reads": "the measurement perimeter of arrangement x", "bsc": "new"}, {"sym": "E_t(a)", "reads": "the exposure set: TRs in the perimeter but outside the group", "bsc": "new"}, {"sym": "[P]", "reads": "1 if statement P is true, else 0", "bsc": "indicator, as BSC 1/0 indicators"}, {"sym": "QM_{Kj}", "reads": "net metered volume of identity or pair K in Settlement Period j (MWh, export positive)", "bsc": "BSC run-together form, 2.4.1 sign convention"}], "findings": [{"id": "F1", "stmts": [20, 21], "text": "Statement 20 says a TR is behind exactly one Boundary Point at any time, which an EV in transit breaks. v0.1 agreed “at most one”; E8 keeps that.", "fix": "Confirm, or reword statement 20."}, {"id": "F2", "stmts": [46, 79], "text": "With allocation made to the control group (79), siblings share an allocation automatically. Statement 46 is then [Derived], not [Rule].", "fix": "Retag statement 46."}, {"id": "F3", "stmts": [38, 59, 88], "text": "“In use” (38, 59) is not defined. The draft reads it as “has a live participation”. In the BSC, statement 88 makes 38 automatic, because differencing only happens when an AMSID Pair participates.", "fix": "Confirm the meaning of “in use”."}, {"id": "F4", "stmts": [59, 60, 80, 92], "text": "A Boundary arrangement used in a sub-market without differencing overlaps every AMSID Asset of another group (54). Compatibility is assessed across all sub-markets (60) and only compatible groups can be allocated (80), so such a group cannot be allocated. Statement 92 instead expects the overlap to stand and be flagged.", "fix": "Choose: allow flagged overlaps as an exception to 80, or assess compatibility per sub-market for Boundary arrangements."}, {"id": "F5", "stmts": [35, 48, 88, 89], "text": "The FMAR residual Asset subtracts a declared set X, but BSC settlement subtracts OUT_{cj}, the outermost AMSIDs that participate in that period. If an AMSID Asset exists but is not participating in period j, the two perimeters differ.", "fix": "Define the residual Asset’s perimeter per sub-market and period (X = OUT_{cj} in the BSC), or require X to match."}, {"id": "F6", "stmts": [80, 84], "text": "A participation can trace to a delegation instead of an allocation (84). The compatibility check (80) sits on allocations, so a delegated participation is not checked. This gap was F8 in v0.2.", "fix": "Require a delegated participation to sit under the Primary’s allocation, or check compatibility for delegations too."}, {"id": "F7", "stmts": [41], "text": "Statement 41 defines measurability but nothing requires an Asset to be measurable. The overlap results need it. v0.2 accepted “every Asset is measurable” (S29a) for drafting.", "fix": "Confirm the rule."}, {"id": "F8", "stmts": [97], "text": "O2’s second half (within an FSP group, each sub-market traces to one FSP) is not implied by any rule. It needs its own rule on FSP groups.", "fix": "Add a rule, or make it part of the allocation record."}, {"id": "F9", "stmts": [55, 57], "text": "Statement 55 omits the case where both Assets use the same AMSID; statement 57 covers it. E29 combines them.", "fix": "None, unless you want 55 reworded."}, {"id": "F10", "stmts": [34, 37, 89], "text": "Statements 33 and 34 make the reaches a laminar family (nested or disjoint). Statement 37 then reduces to “no subtracted AMSID sits behind another”, and statement 89’s outermost rule satisfies it by construction.", "fix": "None: a consistency result."}, {"id": "F11", "stmts": [26, 41, 48, 89], "text": "A Residual arrangement cannot measure the residual group if a subtracted AMSID also reaches residual TRs. Example: a garage sub-board AMSID feeds an EV charger (controlled) and a freezer (residual); subtracting it removes the freezer from the residual perimeter, so the residual Asset is not measurable (41). In BSC settlement this happens whenever such an AMSID is in OUT_cj.", "fix": "Require every AMSID that can be subtracted to reach only controlled TRs, or accept that the residual Asset then misses those TRs."}], "choices": ["Logical metering identities (MSID, AMSID) are the keys for measurement. Physical meters attach through Asset Meter Allocation, so replacing a meter changes nothing above it.", "The Site Configuration is the scope for measurement and compatibility. The Site is a grouping only.", "The TR control group is the unique object of flexibility. An Asset is that group seen through one measurement arrangement, so one group can have several sibling Assets.", "Differencing is derived in the BSC, but the residual Asset is still an explicit FMAR object.", "“Who” has two levels. Allocation is cross-market and held in FMAR. Participation is per sub-market. Every participation must trace back to an allocation."], "open": ["Allocating at control-group level (statement 79) follows from the sibling rule. It needs confirming against CAA’s current wording, which allocates the Asset.", "A single Load Controller after consolidation (statements 66 and 67).", "Nesting in Site Configurations (statement 13). This is the question for the BSC team.", "CFPCs covering whole control groups (statement 69). It makes authority checkable, but confirm it fits customer contracts in practice."]};
+</script>
+<script>
+window.MathJax = { tex: { packages: { "[+]": ["ams"] } }, svg: { fontCache: "global" }, startup: { typeset: false } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js" defer></script>
+<script>
+(function () {
+  const M = window.MODEL;
+  const $ = (s, r = document) => r.querySelector(s);
+  const el = (tag, attrs = {}, kids = []) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === "class") n.className = v; else if (k === "text") n.textContent = v; else if (k === "html") n.innerHTML = v; else n.setAttribute(k, v);
+    }
+    (Array.isArray(kids) ? kids : [kids]).forEach(c => c != null && n.append(c));
+    return n;
+  };
+  const layerOf = sec => "l-" + (M.layer[sec] || "base");
+  $("#ver").textContent = M.version + " · " + M.date + " · for review";
+  M.choices.forEach(c => $("#choices").append(el("li", { text: c })));
+  M.open.forEach(c => $("#stillopen").append(el("li", { text: c })));
+
+  /* ---------------- Explorer ---------------- */
+  const TREE = { T: null, A1: "T", A2: "A1", A3: "T" };
+  const NAMES = { T: "⊤ MSID Pair", A1: "A1 Garage sub-board", A2: "A2 EV charger", A3: "A3 Battery inverter" };
+  const TRS = [
+    { id: "ev", name: "EV", under: "A2" }, { id: "freezer", name: "Garage freezer", under: "A1" },
+    { id: "battery", name: "Home battery", under: "A3" }, { id: "fridge", name: "Fridge", under: "T" },
+    { id: "lights", name: "Lighting", under: "T" }, { id: "hp", name: "Heat pump", under: "T" }];
+  const GROUPS = [
+    { id: "gEV", name: "EV group · LC ChargeCo", trs: ["ev"], color: "var(--control)" },
+    { id: "gBAT", name: "Battery group · LC Aggregator X", trs: ["battery"], color: "var(--asset)" },
+    { id: "gHP", name: "Heat pump group · LC HeatFlex", trs: ["hp"], color: "var(--who)" },
+    { id: "R", name: "Residual group (no LC)", trs: ["freezer", "fridge", "lights"], color: "var(--muted)" }];
+  const anc = k => { const out = []; let p = TREE[k]; while (p) { out.push(p); p = TREE[p]; } return out; };
+  const sqsub = (a, b) => a === b || anc(a).includes(b);           // a ⊑ b
+  const reach = k => new Set(TRS.filter(t => t.under === k || anc(t.under).includes(k)).map(t => t.id));
+  const AMS = ["A1", "A2", "A3"];
+  const subsets = [];
+  for (let m = 1; m < 8; m++) subsets.push(AMS.filter((_, i) => m & (1 << i)));
+  const ARR = [{ id: "Bnd", label: "Bnd: the MSID Pair alone", t: "Bnd" }]
+    .concat(AMS.map(a => ({ id: "Ast-" + a, label: "Ast(" + a + "): " + NAMES[a].slice(3), t: "Ast", A: a })))
+    .concat(subsets.map(X => ({ id: "Res-" + X.join(""), label: "Res({" + X.join(", ") + "}): boundary minus " + X.join(" and "), t: "Res", X })));
+  const per = x => {
+    if (x.t === "Bnd") return reach("T");
+    if (x.t === "Ast") return reach(x.A);
+    const s = new Set(reach("T")); x.X.forEach(a => reach(a).forEach(r => s.delete(r))); return s;
+  };
+  const antichain = X => X.every(a => X.every(b => a === b || !sqsub(a, b)));
+  const treeOv = (x, y) => {
+    if (x.t === "Bnd" || y.t === "Bnd") return { v: 1, why: "A Boundary arrangement overlaps every Asset of another group (54).", c: "E29 case 1" };
+    if (x.id === y.id) return { v: 1, why: "Same arrangement, so same perimeter (57).", c: "E29 case 1" };
+    if (x.t === "Ast" && y.t === "Ast") {
+      const n = sqsub(x.A, y.A) || sqsub(y.A, x.A);
+      return { v: n ? 1 : 0, why: n ? x.A + " and " + y.A + " are nested, so they overlap (55)." : x.A + " and " + y.A + " sit side by side, so their reaches are disjoint (34, 55).", c: "E29 case 2" };
+    }
+    if (x.t === "Res" && y.t === "Res") return { v: 1, why: "Two Residuals share the unmetered remainder, so they are treated as overlapping.", c: "E29 case 4" };
+    const a = x.t === "Ast" ? x : y, r = x.t === "Res" ? x : y;
+    const hit = r.X.find(z => sqsub(a.A, z));
+    return hit ? { v: 0, why: "The Residual subtracts " + hit + (hit === a.A ? ", the AMSID itself" : ", an ancestor of " + a.A) + ", so no overlap (56).", c: "E29 case 3" }
+               : { v: 1, why: "The Residual subtracts neither " + a.A + " nor an ancestor of it, so they overlap (56).", c: "E29 case 3" };
+  };
+  const g = id => GROUPS.find(x => x.id === id), x = id => ARR.find(a => a.id === id);
+  const fill = (sel, items, label) => items.forEach(i => sel.append(el("option", { value: i.id, text: label(i) })));
+  ["g1", "g2"].forEach(id => fill($("#" + id), GROUPS, i => i.name));
+  ["x1", "x2"].forEach(id => fill($("#" + id), ARR, i => i.label));
+  GROUPS.forEach(gr => { const s = el("span", {}, [el("i"), document.createTextNode(gr.name)]); s.style.setProperty("--g", gr.color); $("#glegend").append(s); });
+  const PRESETS = [["gBAT", "Ast-A3", "R", "Res-A2A3"], ["gHP", "Bnd", "gEV", "Ast-A2"], ["gEV", "Ast-A2", "R", "Ast-A1"],
+                   ["gEV", "Ast-A1", "gBAT", "Ast-A3"], ["gEV", "Ast-A2", "gEV", "Bnd"], ["R", "Res-A1A2", "gEV", "Ast-A2"]];
+  document.querySelectorAll("[data-preset]").forEach(b => b.addEventListener("click", () => {
+    const p = PRESETS[+b.dataset.preset];["g1", "x1", "g2", "x2"].forEach((id, i) => $("#" + id).value = p[i]); render();
+  }));
+  ["g1", "x1", "g2", "x2"].forEach(id => $("#" + id).addEventListener("change", render));
+
+  function drawBoxes(p1, p2, ovSet) {
+    const box = (k, inner) => {
+      const b = el("div", { class: "box " + (k === "T" ? "root" : "inner") });
+      b.dataset.k = k;
+      const rs = [...reach(k)].length;
+      b.append(el("div", { class: "bl" }, [el("span", { text: NAMES[k] }), el("span", { text: "reach: " + rs + " TR" + (rs === 1 ? "" : "s") })]));
+      TRS.filter(t => t.under === k).forEach(t => {
+        const gr = GROUPS.find(gg => gg.trs.includes(t.id));
+        const c = el("span", { class: "tr" + (p1.has(t.id) ? " in1" : "") + (p2.has(t.id) ? " in2" : "") }, [el("span", { class: "gs" }), document.createTextNode(t.name)]);
+        c.style.setProperty("--g", gr.color);
+        if (ovSet.has(t.id)) c.append(el("span", { class: "flag", text: "overlap" }));
+        b.append(c);
+      });
+      Object.keys(TREE).filter(c => TREE[c] === k).forEach(c => b.append(box(c)));
+      return b;
+    };
+    const host = $("#boxes"); host.textContent = ""; host.append(box("T"));
+  }
+  function drawTree(x1, x2) {
+    const pos = { T: [180, 26], A1: [90, 96], A3: [270, 96], A2: [90, 166] };
+    const used1 = x1.t === "Ast" ? [x1.A] : x1.t === "Res" ? x1.X : ["T"];
+    const used2 = x2.t === "Ast" ? [x2.A] : x2.t === "Res" ? x2.X : ["T"];
+    let s = '<svg viewBox="0 0 360 196" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Metering tree: A1 and A3 under the boundary root, A2 under A1">';
+    Object.entries(TREE).forEach(([k, p]) => { if (p) s += `<line x1="${pos[p][0]}" y1="${pos[p][1] + 14}" x2="${pos[k][0]}" y2="${pos[k][1] - 14}"/>`; });
+    Object.entries(pos).forEach(([k, [cx, cy]]) => {
+      const cls = "tn" + (used1.includes(k) ? " h1" : "") + (used2.includes(k) ? " h2" : "") + ((x1.t === "Res" && x1.X.includes(k)) || (x2.t === "Res" && x2.X.includes(k)) ? " sub" : "");
+      s += `<rect class="${cls}" x="${cx - 78}" y="${cy - 14}" width="156" height="28" rx="5"/><text x="${cx}" y="${cy + 4}" text-anchor="middle">${NAMES[k]}</text>`;
+    });
+    $("#tree").innerHTML = s + "</svg>";
+  }
+  const fmt = s => s.size ? "{" + [...s].map(id => TRS.find(t => t.id === id).name).join(", ") + "}" : "∅";
+  function assetFacts(gr, xx) {
+    const P = per(xx), G = new Set(gr.trs);
+    const meas = [...G].every(r => P.has(r));
+    const E = new Set([...P].filter(r => !G.has(r)));
+    return { P, G, meas, E, exact: meas && E.size === 0 };
+  }
+  function render() {
+    const g1 = g($("#g1").value), x1 = x($("#x1").value), g2 = g($("#g2").value), x2 = x($("#x2").value);
+    const f1 = assetFacts(g1, x1), f2 = assetFacts(g2, x2);
+    const inter = new Set([...f1.P].filter(r => f2.P.has(r)));
+    const same = g1.id === g2.id;
+    const ovSet = same ? new Set() : inter;
+    drawBoxes(f1.P, f2.P, ovSet); drawTree(x1, x2);
+    const v = $("#verdict"); v.textContent = "";
+    const row = (k, val) => v.append(el("div", { class: "vrow" }, [el("b", { text: k }), val]));
+    const pill = (t, c) => el("span", { class: "pill " + c, text: t });
+    const desc = (f, gr, xx, n) => {
+      const d = el("div");
+      const bad = xx.t === "Res" && !antichain(xx.X);
+      d.append(el("div", { class: "setlist", text: "per = " + fmt(f.P) }));
+      const tags = el("div", { class: "presets" });
+      tags.append(bad ? pill("invalid Residual: " + xx.X.join(" ⊏ ") + " nested (37, E19)", "bad") : f.meas ? pill("measurable", "ok") : pill("not measurable (41)", "bad"));
+      if (f.meas) tags.append(f.exact ? pill("exactly measured (42)", "ok") : pill("inclusive (43): exposure " + fmt(f.E), "warn"));
+      if (xx.t === "Res" && gr.id !== "R") tags.append(pill("control group via Residual", "k"));
+      d.append(tags); return d;
+    };
+    row("Asset 1", desc(f1, g1, x1, 1));
+    row("Asset 2", desc(f2, g2, x2, 2));
+    if (same) {
+      row("Relation", el("div", {}, [el("div", { class: "big", text: x1.id === x2.id ? "Same Asset" : "Sibling Assets (45)" }),
+        el("p", { class: "small muted", text: "Same control group, so overlap does not apply (50). Siblings share one allocation (E24) and never participate in the same sub-market in the same period (47, E25)." })]));
+      return;
+    }
+    const t = treeOv(x1, x2);
+    const setOv = inter.size > 0;
+    row("From TR sets", el("div", {}, [pill(setOv ? "overlap" : "no overlap", setOv ? "bad" : "ok"), el("span", { class: "setlist", text: "  per₁ ∩ per₂ = " + fmt(inter) })]));
+    row("From the tree", el("div", {}, [pill(t.v ? "overlap" : "no overlap", t.v ? "bad" : "ok"), el("span", { class: "small muted", text: "  " + t.c })]));
+    row("Why", el("p", { class: "small", text: t.why }));
+    row("Agreement", t.v === (setOv ? 1 : 0) ? pill("tree and sets agree (E30)", "ok")
+      : pill("tree says overlap; sets show none here, because the subtracted meters plus the other Asset cover every TR", "warn"));
+    row("Compatible?", setOv ? pill("no: these two cannot both be in use (59)", "bad") : pill("yes, if nothing else overlaps (59)", "ok"));
+  }
+  $("#g1").value = "gBAT"; $("#x1").value = "Ast-A3"; $("#g2").value = "R"; $("#x2").value = "Res-A2A3";
+  render();
+
+  /* ---------------- Who chain ---------------- */
+  const CHAIN = [
+    ["CFPC φ", "Customer grants a holder rights over whole control groups.", "D24 · E34 · O70"],
+    ["Delegation δ", "Primary grants a Secondary FSP one sub-market for a period; ends with the CFPC.", "D25 · E35 · E36"],
+    ["Registration κ", "FSP claims an Asset in a sub-market; valid with authority and statement 28.", "D26 · E37 · E38"],
+    ["Assignment", "Chooses who prevails among competing registrations.", "D27 · O77"],
+    ["Allocation λ", "Links the control group, and all its siblings, to an FSP or FSP group. FMAR.", "D28 · E39 · E40 · D29"],
+    ["Participation π", "The sub-market’s own record. BSC: MSID Pair Allocation (P0278) or AMSID Pair Allocation (P0306).", "D30 · E41 · E42 · E43"],
+    ["Unit u", "One FSP, one sub-market. BSC: Secondary BM Unit i2.", "D31 · E50 · E51"]];
+  CHAIN.forEach(([h, p, r]) => $("#chain").append(el("div", { class: "step" }, [el("h3", { text: h }), el("p", { class: "small", text: p }), el("span", { class: "r", text: r })])));
+
+  /* ---------------- Differencing timeline ---------------- */
+  const J = [1, 2, 3, 4, 5, 6, 7, 8];
+  const ROWS = [{ A: "A1", who: "FSP Q (AMVLP)", on: [0, 0, 1, 1, 1, 0, 0, 0] },
+                { A: "A2", who: "FSP Q (AMVLP)", on: [0, 1, 1, 1, 0, 0, 1, 1] },
+                { A: "A3", who: "Aggregator X (AMVLP)", on: [0, 0, 0, 1, 1, 1, 1, 0] }];
+  const MSID_WHO = "FSP P (VLP)";
+  function renderDiff() {
+    const t = $("#difftable"); t.textContent = "";
+    const hd = el("tr", {}, [el("th", { text: "Settlement Period j" })].concat(J.map(j => el("th", { text: String(j) }))));
+    t.append(el("thead", {}, hd));
+    const tb = el("tbody"); t.append(tb);
+    tb.append(el("tr", {}, [el("td", { text: "MSID Pair M_b · " + MSID_WHO })].concat(J.map(() => el("td", { class: "on calc", text: "π" })))));
+    ROWS.forEach((r, ri) => {
+      const tr = el("tr", {}, [el("td", { text: NAMES[r.A] + " · " + r.who })]);
+      J.forEach((j, i) => {
+        const b = el("button", { "aria-pressed": r.on[i] ? "true" : "false", "aria-label": r.A + " participation in period " + j, text: r.on[i] ? "π" : "·" });
+        b.addEventListener("click", () => { r.on[i] = r.on[i] ? 0 : 1; renderDiff(); });
+        tr.append(el("td", { class: "cell" }, b));
+      });
+      tb.append(tr);
+    });
+    const PA = J.map((_, i) => ROWS.filter(r => r.on[i]).map(r => r.A));
+    const OUT = PA.map(pa => pa.filter(a => !pa.some(b => b !== a && sqsub(a, b))));
+    const DIFF = PA.map(pa => pa.length ? 1 : 0);
+    tb.append(el("tr", {}, [el("td", { text: "DIFF_cj (E45)" })].concat(DIFF.map(d => el("td", { class: "calc" + (d ? " on" : ""), text: String(d) })))));
+    tb.append(el("tr", {}, [el("td", { text: "OUT_cj subtracted (E46)" })].concat(OUT.map(o => el("td", { class: "calc", text: o.length ? o.join("+") : "–" })))));
+    tb.append(el("tr", {}, [el("td", { text: "Notify P (E47)" })].concat(DIFF.map((d, i) => {
+      const ch = i > 0 && d !== DIFF[i - 1];
+      return el("td", { class: "calc" + (ch ? " note" : ""), text: ch ? (d ? "starts" : "stops") : "" });
+    }))));
+    const lines = J.map((j, i) => "j=" + j + ":  QRES = QM(M_b)" + (OUT[i].length ? " − (" + OUT[i].map(a => "QM(" + a + ")").join(" + ") + ")" : "   (not differenced)"));
+    $("#diffformula").textContent = lines.join("\n");
+  }
+  renderDiff();
+
+  /* ---------------- Expression cards ---------------- */
+  const card = (e, dom) => {
+    const c = el("article", { class: "card " + layerOf(e.sec), id: dom ? "x-" + e.id : null });
+    const head = el("div", { class: "ch" }, [el("span", { class: "id", text: e.id }), el("span", { class: "nm", text: e.name }),
+      el("span", { class: "kind k-" + e.kind, text: e.kind })]);
+    c.append(head, el("div", { class: "tex", text: "$$" + e.tex + "$$" }));
+    if (e.note) c.append(el("p", { class: "nt", text: e.note }));
+    const sr = el("div", { class: "srefs" }, [el("span", { class: "small muted", text: "Statements:" })]);
+    e.stmts.forEach(n => { const b = el("button", { class: "sref", text: String(n), "aria-label": "Go to statement " + n }); b.addEventListener("click", () => jump("s-" + n)); sr.append(b); });
+    c.append(sr);
+    c.dataset.sec = e.sec; c.dataset.kind = e.kind;
+    c.dataset.search = (e.id + " " + e.name + " " + (e.note || "") + " " + e.stmts.map(n => "#" + n + " " + n).join(" ")).toLowerCase();
+    return c;
+  };
+  M.expressions.filter(e => e.core).forEach(e => $("#corecards").append(card(e, false)));
+  const all = $("#allcards");
+  Object.entries(M.sections).forEach(([sec, title]) => {
+    const list = M.expressions.filter(e => String(e.sec) === sec);
+    const h = el("div", { class: "sechead " + layerOf(+sec) }, [el("span", { class: "dot" }), el("h3", { text: sec + ". " + title }), el("span", { class: "count", text: list.length + " expressions" })]);
+    h.dataset.secHead = sec; all.append(h);
+    list.forEach(e => all.append(card(e, true)));
+    $("#fsec").append(el("option", { value: sec, text: sec + ". " + title }));
+  });
+  const kinds = ["Def", "Rule", "Derived", "Open"]; const kindOn = new Set(kinds);
+  kinds.forEach(k => { const b = el("button", { "aria-pressed": "true", text: k }); b.addEventListener("click", () => { kindOn.has(k) ? kindOn.delete(k) : kindOn.add(k); b.setAttribute("aria-pressed", kindOn.has(k)); filter(); }); $("#fkind").append(b); });
+  function filter() {
+    const q = $("#fsearch").value.trim().toLowerCase(), sec = $("#fsec").value;
+    let shown = 0;
+    all.querySelectorAll(".card").forEach(c => {
+      const ok = (!sec || c.dataset.sec === sec) && kindOn.has(c.dataset.kind) && (!q || q.split(/\s+/).every(w => c.dataset.search.includes(w)));
+      c.hidden = !ok; if (ok) shown++;
+    });
+    all.querySelectorAll("[data-sec-head]").forEach(h => { h.hidden = ![...all.querySelectorAll('.card[data-sec="' + h.dataset.secHead + '"]')].some(c => !c.hidden); });
+    $("#exsummary").textContent = shown + " of " + M.expressions.length + " expressions shown · " + M.expressions.filter(e => e.core).length + " are in the core.";
+  }
+  $("#fsearch").addEventListener("input", filter); $("#fsec").addEventListener("change", filter); filter();
+
+  /* ---------------- Statements, findings, notation ---------------- */
+  const cov = n => M.expressions.filter(e => e.stmts.includes(n)).map(e => e.id);
+  const st = $("#sttable");
+  st.append(el("thead", {}, el("tr", {}, [el("th", { text: "#" }), el("th", { text: "Tag" }), el("th", { text: "Statement" }), el("th", { text: "Expressions" })])));
+  const sb = el("tbody"); st.append(sb);
+  let lastSec = 0;
+  M.statements.forEach(s => {
+    if (s.sec !== lastSec) { lastSec = s.sec; sb.append(el("tr", {}, el("td", { colspan: "4", class: "small", html: "<b>" + s.sec + ". " + M.sections[s.sec] + "</b>" }))); }
+    const xs = el("td"); cov(s.n).forEach(id => { const b = el("button", { class: "xlink", text: id }); b.addEventListener("click", () => jump("x-" + id)); xs.append(b); });
+    sb.append(el("tr", { id: "s-" + s.n }, [el("td", { text: String(s.n) }), el("td", {}, el("span", { class: "kind k-" + s.tag, text: s.tag })), el("td", { text: s.text }), xs]));
+  });
+  M.findings.forEach(f => $("#finds").append(el("div", { class: "find" }, [el("span", { class: "fid", text: f.id }),
+    el("div", {}, [el("p", { text: f.text }), el("p", { class: "fx", text: "Statements " + f.stmts.join(", ") + " · " + f.fix })])])));
+  const nt = $("#notation");
+  nt.append(el("thead", {}, el("tr", {}, [el("th", { text: "Symbol" }), el("th", { text: "Reads as" }), el("th", { text: "BSC alignment" })])));
+  const nb = el("tbody"); nt.append(nb);
+  M.notation.forEach(n => nb.append(el("tr", {}, [el("td", { class: "tex", text: "\\(" + n.sym + "\\)" }), el("td", { text: n.reads }), el("td", { text: n.bsc })])));
+
+  function jump(id) {
+    const t = document.getElementById(id); if (!t) return;
+    if (t.hidden) { $("#fsearch").value = ""; $("#fsec").value = ""; kinds.forEach(k => kindOn.add(k)); $("#fkind").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", "true")); filter(); }
+    t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+    t.classList.remove("flash"); void t.offsetWidth; t.classList.add("flash");
+  }
+
+  /* ---------------- MathJax ---------------- */
+  let tries = 0;
+  (function typeset() {
+    if (window.MathJax && window.MathJax.typesetPromise) { window.MathJax.typesetPromise().catch(() => document.body.classList.add("mjfail")); return; }
+    if (++tries > 80) { document.body.classList.add("mjfail"); return; }
+    setTimeout(typeset, 100);
+  })();
+})();
+</script>

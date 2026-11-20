@@ -1,0 +1,663 @@
+<title>Flexibility Core Model</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a technical reference. Left rail of sections on wide screens, one reading column; each model layer keeps one colour everywhere. */
+:root {
+  --bg: #f4f6f9; --surface: #ffffff; --sunk: #eef1f5; --ink: #142030; --muted: #566273; --line: #d6dce5;
+  --measure: #1d67a8; --control: #b26f06; --asset: #7247ad; --who: #1b7f52; --objective: #46566b;
+  --measure-soft: #e3eef8; --control-soft: #f8eedb; --asset-soft: #efe8f8; --who-soft: #e1f2e9; --objective-soft: #e8ecf1;
+  --ok: #1b7f52; --bad: #b8322f; --warn: #a65307;
+  --sel1: #1d67a8; --sel2: #b8322f;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --radius: 6px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0e131a; --surface: #151c26; --sunk: #111821; --ink: #e5eaf1; --muted: #9ba7b7; --line: #2a3442;
+  --measure: #62a8e6; --control: #e0a542; --asset: #ad8ce4; --who: #50c48e; --objective: #a3b1c4;
+  --measure-soft: #16283a; --control-soft: #2e2413; --asset-soft: #241c33; --who-soft: #132a20; --objective-soft: #1c2430;
+  --ok: #50c48e; --bad: #f07a77; --warn: #f0a35e; --sel1: #62a8e6; --sel2: #f07a77; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0e131a; --surface: #151c26; --sunk: #111821; --ink: #e5eaf1; --muted: #9ba7b7; --line: #2a3442;
+  --measure: #62a8e6; --control: #e0a542; --asset: #ad8ce4; --who: #50c48e; --objective: #a3b1c4;
+  --measure-soft: #16283a; --control-soft: #2e2413; --asset-soft: #241c33; --who-soft: #132a20; --objective-soft: #1c2430;
+  --ok: #50c48e; --bad: #f07a77; --warn: #f0a35e; --sel1: #62a8e6; --sel2: #f07a77; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 var(--body); margin: 0; }
+a { color: var(--measure); }
+:focus-visible { outline: 2px solid var(--measure); outline-offset: 2px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.2; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(1.9rem, 4vw, 2.6rem); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 1.45rem; font-weight: 600; }
+h3 { font-size: 1.05rem; font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+.eyebrow { font: 500 0.72rem/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+.wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header.top { background: var(--surface); border-bottom: 1px solid var(--line); }
+header.top .wrap { padding-block: 28px 22px; display: grid; gap: 14px; max-width: 1240px; margin: 0 auto; }
+.lede { color: var(--muted); font-size: 1.02rem; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font: 500 0.8rem/1.6 var(--body); border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex: none; }
+.l-measure { --c: var(--measure); --cs: var(--measure-soft); }
+.l-control { --c: var(--control); --cs: var(--control-soft); }
+.l-asset { --c: var(--asset); --cs: var(--asset-soft); }
+.l-who { --c: var(--who); --cs: var(--who-soft); }
+.l-objective, .l-base { --c: var(--objective); --cs: var(--objective-soft); }
+.dot { background: var(--c, var(--muted)); }
+
+.layout { max-width: 1240px; margin: 0 auto; display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 32px; }
+nav.rail { position: sticky; top: env(safe-area-inset-top, 0px); align-self: start; padding-block: 24px; display: grid; gap: 2px; }
+nav.rail a { color: var(--muted); text-decoration: none; padding: 5px 10px; border-radius: var(--radius); font-size: 0.9rem; }
+nav.rail a:hover { background: var(--sunk); color: var(--ink); }
+main { min-width: 0; padding-block: 24px 64px; display: grid; gap: 44px; }
+section { display: grid; gap: 16px; scroll-margin-top: 16px; }
+.sec-head { display: grid; gap: 6px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; min-width: 0; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.muted { color: var(--muted); }
+.small { font-size: 0.85rem; }
+
+@media (max-width: 860px) {
+  .layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  nav.rail { position: static; display: flex; overflow-x: auto; gap: 4px; padding-block: 12px 0; }
+  nav.rail a { white-space: nowrap; border: 1px solid var(--line); background: var(--surface); }
+}
+
+/* choices */
+ol.choices { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; max-width: 75ch; }
+
+/* model map */
+.map { overflow-x: auto; }
+.map svg { display: block; min-width: 760px; width: 100%; height: auto; }
+.map text { font-family: var(--body); fill: var(--ink); }
+.map .lbl { font-size: 12px; fill: var(--muted); }
+.map .zone { fill: var(--cs); stroke: none; }
+.map .zt { font: 600 11px var(--mono); letter-spacing: 0.06em; fill: var(--c); }
+.map .node { fill: var(--surface); stroke: var(--c); stroke-width: 1.5; }
+.map .edge { stroke: var(--muted); stroke-width: 1.2; fill: none; }
+.map .edge.dash { stroke-dasharray: 4 3; }
+.map .arrowhead { fill: var(--muted); }
+
+/* explorer */
+.explorer { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; }
+@media (max-width: 980px) { .explorer { grid-template-columns: minmax(0, 1fr); } }
+.pickers { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.picker { border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; display: grid; gap: 8px; background: var(--surface); }
+.picker.p1 { border-top: 3px solid var(--sel1); }
+.picker.p2 { border-top: 3px dashed var(--sel2); }
+label.f { display: grid; gap: 3px; font-size: 0.8rem; color: var(--muted); }
+select, input[type="search"] { font: 0.9rem var(--body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 6px 8px; width: 100%; }
+.presets { display: flex; flex-wrap: wrap; gap: 6px; }
+button { font: 500 0.84rem var(--body); color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 4px; padding: 5px 10px; cursor: pointer; }
+button:hover { background: var(--sunk); }
+button[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+
+.site { display: grid; gap: 10px; }
+.box { border: 1.5px solid var(--measure); border-radius: 8px; padding: 10px; display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; position: relative; background: color-mix(in srgb, var(--measure-soft) 55%, transparent); }
+.box > .bl { width: 100%; font: 500 0.74rem var(--mono); color: var(--measure); display: flex; justify-content: space-between; gap: 8px; }
+.box.root { border-width: 2px; background: var(--surface); }
+.box.inner { flex: 1 1 150px; }
+.box.hl1 { box-shadow: 0 0 0 3px color-mix(in srgb, var(--sel1) 45%, transparent); }
+.box.hl2 { outline: 3px dashed color-mix(in srgb, var(--sel2) 70%, transparent); outline-offset: 2px; }
+.tr { position: relative; display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px; border-radius: 6px; font-size: 0.84rem; border: 1.5px solid var(--line); background: var(--surface); }
+.tr .gs { width: 10px; height: 10px; border-radius: 2px; background: var(--g, var(--muted)); flex: none; }
+.tr.in1 { border-color: var(--sel1); border-width: 2.5px; }
+.tr.in2 { border-color: var(--sel2); border-style: dashed; border-width: 2.5px; }
+.tr.in1.in2 { border-style: solid; border-color: var(--sel2); box-shadow: 0 0 0 3px var(--sel1); }
+.tr .flag { font: 600 0.7rem var(--mono); color: var(--bad); }
+.glegend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 0.8rem; color: var(--muted); }
+.glegend span { display: inline-flex; gap: 5px; align-items: center; }
+.glegend i { width: 10px; height: 10px; border-radius: 2px; background: var(--g); display: inline-block; }
+
+.tree svg { width: 100%; max-width: 360px; height: auto; display: block; }
+.tree text { font: 500 12px var(--mono); fill: var(--ink); }
+.tree .tn { fill: var(--surface); stroke: var(--measure); stroke-width: 1.5; }
+.tree .tn.h1 { stroke: var(--sel1); stroke-width: 3; }
+.tree .tn.h2 { stroke: var(--sel2); stroke-width: 3; stroke-dasharray: 5 3; }
+.tree .tn.sub { fill: var(--sunk); }
+.tree line { stroke: var(--muted); stroke-width: 1.2; }
+
+.verdict { display: grid; gap: 10px; }
+.vrow { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 10px; font-size: 0.9rem; align-items: baseline; }
+@media (max-width: 480px) { .vrow { grid-template-columns: minmax(0, 1fr); gap: 2px; } }
+.vrow > b { font-weight: 500; color: var(--muted); font-size: 0.82rem; }
+.pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font: 600 0.74rem/1.7 var(--mono); }
+.pill.ok { background: color-mix(in srgb, var(--ok) 15%, transparent); color: var(--ok); }
+.pill.bad { background: color-mix(in srgb, var(--bad) 15%, transparent); color: var(--bad); }
+.pill.warn { background: color-mix(in srgb, var(--warn) 15%, transparent); color: var(--warn); }
+.pill.k { background: var(--sunk); color: var(--muted); }
+.big { font: 600 1.1rem var(--display); }
+.setlist { font-family: var(--mono); font-size: 0.84rem; }
+
+/* who chain */
+.chain { display: flex; flex-wrap: wrap; gap: 0; align-items: stretch; }
+.step { flex: 1 1 150px; min-width: 0; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--who); padding: 10px 12px; display: grid; gap: 4px; align-content: start; margin: 0 14px 10px 0; position: relative; border-radius: 4px; }
+.step::after { content: "→"; position: absolute; right: -13px; top: 12px; color: var(--muted); font-size: 0.9rem; }
+.step:last-child::after { content: ""; }
+.step h3 { font-size: 0.95rem; }
+.step .r { font: 0.74rem var(--mono); color: var(--muted); }
+
+/* timelines */
+.tl { overflow-x: auto; }
+table.grid { border-collapse: collapse; font-size: 0.84rem; min-width: 640px; width: 100%; font-variant-numeric: tabular-nums; }
+table.grid th, table.grid td { border: 1px solid var(--line); padding: 6px 8px; text-align: center; }
+table.grid th:first-child, table.grid td:first-child { text-align: left; white-space: nowrap; }
+table.grid thead th { background: var(--sunk); font-weight: 500; }
+td.cell button { width: 100%; min-width: 34px; padding: 4px 0; border-radius: 3px; }
+td.cell button[aria-pressed="true"] { background: var(--measure); border-color: var(--measure); color: var(--surface); }
+td.calc { font-family: var(--mono); font-size: 0.78rem; }
+td.on { background: color-mix(in srgb, var(--measure) 18%, transparent); }
+td.note { color: var(--warn); font-weight: 600; }
+.formula { font-family: var(--mono); font-size: 0.84rem; background: var(--sunk); padding: 8px 10px; border-radius: 4px; overflow-x: auto; white-space: pre; }
+
+.switch svg { width: 100%; min-width: 600px; height: auto; display: block; }
+.switch text { font-family: var(--body); font-size: 12px; fill: var(--ink); }
+.switch .ax { stroke: var(--muted); }
+.switch .al1 { fill: color-mix(in srgb, var(--who) 30%, transparent); stroke: var(--who); }
+.switch .al2 { fill: color-mix(in srgb, var(--asset) 30%, transparent); stroke: var(--asset); }
+.switch .pt { fill: var(--surface); stroke: var(--ink); stroke-width: 1; }
+
+/* expressions */
+.filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+.filters .f { min-width: 160px; flex: 1 1 160px; }
+.cards { display: grid; gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--c); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 8px; min-width: 0; scroll-margin-top: 16px; }
+.card.flash, tr.flash { animation: flash 1.6s ease-out; }
+@keyframes flash { from { background: color-mix(in srgb, var(--measure) 22%, var(--surface)); } to { background: var(--surface); } }
+@media (prefers-reduced-motion: reduce) { .card.flash, tr.flash { animation: none; outline: 2px solid var(--measure); } }
+.card .ch { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; }
+.card .id { font: 600 0.85rem var(--mono); color: var(--c); }
+.card .nm { font-weight: 600; }
+.card .tex { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
+.card .tex mjx-container { margin: 0 !important; }
+.card .nt { color: var(--muted); font-size: 0.88rem; max-width: 80ch; }
+.srefs { display: flex; flex-wrap: wrap; gap: 4px; }
+.sref { font: 500 0.74rem var(--mono); padding: 1px 6px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); background: var(--surface); cursor: pointer; }
+.k-Def { color: var(--measure); } .k-Rule { color: var(--control); } .k-Derived { color: var(--who); } .k-Open { color: var(--bad); }
+.kind { font: 600 0.7rem var(--mono); text-transform: uppercase; letter-spacing: 0.05em; }
+.sechead { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.sechead h3 { font-size: 1rem; }
+.count { color: var(--muted); font-size: 0.85rem; }
+
+table.st { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+table.st td, table.st th { border-bottom: 1px solid var(--line); padding: 7px 8px; vertical-align: top; text-align: left; }
+table.st th { color: var(--muted); font-weight: 500; font-size: 0.8rem; }
+table.st td:first-child { font-family: var(--mono); color: var(--muted); }
+table.st tr { scroll-margin-top: 16px; }
+.xlink { font: 500 0.76rem var(--mono); margin-right: 6px; cursor: pointer; color: var(--measure); background: none; border: 0; padding: 0; text-decoration: underline; }
+.tblwrap { overflow-x: auto; }
+
+.finds { display: grid; gap: 10px; }
+.find { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; }
+.find .fid { font: 600 0.9rem var(--mono); color: var(--warn); }
+.find .fx { color: var(--muted); font-size: 0.88rem; }
+footer { color: var(--muted); font-size: 0.8rem; padding-block: 24px 40px; border-top: 1px solid var(--line); }
+.mjfail .tex { font-family: var(--mono); font-size: 0.8rem; white-space: pre-wrap; }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <span class="eyebrow" id="ver">Draft</span>
+    <h1>Flexibility Core Model</h1>
+    <p class="lede">The 99 consolidated statements on boundary metering, Site Configurations, TR control and FSP authority, written as a core set of expressions in notation aligned with BSC Annex X-2. Each colour below marks one layer of the model and keeps that meaning throughout the page.</p>
+    <div class="legend" aria-label="Model layers">
+      <span class="chip l-measure"><span class="dot"></span>Measurement</span>
+      <span class="chip l-control"><span class="dot"></span>Control</span>
+      <span class="chip l-asset"><span class="dot"></span>Assets and overlap</span>
+      <span class="chip l-who"><span class="dot"></span>Authority, allocation, participation</span>
+      <span class="chip l-objective"><span class="dot"></span>Objectives</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="layout">
+  <nav class="rail" aria-label="Sections">
+    <a href="#overview">Overview</a>
+    <a href="#explorer">Metering tree explorer</a>
+    <a href="#who">Who can act</a>
+    <a href="#differencing">Differencing</a>
+    <a href="#switching">Switching</a>
+    <a href="#core">The core</a>
+    <a href="#expressions">All expressions</a>
+    <a href="#statements">Statements</a>
+    <a href="#findings">Findings</a>
+  </nav>
+
+  <main>
+    <section id="overview">
+      <div class="sec-head"><span class="eyebrow">Overview</span><h2>The model at a glance</h2>
+        <p class="muted">Logical metering identities carry the measurement. Control groups carry the flexibility. An Asset is a control group seen through one measurement arrangement. Allocation and participation say who may use it, and where.</p></div>
+      <div class="panel map" role="img" aria-label="Object map: Boundary Point, MSID Pair, Site Configuration, AMSID Pairs and Asset Meters on the measurement side; TRs, control groups, residual group and Load Controller on the control side; Assets join a group to an arrangement; CFPC, delegation, registration, allocation, participation and Unit say who may use an Asset.">
+        <svg viewBox="0 0 960 380" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
+          <g class="l-measure"><rect class="zone" x="10" y="10" width="300" height="360" rx="8"/><text class="zt" x="24" y="32">MEASUREMENT</text>
+            <rect class="node" x="30" y="50" width="120" height="40" rx="5"/><text x="90" y="75" text-anchor="middle">Boundary Point b</text>
+            <rect class="node" x="170" y="50" width="120" height="40" rx="5"/><text x="230" y="75" text-anchor="middle">MSID Pair M_b</text>
+            <rect class="node" x="30" y="125" width="260" height="44" rx="5"/><text x="160" y="145" text-anchor="middle">Site Configuration c</text><text class="lbl" x="160" y="161" text-anchor="middle">MSIDs · AMSID Pairs · nesting (immutable ID)</text>
+            <rect class="node" x="170" y="200" width="120" height="36" rx="5"/><text x="230" y="223" text-anchor="middle">Site w</text>
+            <rect class="node" x="30" y="268" width="120" height="40" rx="5"/><text x="90" y="293" text-anchor="middle">AMSID Pair A</text>
+            <rect class="node" x="170" y="268" width="120" height="40" rx="5"/><text x="230" y="293" text-anchor="middle">Asset Meter m</text>
+            <line class="edge" x1="150" y1="70" x2="170" y2="70"/>
+            <line class="edge" x1="230" y1="125" x2="230" y2="92" marker-end="url(#ah)"/><text class="lbl" x="236" y="113">root</text>
+            <line class="edge" x1="90" y1="169" x2="90" y2="266" marker-end="url(#ah)"/><text class="lbl" x="96" y="222">nests (tree)</text>
+            <line class="edge dash" x1="230" y1="200" x2="230" y2="171" marker-end="url(#ah)"/><text class="lbl" x="236" y="190">groups</text>
+            <line class="edge" x1="150" y1="288" x2="168" y2="288" marker-end="url(#ah)"/><text class="lbl" x="160" y="332" text-anchor="middle">Asset Meter Allocation (A → m)</text>
+          </g>
+          <g class="l-control"><rect class="zone" x="330" y="10" width="290" height="170" rx="8"/><text class="zt" x="344" y="32">CONTROL</text>
+            <rect class="node" x="345" y="50" width="120" height="40" rx="5"/><text x="405" y="75" text-anchor="middle">TRs r</text>
+            <rect class="node" x="485" y="50" width="120" height="40" rx="5"/><text x="545" y="75" text-anchor="middle">Residual group R</text>
+            <rect class="node" x="345" y="120" width="120" height="40" rx="5"/><text x="405" y="145" text-anchor="middle">Control group g</text>
+            <rect class="node" x="485" y="120" width="120" height="40" rx="5"/><text x="545" y="145" text-anchor="middle">Load Controller</text>
+            <line class="edge" x1="405" y1="90" x2="405" y2="118" marker-end="url(#ah)"/>
+            <line class="edge" x1="465" y1="70" x2="483" y2="70" marker-end="url(#ah)"/><text class="lbl" x="545" y="104" text-anchor="middle">no Load Controller</text>
+            <line class="edge" x1="465" y1="140" x2="483" y2="140" marker-end="url(#ah)"/><text class="lbl" x="474" y="174" text-anchor="middle">exactly one</text>
+          </g>
+          <g class="l-asset"><rect class="zone" x="330" y="195" width="290" height="175" rx="8"/><text class="zt" x="344" y="217">ASSETS</text>
+            <rect class="node" x="345" y="235" width="260" height="44" rx="5"/><text x="475" y="255" text-anchor="middle">Asset a = (g, x)</text><text class="lbl" x="475" y="271" text-anchor="middle">siblings share g, differ in x</text>
+            <rect class="node" x="345" y="310" width="260" height="44" rx="5"/><text x="475" y="330" text-anchor="middle">Arrangement x</text><text class="lbl" x="475" y="346" text-anchor="middle">Bnd · Ast(A) · Res(X)</text>
+            <line class="edge" x1="475" y1="279" x2="475" y2="308" marker-end="url(#ah)"/>
+          </g>
+          <g class="l-who"><rect class="zone" x="640" y="10" width="310" height="360" rx="8"/><text class="zt" x="654" y="32">WHO</text>
+            <rect class="node" x="660" y="48" width="120" height="36" rx="5"/><text x="720" y="71" text-anchor="middle">CFPC φ</text>
+            <rect class="node" x="810" y="48" width="125" height="36" rx="5"/><text x="872" y="71" text-anchor="middle">Delegation δ</text>
+            <rect class="node" x="660" y="112" width="275" height="36" rx="5"/><text x="797" y="135" text-anchor="middle">Registration κ → Assignment</text>
+            <rect class="node" x="660" y="176" width="275" height="40" rx="5"/><text x="797" y="196" text-anchor="middle">Allocation λ (to the group)</text><text class="lbl" x="797" y="210" text-anchor="middle">cross-market, held in FMAR</text>
+            <rect class="node" x="660" y="244" width="275" height="40" rx="5"/><text x="797" y="264" text-anchor="middle">Participation π (per sub-market)</text><text class="lbl" x="797" y="278" text-anchor="middle">BSC: MSID / AMSID Pair Allocation</text>
+            <rect class="node" x="660" y="312" width="275" height="40" rx="5"/><text x="797" y="337" text-anchor="middle">Unit u · Secondary BM Unit i2</text>
+            <line class="edge" x1="780" y1="66" x2="808" y2="66" marker-end="url(#ah)"/>
+            <line class="edge" x1="720" y1="84" x2="720" y2="110" marker-end="url(#ah)"/>
+            <line class="edge" x1="872" y1="84" x2="872" y2="110" marker-end="url(#ah)"/>
+            <line class="edge" x1="797" y1="148" x2="797" y2="174" marker-end="url(#ah)"/>
+            <line class="edge" x1="797" y1="216" x2="797" y2="242" marker-end="url(#ah)"/>
+            <line class="edge" x1="797" y1="284" x2="797" y2="310" marker-end="url(#ah)"/>
+          </g>
+          <path class="edge dash" d="M370 50 C 330 18, 140 18, 108 48" marker-end="url(#ah)"/><text class="lbl" x="240" y="26" text-anchor="middle">behind (at most one, E8)</text>
+          <path class="edge" d="M345 332 H320 V147 H292" marker-end="url(#ah)"/><text class="lbl" x="318" y="240" text-anchor="middle" transform="rotate(-90 318 240)">lies in c</text>
+          <line class="edge" x1="405" y1="160" x2="420" y2="233" marker-end="url(#ah)"/>
+          <line class="edge" x1="660" y1="200" x2="430" y2="162" marker-end="url(#ah)"/><text class="lbl" x="606" y="186" text-anchor="end">allocates g</text>
+          <line class="edge" x1="660" y1="264" x2="607" y2="257" marker-end="url(#ah)"/>
+        </svg>
+      </div>
+      <div class="panel"><h3>Choices behind the model</h3><ol class="choices" id="choices"></ol></div>
+    </section>
+
+    <section id="explorer">
+      <div class="sec-head"><span class="eyebrow">Measurement · Assets</span><h2>Metering tree explorer</h2>
+        <p class="muted">An example Site Configuration with three AMSID Pairs. Pick two Assets, each a group seen through an arrangement. The page works out each perimeter from the TR sets (D12), and separately from the metering tree alone (E29), and shows whether the two agree (E30).</p></div>
+      <div class="presets" role="group" aria-label="Examples">
+        <button data-preset="0">Asset beside Residual (56)</button>
+        <button data-preset="1">Boundary overlaps all (54)</button>
+        <button data-preset="2">Nested AMSIDs (55)</button>
+        <button data-preset="3">Inclusive measurement (43–44)</button>
+        <button data-preset="4">Siblings (45, 47)</button>
+        <button data-preset="5">Invalid Residual (37)</button>
+      </div>
+      <div class="explorer">
+        <div class="panel site">
+          <div class="pickers">
+            <div class="picker p1"><span class="eyebrow">Asset 1 · solid</span>
+              <label class="f" for="g1">Group<select id="g1"></select></label>
+              <label class="f" for="x1">Arrangement<select id="x1"></select></label></div>
+            <div class="picker p2"><span class="eyebrow">Asset 2 · dashed</span>
+              <label class="f" for="g2">Group<select id="g2"></select></label>
+              <label class="f" for="x2">Arrangement<select id="x2"></select></label></div>
+          </div>
+          <div id="boxes" aria-label="Reach of each metering identity, drawn as nested boxes"></div>
+          <div class="glegend" id="glegend"></div>
+        </div>
+        <div class="panel verdict" aria-live="polite">
+          <div class="tree" id="tree"></div>
+          <div id="verdict"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="who">
+      <div class="sec-head"><span class="eyebrow">Authority · Allocation · Participation</span><h2>Who can act</h2>
+        <p class="muted">Allocation is held in FMAR and is cross-market. Participation is each sub-market’s own record. Every participation must trace back to an allocation (E41); the dotted delegation route is finding F6.</p></div>
+      <div class="chain" id="chain"></div>
+    </section>
+
+    <section id="differencing">
+      <div class="sec-head"><span class="eyebrow">Measurement · BSC settlement</span><h2>Differencing in BSC settlement</h2>
+        <p class="muted">Click a cell to switch an AMSID Pair Allocation on or off in a Settlement Period. The MSID Pair is differenced whenever any AMSID Pair in the configuration participates (E45). Only the outermost participating AMSIDs are subtracted (E46), so A2 is never subtracted while A1 also participates. A change caused by another party notifies the MSID Pair participant (E47).</p></div>
+      <div class="panel tl"><table class="grid" id="difftable"></table></div>
+      <div class="formula" id="diffformula"></div>
+    </section>
+
+    <section id="switching">
+      <div class="sec-head"><span class="eyebrow">Allocation · Objectives</span><h2>Switching without gaps</h2>
+        <p class="muted">Re-allocation at t* ends one allocation and starts the next at the same instant (D29, O3). Each participation sits inside the allocation it traces to (E41).</p></div>
+      <div class="panel switch tl" role="img" aria-label="Timeline: allocation λ1 to FSP A until t*, then λ2 to FSP B from t*. Participations in the BM and in a DNO market sit inside each allocation.">
+        <svg viewBox="0 0 760 190" xmlns="http://www.w3.org/2000/svg">
+          <line class="ax" x1="80" y1="160" x2="740" y2="160"/>
+          <text x="80" y="178">t₀</text><text x="402" y="178" text-anchor="middle">t*</text><text x="740" y="178" text-anchor="end">t₁</text>
+          <line class="ax" x1="402" y1="20" x2="402" y2="162" stroke-dasharray="3 3"/>
+          <text x="8" y="44">group g</text>
+          <rect class="al1" x="80" y="28" width="322" height="26" rx="3"/><text x="92" y="46">λ₁ → FSP A</text>
+          <rect class="al2" x="402" y="28" width="338" height="26" rx="3"/><text x="414" y="46">λ₂ → FSP B</text>
+          <text x="8" y="92">BM</text>
+          <rect class="pt" x="110" y="76" width="250" height="22" rx="3"/><text x="120" y="92">π: A, AMSID Pair Allocation</text>
+          <rect class="pt" x="430" y="76" width="280" height="22" rx="3"/><text x="440" y="92">π: B, AMSID Pair Allocation</text>
+          <text x="8" y="132">DNO</text>
+          <rect class="pt" x="160" y="116" width="242" height="22" rx="3"/><text x="170" y="132">π: A, unit membership</text>
+          <rect class="pt" x="470" y="116" width="200" height="22" rx="3"/><text x="480" y="132">π: B, unit membership</text>
+        </svg>
+      </div>
+    </section>
+
+    <section id="core">
+      <div class="sec-head"><span class="eyebrow">The core</span><h2>The core on one page</h2>
+        <p class="muted">These expressions carry the structure. The rest of the model adds detail to them.</p></div>
+      <div class="cards" id="corecards"></div>
+    </section>
+
+    <section id="expressions">
+      <div class="sec-head"><span class="eyebrow">Catalogue</span><h2>All expressions</h2>
+        <p class="muted" id="exsummary"></p></div>
+      <div class="filters panel">
+        <label class="f" for="fsearch">Search names, IDs or statement numbers<input type="search" id="fsearch" placeholder="e.g. reach, E29 or 56"></label>
+        <label class="f" for="fsec">Section<select id="fsec"><option value="">All sections</option></select></label>
+        <div class="f" role="group" aria-label="Kind"><span class="small muted">Kind</span>
+          <div class="presets" id="fkind"></div></div>
+      </div>
+      <div class="cards" id="allcards"></div>
+    </section>
+
+    <section id="statements">
+      <div class="sec-head"><span class="eyebrow">Coverage</span><h2>The 99 statements</h2>
+        <p class="muted">Every statement maps to at least one expression. Select an expression ID to jump to it.</p></div>
+      <div class="panel tblwrap"><table class="st" id="sttable"></table></div>
+    </section>
+
+    <section id="findings">
+      <div class="sec-head"><span class="eyebrow">For review</span><h2>Findings and open questions</h2>
+        <p class="muted">Points the notation exposed while formalising, with a suggested resolution for each.</p></div>
+      <div class="finds" id="finds"></div>
+      <div class="panel"><h3>Still open</h3><ul id="stillopen" class="choices"></ul></div>
+      <div class="panel"><h3>Notation register</h3><div class="tblwrap"><table class="st" id="notation"></table></div></div>
+    </section>
+
+    <footer>Generated from <code>work/core-model/model.py</code> by <code>build.py</code>. Not BSC text.</footer>
+  </main>
+</div>
+</div>
+
+<script>
+/*__MODEL__*/
+</script>
+<script>
+window.MathJax = { tex: { packages: { "[+]": ["ams"] } }, svg: { fontCache: "global" }, startup: { typeset: false } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js" defer></script>
+<script>
+(function () {
+  const M = window.MODEL;
+  const $ = (s, r = document) => r.querySelector(s);
+  const el = (tag, attrs = {}, kids = []) => {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === "class") n.className = v; else if (k === "text") n.textContent = v; else if (k === "html") n.innerHTML = v; else n.setAttribute(k, v);
+    }
+    (Array.isArray(kids) ? kids : [kids]).forEach(c => c != null && n.append(c));
+    return n;
+  };
+  const layerOf = sec => "l-" + (M.layer[sec] || "base");
+  $("#ver").textContent = M.version + " · " + M.date + " · for review";
+  M.choices.forEach(c => $("#choices").append(el("li", { text: c })));
+  M.open.forEach(c => $("#stillopen").append(el("li", { text: c })));
+
+  /* ---------------- Explorer ---------------- */
+  const TREE = { T: null, A1: "T", A2: "A1", A3: "T" };
+  const NAMES = { T: "⊤ MSID Pair", A1: "A1 Garage sub-board", A2: "A2 EV charger", A3: "A3 Battery inverter" };
+  const TRS = [
+    { id: "ev", name: "EV", under: "A2" }, { id: "freezer", name: "Garage freezer", under: "A1" },
+    { id: "battery", name: "Home battery", under: "A3" }, { id: "fridge", name: "Fridge", under: "T" },
+    { id: "lights", name: "Lighting", under: "T" }, { id: "hp", name: "Heat pump", under: "T" }];
+  const GROUPS = [
+    { id: "gEV", name: "EV group · LC ChargeCo", trs: ["ev"], color: "var(--control)" },
+    { id: "gBAT", name: "Battery group · LC Aggregator X", trs: ["battery"], color: "var(--asset)" },
+    { id: "gHP", name: "Heat pump group · LC HeatFlex", trs: ["hp"], color: "var(--who)" },
+    { id: "R", name: "Residual group (no LC)", trs: ["freezer", "fridge", "lights"], color: "var(--muted)" }];
+  const anc = k => { const out = []; let p = TREE[k]; while (p) { out.push(p); p = TREE[p]; } return out; };
+  const sqsub = (a, b) => a === b || anc(a).includes(b);           // a ⊑ b
+  const reach = k => new Set(TRS.filter(t => t.under === k || anc(t.under).includes(k)).map(t => t.id));
+  const AMS = ["A1", "A2", "A3"];
+  const subsets = [];
+  for (let m = 1; m < 8; m++) subsets.push(AMS.filter((_, i) => m & (1 << i)));
+  const ARR = [{ id: "Bnd", label: "Bnd: the MSID Pair alone", t: "Bnd" }]
+    .concat(AMS.map(a => ({ id: "Ast-" + a, label: "Ast(" + a + "): " + NAMES[a].slice(3), t: "Ast", A: a })))
+    .concat(subsets.map(X => ({ id: "Res-" + X.join(""), label: "Res({" + X.join(", ") + "}): boundary minus " + X.join(" and "), t: "Res", X })));
+  const per = x => {
+    if (x.t === "Bnd") return reach("T");
+    if (x.t === "Ast") return reach(x.A);
+    const s = new Set(reach("T")); x.X.forEach(a => reach(a).forEach(r => s.delete(r))); return s;
+  };
+  const antichain = X => X.every(a => X.every(b => a === b || !sqsub(a, b)));
+  const treeOv = (x, y) => {
+    if (x.t === "Bnd" || y.t === "Bnd") return { v: 1, why: "A Boundary arrangement overlaps every Asset of another group (54).", c: "E29 case 1" };
+    if (x.id === y.id) return { v: 1, why: "Same arrangement, so same perimeter (57).", c: "E29 case 1" };
+    if (x.t === "Ast" && y.t === "Ast") {
+      const n = sqsub(x.A, y.A) || sqsub(y.A, x.A);
+      return { v: n ? 1 : 0, why: n ? x.A + " and " + y.A + " are nested, so they overlap (55)." : x.A + " and " + y.A + " sit side by side, so their reaches are disjoint (34, 55).", c: "E29 case 2" };
+    }
+    if (x.t === "Res" && y.t === "Res") return { v: 1, why: "Two Residuals share the unmetered remainder, so they are treated as overlapping.", c: "E29 case 4" };
+    const a = x.t === "Ast" ? x : y, r = x.t === "Res" ? x : y;
+    const hit = r.X.find(z => sqsub(a.A, z));
+    return hit ? { v: 0, why: "The Residual subtracts " + hit + (hit === a.A ? ", the AMSID itself" : ", an ancestor of " + a.A) + ", so no overlap (56).", c: "E29 case 3" }
+               : { v: 1, why: "The Residual subtracts neither " + a.A + " nor an ancestor of it, so they overlap (56).", c: "E29 case 3" };
+  };
+  const g = id => GROUPS.find(x => x.id === id), x = id => ARR.find(a => a.id === id);
+  const fill = (sel, items, label) => items.forEach(i => sel.append(el("option", { value: i.id, text: label(i) })));
+  ["g1", "g2"].forEach(id => fill($("#" + id), GROUPS, i => i.name));
+  ["x1", "x2"].forEach(id => fill($("#" + id), ARR, i => i.label));
+  GROUPS.forEach(gr => { const s = el("span", {}, [el("i"), document.createTextNode(gr.name)]); s.style.setProperty("--g", gr.color); $("#glegend").append(s); });
+  const PRESETS = [["gBAT", "Ast-A3", "R", "Res-A2A3"], ["gHP", "Bnd", "gEV", "Ast-A2"], ["gEV", "Ast-A2", "R", "Ast-A1"],
+                   ["gEV", "Ast-A1", "gBAT", "Ast-A3"], ["gEV", "Ast-A2", "gEV", "Bnd"], ["R", "Res-A1A2", "gEV", "Ast-A2"]];
+  document.querySelectorAll("[data-preset]").forEach(b => b.addEventListener("click", () => {
+    const p = PRESETS[+b.dataset.preset];["g1", "x1", "g2", "x2"].forEach((id, i) => $("#" + id).value = p[i]); render();
+  }));
+  ["g1", "x1", "g2", "x2"].forEach(id => $("#" + id).addEventListener("change", render));
+
+  function drawBoxes(p1, p2, ovSet) {
+    const box = (k, inner) => {
+      const b = el("div", { class: "box " + (k === "T" ? "root" : "inner") });
+      b.dataset.k = k;
+      const rs = [...reach(k)].length;
+      b.append(el("div", { class: "bl" }, [el("span", { text: NAMES[k] }), el("span", { text: "reach: " + rs + " TR" + (rs === 1 ? "" : "s") })]));
+      TRS.filter(t => t.under === k).forEach(t => {
+        const gr = GROUPS.find(gg => gg.trs.includes(t.id));
+        const c = el("span", { class: "tr" + (p1.has(t.id) ? " in1" : "") + (p2.has(t.id) ? " in2" : "") }, [el("span", { class: "gs" }), document.createTextNode(t.name)]);
+        c.style.setProperty("--g", gr.color);
+        if (ovSet.has(t.id)) c.append(el("span", { class: "flag", text: "overlap" }));
+        b.append(c);
+      });
+      Object.keys(TREE).filter(c => TREE[c] === k).forEach(c => b.append(box(c)));
+      return b;
+    };
+    const host = $("#boxes"); host.textContent = ""; host.append(box("T"));
+  }
+  function drawTree(x1, x2) {
+    const pos = { T: [180, 26], A1: [90, 96], A3: [270, 96], A2: [90, 166] };
+    const used1 = x1.t === "Ast" ? [x1.A] : x1.t === "Res" ? x1.X : ["T"];
+    const used2 = x2.t === "Ast" ? [x2.A] : x2.t === "Res" ? x2.X : ["T"];
+    let s = '<svg viewBox="0 0 360 196" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Metering tree: A1 and A3 under the boundary root, A2 under A1">';
+    Object.entries(TREE).forEach(([k, p]) => { if (p) s += `<line x1="${pos[p][0]}" y1="${pos[p][1] + 14}" x2="${pos[k][0]}" y2="${pos[k][1] - 14}"/>`; });
+    Object.entries(pos).forEach(([k, [cx, cy]]) => {
+      const cls = "tn" + (used1.includes(k) ? " h1" : "") + (used2.includes(k) ? " h2" : "") + ((x1.t === "Res" && x1.X.includes(k)) || (x2.t === "Res" && x2.X.includes(k)) ? " sub" : "");
+      s += `<rect class="${cls}" x="${cx - 78}" y="${cy - 14}" width="156" height="28" rx="5"/><text x="${cx}" y="${cy + 4}" text-anchor="middle">${NAMES[k]}</text>`;
+    });
+    $("#tree").innerHTML = s + "</svg>";
+  }
+  const fmt = s => s.size ? "{" + [...s].map(id => TRS.find(t => t.id === id).name).join(", ") + "}" : "∅";
+  function assetFacts(gr, xx) {
+    const P = per(xx), G = new Set(gr.trs);
+    const meas = [...G].every(r => P.has(r));
+    const E = new Set([...P].filter(r => !G.has(r)));
+    return { P, G, meas, E, exact: meas && E.size === 0 };
+  }
+  function render() {
+    const g1 = g($("#g1").value), x1 = x($("#x1").value), g2 = g($("#g2").value), x2 = x($("#x2").value);
+    const f1 = assetFacts(g1, x1), f2 = assetFacts(g2, x2);
+    const inter = new Set([...f1.P].filter(r => f2.P.has(r)));
+    const same = g1.id === g2.id;
+    const ovSet = same ? new Set() : inter;
+    drawBoxes(f1.P, f2.P, ovSet); drawTree(x1, x2);
+    const v = $("#verdict"); v.textContent = "";
+    const row = (k, val) => v.append(el("div", { class: "vrow" }, [el("b", { text: k }), val]));
+    const pill = (t, c) => el("span", { class: "pill " + c, text: t });
+    const desc = (f, gr, xx, n) => {
+      const d = el("div");
+      const bad = xx.t === "Res" && !antichain(xx.X);
+      d.append(el("div", { class: "setlist", text: "per = " + fmt(f.P) }));
+      const tags = el("div", { class: "presets" });
+      tags.append(bad ? pill("invalid Residual: " + xx.X.join(" ⊏ ") + " nested (37, E19)", "bad") : f.meas ? pill("measurable", "ok") : pill("not measurable (41)", "bad"));
+      if (f.meas) tags.append(f.exact ? pill("exactly measured (42)", "ok") : pill("inclusive (43): exposure " + fmt(f.E), "warn"));
+      if (xx.t === "Res" && gr.id !== "R") tags.append(pill("control group via Residual", "k"));
+      d.append(tags); return d;
+    };
+    row("Asset 1", desc(f1, g1, x1, 1));
+    row("Asset 2", desc(f2, g2, x2, 2));
+    if (same) {
+      row("Relation", el("div", {}, [el("div", { class: "big", text: x1.id === x2.id ? "Same Asset" : "Sibling Assets (45)" }),
+        el("p", { class: "small muted", text: "Same control group, so overlap does not apply (50). Siblings share one allocation (E24) and never participate in the same sub-market in the same period (47, E25)." })]));
+      return;
+    }
+    const t = treeOv(x1, x2);
+    const setOv = inter.size > 0;
+    row("From TR sets", el("div", {}, [pill(setOv ? "overlap" : "no overlap", setOv ? "bad" : "ok"), el("span", { class: "setlist", text: "  per₁ ∩ per₂ = " + fmt(inter) })]));
+    row("From the tree", el("div", {}, [pill(t.v ? "overlap" : "no overlap", t.v ? "bad" : "ok"), el("span", { class: "small muted", text: "  " + t.c })]));
+    row("Why", el("p", { class: "small", text: t.why }));
+    row("Agreement", t.v === (setOv ? 1 : 0) ? pill("tree and sets agree (E30)", "ok")
+      : pill("tree says overlap; sets show none here, because the subtracted meters plus the other Asset cover every TR", "warn"));
+    row("Compatible?", setOv ? pill("no: these two cannot both be in use (59)", "bad") : pill("yes, if nothing else overlaps (59)", "ok"));
+  }
+  $("#g1").value = "gBAT"; $("#x1").value = "Ast-A3"; $("#g2").value = "R"; $("#x2").value = "Res-A2A3";
+  render();
+
+  /* ---------------- Who chain ---------------- */
+  const CHAIN = [
+    ["CFPC φ", "Customer grants a holder rights over whole control groups.", "D24 · E34 · O70"],
+    ["Delegation δ", "Primary grants a Secondary FSP one sub-market for a period; ends with the CFPC.", "D25 · E35 · E36"],
+    ["Registration κ", "FSP claims an Asset in a sub-market; valid with authority and statement 28.", "D26 · E37 · E38"],
+    ["Assignment", "Chooses who prevails among competing registrations.", "D27 · O77"],
+    ["Allocation λ", "Links the control group, and all its siblings, to an FSP or FSP group. FMAR.", "D28 · E39 · E40 · D29"],
+    ["Participation π", "The sub-market’s own record. BSC: MSID Pair Allocation (P0278) or AMSID Pair Allocation (P0306).", "D30 · E41 · E42 · E43"],
+    ["Unit u", "One FSP, one sub-market. BSC: Secondary BM Unit i2.", "D31 · E50 · E51"]];
+  CHAIN.forEach(([h, p, r]) => $("#chain").append(el("div", { class: "step" }, [el("h3", { text: h }), el("p", { class: "small", text: p }), el("span", { class: "r", text: r })])));
+
+  /* ---------------- Differencing timeline ---------------- */
+  const J = [1, 2, 3, 4, 5, 6, 7, 8];
+  const ROWS = [{ A: "A1", who: "FSP Q (AMVLP)", on: [0, 0, 1, 1, 1, 0, 0, 0] },
+                { A: "A2", who: "FSP Q (AMVLP)", on: [0, 1, 1, 1, 0, 0, 1, 1] },
+                { A: "A3", who: "Aggregator X (AMVLP)", on: [0, 0, 0, 1, 1, 1, 1, 0] }];
+  const MSID_WHO = "FSP P (VLP)";
+  function renderDiff() {
+    const t = $("#difftable"); t.textContent = "";
+    const hd = el("tr", {}, [el("th", { text: "Settlement Period j" })].concat(J.map(j => el("th", { text: String(j) }))));
+    t.append(el("thead", {}, hd));
+    const tb = el("tbody"); t.append(tb);
+    tb.append(el("tr", {}, [el("td", { text: "MSID Pair M_b · " + MSID_WHO })].concat(J.map(() => el("td", { class: "on calc", text: "π" })))));
+    ROWS.forEach((r, ri) => {
+      const tr = el("tr", {}, [el("td", { text: NAMES[r.A] + " · " + r.who })]);
+      J.forEach((j, i) => {
+        const b = el("button", { "aria-pressed": r.on[i] ? "true" : "false", "aria-label": r.A + " participation in period " + j, text: r.on[i] ? "π" : "·" });
+        b.addEventListener("click", () => { r.on[i] = r.on[i] ? 0 : 1; renderDiff(); });
+        tr.append(el("td", { class: "cell" }, b));
+      });
+      tb.append(tr);
+    });
+    const PA = J.map((_, i) => ROWS.filter(r => r.on[i]).map(r => r.A));
+    const OUT = PA.map(pa => pa.filter(a => !pa.some(b => b !== a && sqsub(a, b))));
+    const DIFF = PA.map(pa => pa.length ? 1 : 0);
+    tb.append(el("tr", {}, [el("td", { text: "DIFF_cj (E45)" })].concat(DIFF.map(d => el("td", { class: "calc" + (d ? " on" : ""), text: String(d) })))));
+    tb.append(el("tr", {}, [el("td", { text: "OUT_cj subtracted (E46)" })].concat(OUT.map(o => el("td", { class: "calc", text: o.length ? o.join("+") : "–" })))));
+    tb.append(el("tr", {}, [el("td", { text: "Notify P (E47)" })].concat(DIFF.map((d, i) => {
+      const ch = i > 0 && d !== DIFF[i - 1];
+      return el("td", { class: "calc" + (ch ? " note" : ""), text: ch ? (d ? "starts" : "stops") : "" });
+    }))));
+    const lines = J.map((j, i) => "j=" + j + ":  QRES = QM(M_b)" + (OUT[i].length ? " − (" + OUT[i].map(a => "QM(" + a + ")").join(" + ") + ")" : "   (not differenced)"));
+    $("#diffformula").textContent = lines.join("\n");
+  }
+  renderDiff();
+
+  /* ---------------- Expression cards ---------------- */
+  const card = (e, dom) => {
+    const c = el("article", { class: "card " + layerOf(e.sec), id: dom ? "x-" + e.id : null });
+    const head = el("div", { class: "ch" }, [el("span", { class: "id", text: e.id }), el("span", { class: "nm", text: e.name }),
+      el("span", { class: "kind k-" + e.kind, text: e.kind })]);
+    c.append(head, el("div", { class: "tex", text: "$$" + e.tex + "$$" }));
+    if (e.note) c.append(el("p", { class: "nt", text: e.note }));
+    const sr = el("div", { class: "srefs" }, [el("span", { class: "small muted", text: "Statements:" })]);
+    e.stmts.forEach(n => { const b = el("button", { class: "sref", text: String(n), "aria-label": "Go to statement " + n }); b.addEventListener("click", () => jump("s-" + n)); sr.append(b); });
+    c.append(sr);
+    c.dataset.sec = e.sec; c.dataset.kind = e.kind;
+    c.dataset.search = (e.id + " " + e.name + " " + (e.note || "") + " " + e.stmts.map(n => "#" + n + " " + n).join(" ")).toLowerCase();
+    return c;
+  };
+  M.expressions.filter(e => e.core).forEach(e => $("#corecards").append(card(e, false)));
+  const all = $("#allcards");
+  Object.entries(M.sections).forEach(([sec, title]) => {
+    const list = M.expressions.filter(e => String(e.sec) === sec);
+    const h = el("div", { class: "sechead " + layerOf(+sec) }, [el("span", { class: "dot" }), el("h3", { text: sec + ". " + title }), el("span", { class: "count", text: list.length + " expressions" })]);
+    h.dataset.secHead = sec; all.append(h);
+    list.forEach(e => all.append(card(e, true)));
+    $("#fsec").append(el("option", { value: sec, text: sec + ". " + title }));
+  });
+  const kinds = ["Def", "Rule", "Derived", "Open"]; const kindOn = new Set(kinds);
+  kinds.forEach(k => { const b = el("button", { "aria-pressed": "true", text: k }); b.addEventListener("click", () => { kindOn.has(k) ? kindOn.delete(k) : kindOn.add(k); b.setAttribute("aria-pressed", kindOn.has(k)); filter(); }); $("#fkind").append(b); });
+  function filter() {
+    const q = $("#fsearch").value.trim().toLowerCase(), sec = $("#fsec").value;
+    let shown = 0;
+    all.querySelectorAll(".card").forEach(c => {
+      const ok = (!sec || c.dataset.sec === sec) && kindOn.has(c.dataset.kind) && (!q || q.split(/\s+/).every(w => c.dataset.search.includes(w)));
+      c.hidden = !ok; if (ok) shown++;
+    });
+    all.querySelectorAll("[data-sec-head]").forEach(h => { h.hidden = ![...all.querySelectorAll('.card[data-sec="' + h.dataset.secHead + '"]')].some(c => !c.hidden); });
+    $("#exsummary").textContent = shown + " of " + M.expressions.length + " expressions shown · " + M.expressions.filter(e => e.core).length + " are in the core.";
+  }
+  $("#fsearch").addEventListener("input", filter); $("#fsec").addEventListener("change", filter); filter();
+
+  /* ---------------- Statements, findings, notation ---------------- */
+  const cov = n => M.expressions.filter(e => e.stmts.includes(n)).map(e => e.id);
+  const st = $("#sttable");
+  st.append(el("thead", {}, el("tr", {}, [el("th", { text: "#" }), el("th", { text: "Tag" }), el("th", { text: "Statement" }), el("th", { text: "Expressions" })])));
+  const sb = el("tbody"); st.append(sb);
+  let lastSec = 0;
+  M.statements.forEach(s => {
+    if (s.sec !== lastSec) { lastSec = s.sec; sb.append(el("tr", {}, el("td", { colspan: "4", class: "small", html: "<b>" + s.sec + ". " + M.sections[s.sec] + "</b>" }))); }
+    const xs = el("td"); cov(s.n).forEach(id => { const b = el("button", { class: "xlink", text: id }); b.addEventListener("click", () => jump("x-" + id)); xs.append(b); });
+    sb.append(el("tr", { id: "s-" + s.n }, [el("td", { text: String(s.n) }), el("td", {}, el("span", { class: "kind k-" + s.tag, text: s.tag })), el("td", { text: s.text }), xs]));
+  });
+  M.findings.forEach(f => $("#finds").append(el("div", { class: "find" }, [el("span", { class: "fid", text: f.id }),
+    el("div", {}, [el("p", { text: f.text }), el("p", { class: "fx", text: "Statements " + f.stmts.join(", ") + " · " + f.fix })])])));
+  const nt = $("#notation");
+  nt.append(el("thead", {}, el("tr", {}, [el("th", { text: "Symbol" }), el("th", { text: "Reads as" }), el("th", { text: "BSC alignment" })])));
+  const nb = el("tbody"); nt.append(nb);
+  M.notation.forEach(n => nb.append(el("tr", {}, [el("td", { class: "tex", text: "\\(" + n.sym + "\\)" }), el("td", { text: n.reads }), el("td", { text: n.bsc })])));
+
+  function jump(id) {
+    const t = document.getElementById(id); if (!t) return;
+    if (t.hidden) { $("#fsearch").value = ""; $("#fsec").value = ""; kinds.forEach(k => kindOn.add(k)); $("#fkind").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", "true")); filter(); }
+    t.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+    t.classList.remove("flash"); void t.offsetWidth; t.classList.add("flash");
+  }
+
+  /* ---------------- MathJax ---------------- */
+  let tries = 0;
+  (function typeset() {
+    if (window.MathJax && window.MathJax.typesetPromise) { window.MathJax.typesetPromise().catch(() => document.body.classList.add("mjfail")); return; }
+    if (++tries > 80) { document.body.classList.add("mjfail"); return; }
+    setTimeout(typeset, 100);
+  })();
+})();
+</script>
