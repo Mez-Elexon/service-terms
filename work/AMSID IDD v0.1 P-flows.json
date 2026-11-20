@@ -1,0 +1,3403 @@
+{
+  "source": {
+    "document": "AMSID IDD v0.1 (Copy_of_AMSID_IDD_v_0_1.xlsm)",
+    "sheet": "SVAA P375",
+    "note": "Generated from the workbook. Wording is as in the IDD; whitespace was trimmed."
+  },
+  "conventions": {
+    "mandatory": "true where the IDD level column holds '1' (mandatory), false where it holds 'O' (optional)",
+    "cardinality": "min/max occurrences of a group; max null means unbounded ('*'); raw keeps the IDD text",
+    "level": "IDD nesting level L1-L9; a group at level n contains items and groups at level n+1",
+    "dataType": "parsed from the IDD 'data type' column; dataTypeRaw keeps the original text",
+    "validSet": "name of an entry in validSets; validSetLinkedBy says how it was linked when the IDD Valid Set column is blank",
+    "itemCatalogue": "matching entry in the IDD 'Items' sheet (by item name), where one exists; typeDiffers flags a different type there",
+    "implementation": "SF Object, SF Field, Data Type, Conditions and API Dev Comment columns of the IDD"
+  },
+  "summary": {
+    "flows": 16,
+    "groups": 48,
+    "items": 215
+  },
+  "flows": [
+    {
+      "flowId": "P0297",
+      "version": "001",
+      "name": "Asset Registration",
+      "notes": "P0298 - Rejection; P0299 - Confirmation",
+      "groups": [
+        {
+          "groupId": "PA1",
+          "name": "Asset Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "Asset Registration Id",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 10
+              },
+              "dataTypeRaw": "text(10)",
+              "comments": "Mandatory if Action Indicator is N",
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Asset Registration Id",
+                "sfDataType": "Text (255)",
+                "apiDevComment": "Customer internal identifier"
+              }
+            },
+            {
+              "name": "AMVLP or Supplier Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)",
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "MPID converted to organisation and role and participant ID",
+                "sfDataType": "Formula"
+              }
+            },
+            {
+              "name": "Address Line 1",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0008",
+                "type": "text(40)"
+              },
+              "comments": "Mandatory if Action Indicator is N or U",
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Address Line 1",
+                "sfDataType": "Text (255)"
+              }
+            },
+            {
+              "name": "Address Line 2",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0009",
+                "type": "text(40)"
+              },
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Address Line 2",
+                "sfDataType": "Text (255)"
+              }
+            },
+            {
+              "name": "Address Line 3",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0010",
+                "type": "text(40)"
+              },
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Address Line 3",
+                "sfDataType": "Text (255)"
+              }
+            },
+            {
+              "name": "Address Line 4",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0011",
+                "type": "text(40)"
+              },
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Address Line 4",
+                "sfDataType": "Text (255)"
+              }
+            },
+            {
+              "name": "Address Line 5",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0012",
+                "type": "text(40)"
+              },
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Address Line 5",
+                "sfDataType": "Text (255)"
+              }
+            },
+            {
+              "name": "Address Line 6",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0013",
+                "type": "text(40)"
+              },
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Address Line 6",
+                "sfDataType": "Text (255)"
+              }
+            },
+            {
+              "name": "Postcode",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 10
+              },
+              "dataTypeRaw": "text(10)",
+              "comments": "Mandatory if Action Indicator is N or U",
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Postcode",
+                "sfDataType": "Text (10)"
+              }
+            },
+            {
+              "name": "GSP Group Id",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 2
+              },
+              "dataTypeRaw": "text(2)",
+              "itemCatalogue": {
+                "id": "N0116",
+                "type": "text(2)"
+              },
+              "comments": "Mandatory if Action Indicator is N or U",
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "GSP Group",
+                "sfDataType": "Lookup (Energy Asset)"
+              }
+            },
+            {
+              "name": "BM Unit Id",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 11
+              },
+              "dataTypeRaw": "text(11)",
+              "itemCatalogue": {
+                "id": "N0034",
+                "type": "text(11)"
+              },
+              "comments": "Secondary BM Unit - Suppliers should leave blank",
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "SVA BM Unit",
+                "sfDataType": "Lookup (Energy Asset)",
+                "apiDevComment": "Left blank for EMR AMSID Decl\nNot in communities\nUsed for validation"
+              }
+            },
+            {
+              "name": "Export AMSID required indicator",
+              "mandatory": false,
+              "dataType": {
+                "type": "boolean"
+              },
+              "dataTypeRaw": "boolean",
+              "comments": "Mandatory if Action Indicator is N",
+              "implementation": {
+                "sfObject": "N/A",
+                "sfField": "Export AMSID required indicator",
+                "sfDataType": "Checkbox"
+              }
+            },
+            {
+              "name": "Asset type",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 20
+              },
+              "dataTypeRaw": "text(20)",
+              "comments": "Mandatory if Action Indicator is N or U",
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Asset Type",
+                "sfDataType": "Text (255)"
+              }
+            },
+            {
+              "name": "Asset Voltage",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 6
+              },
+              "dataTypeRaw": "integer(6)",
+              "comments": "Mandatory if Action Indicator is N or U",
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Connection voltage of the Asset Meter",
+                "sfDataType": "Number (6, 0)"
+              }
+            },
+            {
+              "name": "Measurement Transformer Indicator",
+              "mandatory": false,
+              "dataType": {
+                "type": "boolean"
+              },
+              "dataTypeRaw": "boolean",
+              "comments": "Mandatory if Action Indicator is N or U",
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Measurement Transformer Indicator",
+                "sfDataType": "Checkbox",
+                "apiDevComment": "MTI no longer required - Colin"
+              }
+            },
+            {
+              "name": "Asset Capacity",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 6
+              },
+              "dataTypeRaw": "integer(6)",
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Balancing delivery capacity of the Asset",
+                "sfDataType": "Number (6, 0)"
+              }
+            },
+            {
+              "name": "Import AMSID",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "comments": "Mandatory if Action Indicator is U, C or D",
+              "implementation": {
+                "sfObject": "Metering system (record type Asset Metering System) then MSID/AMSID Pair",
+                "sfField": "MPAN then Import Metering System",
+                "sfDataType": "Text (13)",
+                "conditions": "type = import",
+                "apiDevComment": "Outputs created in the Import Metering System and Metering System object"
+              }
+            },
+            {
+              "name": "Export AMSID",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "comments": "Where present; Mandatory if present and Action Indicator is U, C or D",
+              "implementation": {
+                "sfObject": "Metering system (record type Asset Metering System) then MSID/AMSID Pair",
+                "sfField": "MPAN then Import Metering System",
+                "sfDataType": "Text (13)",
+                "conditions": "type = export",
+                "apiDevComment": "Outputs created in the Import Metering System and Metering System object"
+              }
+            },
+            {
+              "name": "AMSID Pair EFD",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "comments": "Mandatory if Action Indicator is N or U",
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Effective From Date",
+                "sfDataType": "Date"
+              }
+            },
+            {
+              "name": "AMSID Pair ETD",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Effective To Date",
+                "sfDataType": "Date"
+              }
+            },
+            {
+              "name": "Measurement Class",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Measurement Class Id",
+              "validSetLinkedBy": "inferred (SF Field \"Measurement Class Id\")",
+              "comments": "Mandatory if Action Indicator is N or . See Valid Sets.",
+              "implementation": {
+                "sfObject": "MSID/AMSID Pair",
+                "sfField": "Measurement Class Id",
+                "sfDataType": "Picklist: A / B C / D / E / F / G"
+              }
+            },
+            {
+              "name": "Action Indicator",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Action Indicator",
+              "validSetLinkedBy": "valid set with the same name",
+              "comments": "See Valid Sets",
+              "implementation": {
+                "conditions": "New value of Enquiry"
+              }
+            }
+          ],
+          "groups": [
+            {
+              "groupId": "PA2",
+              "name": "Associated MSID Pairs",
+              "level": 2,
+              "cardinality": {
+                "min": 0,
+                "max": null,
+                "raw": "0-*"
+              },
+              "comments": "Mandatory if Action Indicator is N or U",
+              "items": [
+                {
+                  "name": "Import MSID",
+                  "mandatory": true,
+                  "dataType": {
+                    "type": "integer",
+                    "length": 13
+                  },
+                  "dataTypeRaw": "integer(13)",
+                  "comments": "Mandatory if group present - check with Colin",
+                  "implementation": {
+                    "sfObject": "Metering System",
+                    "sfField": "MPAN__c",
+                    "sfDataType": "type import",
+                    "apiDevComment": "Used as a validation only (not created)\nDAO action to confirm"
+                  }
+                },
+                {
+                  "name": "Export MSID",
+                  "mandatory": false,
+                  "dataType": {
+                    "type": "integer",
+                    "length": 13
+                  },
+                  "dataTypeRaw": "integer(13)",
+                  "comments": "Where present",
+                  "implementation": {
+                    "sfObject": "Metering System",
+                    "sfField": "MPAN__c",
+                    "sfDataType": "type export",
+                    "apiDevComment": "Used as a validation only (not created)"
+                  }
+                }
+              ],
+              "groups": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "flowId": "P0298",
+      "version": "001",
+      "name": "Rejection of Asset Registration",
+      "groups": [
+        {
+          "groupId": "PB1",
+          "name": "Asset Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "Asset Registration Id",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 10
+              },
+              "dataTypeRaw": "text(10)",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "AMVLP or Supplier Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            },
+            {
+              "name": "Address Line 1",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0008",
+                "type": "text(40)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Address Line 2",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0009",
+                "type": "text(40)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Address Line 3",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0010",
+                "type": "text(40)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Address Line 4",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0011",
+                "type": "text(40)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Address Line 5",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0012",
+                "type": "text(40)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Address Line 6",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0013",
+                "type": "text(40)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Postcode",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 10
+              },
+              "dataTypeRaw": "text(10)",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "GSP Group Id",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 2
+              },
+              "dataTypeRaw": "text(2)",
+              "itemCatalogue": {
+                "id": "N0116",
+                "type": "text(2)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "BM Unit Id",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 11
+              },
+              "dataTypeRaw": "text(11)",
+              "itemCatalogue": {
+                "id": "N0034",
+                "type": "text(11)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Export AMSID required indicator",
+              "mandatory": false,
+              "dataType": {
+                "type": "boolean"
+              },
+              "dataTypeRaw": "boolean",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Asset type",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 20
+              },
+              "dataTypeRaw": "text(20)",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Asset Voltage",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 6
+              },
+              "dataTypeRaw": "integer(6)",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Measurement Transformer Indicator",
+              "mandatory": false,
+              "dataType": {
+                "type": "boolean"
+              },
+              "dataTypeRaw": "boolean",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Asset Capacity",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 6
+              },
+              "dataTypeRaw": "integer(6)",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Import AMSID",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Export AMSID",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "AMSID Pair EFD",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "AMSID Pair ETD",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Measurement Class",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Measurement Class Id",
+              "validSetLinkedBy": "inferred (SF Field \"Measurement Class Id\")",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Action Indicator",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Action Indicator",
+              "validSetLinkedBy": "valid set with the same name"
+            }
+          ],
+          "groups": [
+            {
+              "groupId": "PB2",
+              "name": "Associated MSID Pairs",
+              "level": 2,
+              "cardinality": {
+                "min": 0,
+                "max": null,
+                "raw": "0-*"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow",
+              "items": [
+                {
+                  "name": "Import MSID",
+                  "mandatory": true,
+                  "dataType": {
+                    "type": "integer",
+                    "length": 13
+                  },
+                  "dataTypeRaw": "integer(13)"
+                },
+                {
+                  "name": "Export MSID",
+                  "mandatory": false,
+                  "dataType": {
+                    "type": "integer",
+                    "length": 13
+                  },
+                  "dataTypeRaw": "integer(13)",
+                  "comments": "Mandatory if provided in Asset Registration flow"
+                }
+              ],
+              "groups": []
+            }
+          ]
+        },
+        {
+          "groupId": "PB3",
+          "name": "Rejection Reasons",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "Rejection Reason",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 100
+              },
+              "dataTypeRaw": "text(100)",
+              "itemCatalogue": {
+                "id": "N0187",
+                "type": "text(80)",
+                "typeDiffers": true
+              }
+            }
+          ],
+          "groups": []
+        }
+      ]
+    },
+    {
+      "flowId": "P0299",
+      "version": "001",
+      "name": "Confirmation of Asset Registration",
+      "groups": [
+        {
+          "groupId": "PC1",
+          "name": "Asset Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "Asset Registration Id",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 10
+              },
+              "dataTypeRaw": "text(10)",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "AMVLP or Supplier Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            },
+            {
+              "name": "Address Line 1",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0008",
+                "type": "text(40)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Address Line 2",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0009",
+                "type": "text(40)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Address Line 3",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0010",
+                "type": "text(40)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Address Line 4",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0011",
+                "type": "text(40)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Address Line 5",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0012",
+                "type": "text(40)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Address Line 6",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 40
+              },
+              "dataTypeRaw": "text(40)",
+              "itemCatalogue": {
+                "id": "N0013",
+                "type": "text(40)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Postcode",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 10
+              },
+              "dataTypeRaw": "text(10)",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "GSP Group Id",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 2
+              },
+              "dataTypeRaw": "text(2)",
+              "itemCatalogue": {
+                "id": "N0116",
+                "type": "text(2)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "BM Unit Id",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 11
+              },
+              "dataTypeRaw": "text(11)",
+              "itemCatalogue": {
+                "id": "N0034",
+                "type": "text(11)"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Export AMSID required indicator",
+              "mandatory": false,
+              "dataType": {
+                "type": "boolean"
+              },
+              "dataTypeRaw": "boolean",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Asset type",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 20
+              },
+              "dataTypeRaw": "text(20)",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Asset Voltage",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 6
+              },
+              "dataTypeRaw": "integer(6)",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Measurement Transformer Indicator",
+              "mandatory": false,
+              "dataType": {
+                "type": "boolean"
+              },
+              "dataTypeRaw": "boolean",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Asset Capacity",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 6
+              },
+              "dataTypeRaw": "integer(6)",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Import AMSID",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "comments": "Mandatory in response to N flow, as PMP creates the AMSID Pair"
+            },
+            {
+              "name": "Export AMSID",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "comments": "Mandatory in response to N flow, where \"Export AMSID required indicator = T\""
+            },
+            {
+              "name": "AMSID Pair EFD",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "AMSID Pair ETD",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Measurement Class",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Measurement Class Id",
+              "validSetLinkedBy": "inferred (SF Field \"Measurement Class Id\")",
+              "comments": "Mandatory if provided in Asset Registration flow"
+            },
+            {
+              "name": "Action Indicator",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Action Indicator",
+              "validSetLinkedBy": "valid set with the same name"
+            }
+          ],
+          "groups": [
+            {
+              "groupId": "PC2",
+              "name": "Associated MSID Pairs",
+              "level": 2,
+              "cardinality": {
+                "min": 0,
+                "max": null,
+                "raw": "0-*"
+              },
+              "comments": "Mandatory if provided in Asset Registration flow",
+              "items": [
+                {
+                  "name": "Import MSID",
+                  "mandatory": true,
+                  "dataType": {
+                    "type": "integer",
+                    "length": 13
+                  },
+                  "dataTypeRaw": "integer(13)",
+                  "comments": "Mandatory if provided in Asset Registration flow"
+                },
+                {
+                  "name": "Export MSID",
+                  "mandatory": false,
+                  "dataType": {
+                    "type": "integer",
+                    "length": 13
+                  },
+                  "dataTypeRaw": "integer(13)",
+                  "comments": "Mandatory if provided in Asset Registration flow"
+                }
+              ],
+              "groups": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "flowId": "P0300",
+      "version": "001",
+      "name": "Registration of Asset Metering Agents",
+      "groups": [
+        {
+          "groupId": "PD1",
+          "name": "AMSID Pair Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "AMVLP or Supplier Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)",
+              "implementation": {
+                "sfObject": "Appointment (HHDA_Information__c)",
+                "sfField": "MPID",
+                "sfDataType": "Formula"
+              }
+            },
+            {
+              "name": "Import AMSID",
+              "mandatory": true,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "implementation": {
+                "sfObject": "Appointment (HHDA_Information__c)",
+                "sfField": "Metering System",
+                "sfDataType": "Lookup (Metering System)",
+                "apiDevComment": "Customer provides from P0297"
+              }
+            },
+            {
+              "name": "Export AMSID",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "comments": "Where present",
+              "implementation": {
+                "sfObject": "Appointment (HHDA_Information__c)",
+                "sfField": "Metering System",
+                "sfDataType": "Lookup (Metering System)",
+                "apiDevComment": "Customer provides from P0298"
+              }
+            },
+            {
+              "name": "Action Indicator",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Action Indicator",
+              "validSetLinkedBy": "valid set with the same name",
+              "comments": "See Valid Sets. Limited to N(ew) or U(pdate)",
+              "implementation": {
+                "sfObject": "N/A"
+              }
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PD2",
+          "name": "HHDC Details",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": 1,
+            "raw": "0-1"
+          },
+          "comments": "Mandatory if Action Indicator = N",
+          "implementation": {
+            "apiDevComment": "Created as 1 record in appointment where Metering System = HHDC_Metering_system__c"
+          },
+          "items": [
+            {
+              "name": "HHDC Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)",
+              "implementation": {
+                "sfObject": "Appointment (HHDA_Information__c)",
+                "sfField": "MPID",
+                "sfDataType": "Formula"
+              }
+            },
+            {
+              "name": "HHDC Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "implementation": {
+                "sfObject": "Appointment (HHDA_Information__c)",
+                "sfField": "Effective From Date",
+                "sfDataType": "Date"
+              }
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PD3",
+          "name": "AMHHDC Details",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": 1,
+            "raw": "0-1"
+          },
+          "comments": "Mandatory if Action Indicator = N and AMHHDC has been appointed",
+          "implementation": {
+            "apiDevComment": "Created as 1 record in appointment where Metering System = AMHHDC_Metering_system__c"
+          },
+          "items": [
+            {
+              "name": "AMHHDC Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)",
+              "implementation": {
+                "sfObject": "Appointment (HHDA_Information__c)",
+                "sfField": "MPID",
+                "sfDataType": "Formula"
+              }
+            },
+            {
+              "name": "AMHHDC Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "implementation": {
+                "sfObject": "Appointment (HHDA_Information__c)",
+                "sfField": "Effective From Date",
+                "sfDataType": "Date"
+              }
+            },
+            {
+              "name": "AMHHDC Effective To Date",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "implementation": {
+                "sfObject": "Appointment (HHDA_Information__c)",
+                "sfField": "Effective To Date",
+                "sfDataType": "Date"
+              }
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PD4",
+          "name": "MOA/AMMOA Details",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": 1,
+            "raw": "0-1"
+          },
+          "comments": "Mandatory if Action Indicator = N",
+          "implementation": {
+            "conditions": "Either MOA or AMMOA",
+            "apiDevComment": "Created as 1 record in appointment where Metering System = MOA_Metering_system__c or AMMOA_Metering_system__c determined by the Organisation Role held against the Agent"
+          },
+          "items": [
+            {
+              "name": "MOA Id/AMMOA Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)",
+              "implementation": {
+                "sfObject": "Appointment (HHDA_Information__c)",
+                "sfField": "MPID",
+                "sfDataType": "Formula"
+              }
+            },
+            {
+              "name": "MOA/AMMOA Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "implementation": {
+                "sfObject": "Appointment (HHDA_Information__c)",
+                "sfField": "Effective From Date",
+                "sfDataType": "Date"
+              }
+            }
+          ],
+          "groups": []
+        }
+      ]
+    },
+    {
+      "flowId": "P0301",
+      "version": "001",
+      "name": "Rejection of Asset Metering Agent Registration",
+      "groups": [
+        {
+          "groupId": "PE1",
+          "name": "AMSID Pair Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "AMVLP or Supplier Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            },
+            {
+              "name": "Import AMSID",
+              "mandatory": true,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)"
+            },
+            {
+              "name": "Export AMSID",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "comments": "Mandatory if present in Registration of Asset Metering Agents flow"
+            },
+            {
+              "name": "Action Indicator",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Action Indicator",
+              "validSetLinkedBy": "valid set with the same name"
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PE2",
+          "name": "HHDC Details",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": 1,
+            "raw": "0-1"
+          },
+          "comments": "Mandatory if present in Registration of Asset Metering Agents flow",
+          "items": [
+            {
+              "name": "HHDC Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            },
+            {
+              "name": "HHDC Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PE3",
+          "name": "AMHHDC Details",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": 1,
+            "raw": "0-1"
+          },
+          "comments": "Mandatory if present in Registration of Asset Metering Agents flow",
+          "items": [
+            {
+              "name": "AMHHDC Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            },
+            {
+              "name": "AMHHDC Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            },
+            {
+              "name": "AMHHDC Effective To Date",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "comments": "Mandatory if present in Registration of Asset Metering Agents flow"
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PE4",
+          "name": "MOA/AMMOA Details",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": 1,
+            "raw": "0-1"
+          },
+          "comments": "Mandatory if present in Registration of Asset Metering Agents flow",
+          "items": [
+            {
+              "name": "MOA Id/AMMOA Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            },
+            {
+              "name": "MOA/AMMOA Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PE5",
+          "name": "Rejection Reasons",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "Rejection Reason",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 100
+              },
+              "dataTypeRaw": "text(100)",
+              "itemCatalogue": {
+                "id": "N0187",
+                "type": "text(80)",
+                "typeDiffers": true
+              }
+            }
+          ],
+          "groups": []
+        }
+      ]
+    },
+    {
+      "flowId": "P0302",
+      "version": "001",
+      "name": "Confirmation of Asset Metering Agent Registration",
+      "groups": [
+        {
+          "groupId": "PF1",
+          "name": "AMSID Pair Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "AMVLP or Supplier Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            },
+            {
+              "name": "Import AMSID",
+              "mandatory": true,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)"
+            },
+            {
+              "name": "Export AMSID",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "comments": "Mandatory if present in Registration of Asset Metering Agents flow"
+            },
+            {
+              "name": "Action Indicator",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Action Indicator",
+              "validSetLinkedBy": "valid set with the same name",
+              "comments": "From Registration of Asset Metering Agents flow"
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PF2",
+          "name": "HHDC Details",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": 1,
+            "raw": "0-1"
+          },
+          "comments": "Mandatory if present in Registration of Asset Metering Agents flow",
+          "items": [
+            {
+              "name": "HHDC Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            },
+            {
+              "name": "HHDC Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PF3",
+          "name": "AMHHDC Details",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": 1,
+            "raw": "0-1"
+          },
+          "comments": "Mandatory if present in Registration of Asset Metering Agents flow",
+          "items": [
+            {
+              "name": "AMHHDC Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            },
+            {
+              "name": "AMHHDC Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            },
+            {
+              "name": "AMHHDC Effective To Date",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "comments": "Mandatory if present in Registration of Asset Metering Agents flow"
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PF4",
+          "name": "MOA/AMMOA Details",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": 1,
+            "raw": "0-1"
+          },
+          "comments": "Mandatory if present in Registration of Asset Metering Agents flow",
+          "items": [
+            {
+              "name": "MOA Id/AMMOA Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            },
+            {
+              "name": "MOA/AMMOA Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            }
+          ],
+          "groups": []
+        }
+      ]
+    },
+    {
+      "flowId": "P0303",
+      "version": "001",
+      "name": "Asset Meter Registration",
+      "groups": [
+        {
+          "groupId": "PG1",
+          "name": "AMVLP or Supplier Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "AMVLP or Supplier Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)",
+              "implementation": {
+                "sfObject": "Identification?"
+              }
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PG2",
+          "name": "Import Meters",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": null,
+            "raw": "0-*"
+          },
+          "comments": "Mandatory if Action Indicator = N",
+          "items": [
+            {
+              "name": "Import AMSID",
+              "mandatory": true,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "implementation": {
+                "sfObject": "Asset Meter",
+                "sfField": "Asset Metering System",
+                "sfDataType": "Master-Detail(Metering System)"
+              }
+            },
+            {
+              "name": "Asset Meter Serial Number",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 10
+              },
+              "dataTypeRaw": "text(10)",
+              "implementation": {
+                "sfObject": "Asset Meter",
+                "sfField": "Asset Meter Serial Number",
+                "sfDataType": "Text (80)",
+                "apiDevComment": "Use AMSN & OutStnType in P0297 to check if exists"
+              }
+            },
+            {
+              "name": "Outstation Type",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 3
+              },
+              "dataTypeRaw": "text(3)",
+              "implementation": {
+                "sfObject": "Asset Meter",
+                "sfField": "Outstation Type",
+                "sfDataType": "Text (3)"
+              }
+            },
+            {
+              "name": "Asset Meter make and model",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 20
+              },
+              "dataTypeRaw": "text(20)",
+              "implementation": {
+                "sfObject": "Asset Meter",
+                "sfField": "Asset Meter Make and Model",
+                "sfDataType": "Text (80)",
+                "apiDevComment": "Moving to 60 chars in IDD definition"
+              }
+            },
+            {
+              "name": "Asset Meter Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "implementation": {
+                "sfObject": "Asset Meter",
+                "sfField": "Effective From Date",
+                "sfDataType": "Date"
+              }
+            },
+            {
+              "name": "Asset Meter Effective To Date",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "implementation": {
+                "sfObject": "Asset Meter",
+                "sfField": "Effective To Date",
+                "sfDataType": "Date",
+                "apiDevComment": "Guidance note should call out if populated then no allocations can be made beyonf the ETD"
+              }
+            },
+            {
+              "name": "Asset Metering Type",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Asset Metering Type",
+              "validSetLinkedBy": "valid set with the same name",
+              "comments": "Mandatory if group present. See Valid Set",
+              "implementation": {
+                "sfObject": "Asset Meter",
+                "sfField": "Asset Metering Type",
+                "sfDataType": "Picklist"
+              }
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PG3",
+          "name": "Export Meters",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": null,
+            "raw": "0-*"
+          },
+          "comments": "Mandatory if Action Indicator = N and Export AMSID exists",
+          "items": [
+            {
+              "name": "Export AMSID",
+              "mandatory": true,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "implementation": {
+                "sfObject": "Asset Meter",
+                "sfField": "Asset Metering System",
+                "sfDataType": "Master-Detail(Metering System)"
+              }
+            },
+            {
+              "name": "Asset Meter Serial Number",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 10
+              },
+              "dataTypeRaw": "text(10)",
+              "implementation": {
+                "sfObject": "Asset Meter",
+                "sfField": "Asset Meter Serial Number",
+                "sfDataType": "Text (80)",
+                "apiDevComment": "If same AMSN provided then export working off same meter"
+              }
+            },
+            {
+              "name": "Outstation Type",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 3
+              },
+              "dataTypeRaw": "text(3)",
+              "implementation": {
+                "sfObject": "Asset Meter",
+                "sfField": "Outstation Type",
+                "sfDataType": "Text (3)"
+              }
+            },
+            {
+              "name": "Asset Meter make and model",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 20
+              },
+              "dataTypeRaw": "text(20)",
+              "implementation": {
+                "sfObject": "Asset Meter",
+                "sfField": "Asset Meter make and model",
+                "sfDataType": "Text (80)"
+              }
+            },
+            {
+              "name": "Asset Meter Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "implementation": {
+                "sfObject": "Asset Meter",
+                "sfField": "Effective From Date",
+                "sfDataType": "Date"
+              }
+            },
+            {
+              "name": "Asset Meter Effective To Date",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "implementation": {
+                "sfObject": "Asset Meter",
+                "sfField": "Effective To Date",
+                "sfDataType": "Date"
+              }
+            },
+            {
+              "name": "Asset Metering Type",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Asset Metering Type",
+              "validSetLinkedBy": "valid set with the same name",
+              "comments": "Mandatory if group present. See Valid Set",
+              "implementation": {
+                "sfObject": "Asset Meter",
+                "sfField": "Asset Metering Type",
+                "sfDataType": "Picklist"
+              }
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PG4",
+          "name": "Action Indicator",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": 1,
+            "raw": "1"
+          },
+          "items": [
+            {
+              "name": "Action Indicator",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Action Indicator",
+              "validSetLinkedBy": "valid set with the same name",
+              "comments": "See Valid Sets. Limited to N(ew) or U(pdate)",
+              "implementation": {
+                "sfObject": "N//A"
+              }
+            }
+          ],
+          "groups": []
+        }
+      ]
+    },
+    {
+      "flowId": "P0304",
+      "version": "001",
+      "name": "Rejection of Asset Meter Registration",
+      "groups": [
+        {
+          "groupId": "PH1",
+          "name": "AMVLP or Supplier Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "AMVLP or Supplier Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PH2",
+          "name": "Import Meters",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": null,
+            "raw": "0-*"
+          },
+          "comments": "Mandatory if present in Asset Meter Registration flow",
+          "items": [
+            {
+              "name": "Import AMSID",
+              "mandatory": true,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)"
+            },
+            {
+              "name": "Asset Meter Serial Number",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 10
+              },
+              "dataTypeRaw": "text(10)"
+            },
+            {
+              "name": "Outstation Type",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 3
+              },
+              "dataTypeRaw": "text(3)"
+            },
+            {
+              "name": "Asset Meter make and model",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 20
+              },
+              "dataTypeRaw": "text(20)"
+            },
+            {
+              "name": "Asset Meter Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            },
+            {
+              "name": "Asset Meter Effective To Date",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            },
+            {
+              "name": "Asset Metering Type",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Asset Metering Type",
+              "validSetLinkedBy": "valid set with the same name"
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PH3",
+          "name": "Export Meters",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": null,
+            "raw": "0-*"
+          },
+          "comments": "Mandatory if present in Asset Meter Registration flow",
+          "items": [
+            {
+              "name": "Export AMSID",
+              "mandatory": true,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)"
+            },
+            {
+              "name": "Asset Meter Serial Number",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 10
+              },
+              "dataTypeRaw": "text(10)"
+            },
+            {
+              "name": "Outstation Type",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 3
+              },
+              "dataTypeRaw": "text(3)"
+            },
+            {
+              "name": "Asset Meter make and model",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 20
+              },
+              "dataTypeRaw": "text(20)"
+            },
+            {
+              "name": "Asset Meter Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            },
+            {
+              "name": "Asset Meter Effective To Date",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            },
+            {
+              "name": "Asset Metering Type",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Asset Metering Type",
+              "validSetLinkedBy": "valid set with the same name"
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PH4",
+          "name": "Action Indicator",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": 1,
+            "raw": "1"
+          },
+          "items": [
+            {
+              "name": "Action Indicator",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Action Indicator",
+              "validSetLinkedBy": "valid set with the same name",
+              "comments": "From Asset Meter Registration flow"
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PH5",
+          "name": "Rejection Reason",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "Rejection Reason",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 100
+              },
+              "dataTypeRaw": "text(100)",
+              "itemCatalogue": {
+                "id": "N0187",
+                "type": "text(80)",
+                "typeDiffers": true
+              }
+            }
+          ],
+          "groups": []
+        }
+      ]
+    },
+    {
+      "flowId": "P0305",
+      "version": "001",
+      "name": "Confirmation of Asset Meter Registration",
+      "groups": [
+        {
+          "groupId": "PI1",
+          "name": "AMVLP or Supplier Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "AMVLP or Supplier Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PI2",
+          "name": "Import Meters",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": null,
+            "raw": "0-*"
+          },
+          "comments": "Mandatory if present in Asset Meter Registration flow",
+          "items": [
+            {
+              "name": "Import AMSID",
+              "mandatory": true,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)"
+            },
+            {
+              "name": "Asset Meter Serial Number",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 10
+              },
+              "dataTypeRaw": "text(10)"
+            },
+            {
+              "name": "Outstation Type",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 3
+              },
+              "dataTypeRaw": "text(3)"
+            },
+            {
+              "name": "Asset Meter make and model",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 20
+              },
+              "dataTypeRaw": "text(20)"
+            },
+            {
+              "name": "Asset Meter Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            },
+            {
+              "name": "Asset Meter Effective To Date",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            },
+            {
+              "name": "Asset Metering Type",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Asset Metering Type",
+              "validSetLinkedBy": "valid set with the same name"
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PI3",
+          "name": "Export Meters",
+          "level": 1,
+          "cardinality": {
+            "min": 0,
+            "max": null,
+            "raw": "0-*"
+          },
+          "comments": "Mandatory if present in Asset Meter Registration flow",
+          "items": [
+            {
+              "name": "Export AMSID",
+              "mandatory": true,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)"
+            },
+            {
+              "name": "Asset Meter Serial Number",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 10
+              },
+              "dataTypeRaw": "text(10)"
+            },
+            {
+              "name": "Outstation Type",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 3
+              },
+              "dataTypeRaw": "text(3)"
+            },
+            {
+              "name": "Asset Meter make and model",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 20
+              },
+              "dataTypeRaw": "text(20)"
+            },
+            {
+              "name": "Asset Meter Effective From Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            },
+            {
+              "name": "Asset Meter Effective To Date",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            },
+            {
+              "name": "Asset Metering Type",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Asset Metering Type",
+              "validSetLinkedBy": "valid set with the same name"
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "PI4",
+          "name": "Action Indicator",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": 1,
+            "raw": "1"
+          },
+          "items": [
+            {
+              "name": "Action Indicator",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 1
+              },
+              "dataTypeRaw": "text(1)",
+              "validSet": "Action Indicator",
+              "validSetLinkedBy": "valid set with the same name",
+              "comments": "From Asset Meter Registration flow"
+            }
+          ],
+          "groups": []
+        }
+      ]
+    },
+    {
+      "flowId": "P0306",
+      "version": "001",
+      "name": "AMSID Pair Allocation to a Secondary BM Unit",
+      "groups": [
+        {
+          "groupId": "PJ1",
+          "name": "AMVLP and BM Unit Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "AMVLP Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)",
+              "implementation": {
+                "sfObject": "Identifier"
+              }
+            },
+            {
+              "name": "BM Unit Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 11
+              },
+              "dataTypeRaw": "text(11)",
+              "itemCatalogue": {
+                "id": "N0034",
+                "type": "text(11)"
+              },
+              "comments": "Secondary BM Unit",
+              "implementation": {
+                "sfObject": "Identify and validate?"
+              }
+            }
+          ],
+          "groups": [
+            {
+              "groupId": "PJ2",
+              "name": "AMSID Pair Details",
+              "level": 2,
+              "cardinality": {
+                "min": 1,
+                "max": null,
+                "raw": "1-*"
+              },
+              "items": [
+                {
+                  "name": "Import AMSID",
+                  "mandatory": true,
+                  "dataType": {
+                    "type": "integer",
+                    "length": 13
+                  },
+                  "dataTypeRaw": "integer(13)",
+                  "implementation": {
+                    "sfObject": "Identifier"
+                  }
+                },
+                {
+                  "name": "Export AMSID",
+                  "mandatory": false,
+                  "dataType": {
+                    "type": "integer",
+                    "length": 13
+                  },
+                  "dataTypeRaw": "integer(13)",
+                  "comments": "Where present",
+                  "implementation": {
+                    "sfObject": "Identifier"
+                  }
+                },
+                {
+                  "name": "AMSID Pair Differencing Indicator",
+                  "mandatory": true,
+                  "dataType": {
+                    "type": "boolean"
+                  },
+                  "dataTypeRaw": "boolean",
+                  "comments": "T' = AMSID Pair used for Differencing; 'F' = AMSID Pair used for Asset Metering",
+                  "implementation": {
+                    "sfObject": "BM Unit MSID/AMSID Pair Allocation",
+                    "sfField": "AMSID Pair Differencing Indicator",
+                    "sfDataType": "Checkbox"
+                  }
+                },
+                {
+                  "name": "AMSID Pair in Secondary BM Unit EFD",
+                  "mandatory": true,
+                  "dataType": {
+                    "type": "date"
+                  },
+                  "dataTypeRaw": "date",
+                  "implementation": {
+                    "sfObject": "Indentify and validate?"
+                  }
+                },
+                {
+                  "name": "AMSID Pair in Secondary BM Unit ETD",
+                  "mandatory": false,
+                  "dataType": {
+                    "type": "date"
+                  },
+                  "dataTypeRaw": "date",
+                  "implementation": {
+                    "sfObject": "Indentify and validate?"
+                  }
+                }
+              ],
+              "groups": [
+                {
+                  "groupId": "PJ3",
+                  "name": "Associated MSID Pairs",
+                  "level": 3,
+                  "cardinality": {
+                    "min": 1,
+                    "max": null,
+                    "raw": "1-*"
+                  },
+                  "items": [
+                    {
+                      "name": "Import MSID",
+                      "mandatory": true,
+                      "dataType": {
+                        "type": "integer",
+                        "length": 13
+                      },
+                      "dataTypeRaw": "integer(13)"
+                    },
+                    {
+                      "name": "Export MSID",
+                      "mandatory": false,
+                      "dataType": {
+                        "type": "integer",
+                        "length": 13
+                      },
+                      "dataTypeRaw": "integer(13)",
+                      "comments": "Where present"
+                    },
+                    {
+                      "name": "MSID Pair Indicator",
+                      "mandatory": true,
+                      "dataType": {
+                        "type": "text",
+                        "length": 1
+                      },
+                      "dataTypeRaw": "text(1)",
+                      "validSet": "MSID Pair Indicator",
+                      "validSetLinkedBy": "valid set with the same name",
+                      "comments": "See Valid Set; AMSID Pair Differencing Indicator and MSID Pair Indicator must be complementary: If AMSID Pair Differencing Indicator = 'F', MSID Pair Indicator must be 'A'.",
+                      "implementation": {
+                        "sfObject": "BM Unit MSID/AMSID Pair Allocation",
+                        "sfField": "MSID Pair Indicator",
+                        "sfDataType": "Picklist"
+                      }
+                    }
+                  ],
+                  "groups": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "flowId": "P0307",
+      "version": "001",
+      "name": "Confirmation of AMSID Pair Allocation to a Secondary BM Unit",
+      "groups": [
+        {
+          "groupId": "PK1",
+          "name": "AMVLP and BM Unit Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "AMVLP Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            },
+            {
+              "name": "BM Unit Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 11
+              },
+              "dataTypeRaw": "text(11)",
+              "itemCatalogue": {
+                "id": "N0034",
+                "type": "text(11)"
+              },
+              "comments": "Secondary BM Unit"
+            }
+          ],
+          "groups": [
+            {
+              "groupId": "PK2",
+              "name": "AMSID Pair Details",
+              "level": 2,
+              "cardinality": {
+                "min": 1,
+                "max": null,
+                "raw": "1-*"
+              },
+              "items": [
+                {
+                  "name": "Import AMSID",
+                  "mandatory": true,
+                  "dataType": {
+                    "type": "integer",
+                    "length": 13
+                  },
+                  "dataTypeRaw": "integer(13)"
+                },
+                {
+                  "name": "Export AMSID",
+                  "mandatory": false,
+                  "dataType": {
+                    "type": "integer",
+                    "length": 13
+                  },
+                  "dataTypeRaw": "integer(13)",
+                  "comments": "Mandatory if present in AMSID Pair Allocation to a Secondary BM Unit Flow"
+                },
+                {
+                  "name": "AMSID Pair Differencing Indicator",
+                  "mandatory": true,
+                  "dataType": {
+                    "type": "boolean"
+                  },
+                  "dataTypeRaw": "boolean"
+                },
+                {
+                  "name": "AMSID Pair in Secondary BM Unit EFD",
+                  "mandatory": true,
+                  "dataType": {
+                    "type": "date"
+                  },
+                  "dataTypeRaw": "date"
+                },
+                {
+                  "name": "AMSID Pair in Secondary BM Unit ETD",
+                  "mandatory": false,
+                  "dataType": {
+                    "type": "date"
+                  },
+                  "dataTypeRaw": "date",
+                  "comments": "Mandatory if present in AMSID Pair Allocation to a Secondary BM Unit Flow"
+                }
+              ],
+              "groups": [
+                {
+                  "groupId": "PK3",
+                  "name": "Associated MSID Pairs",
+                  "level": 3,
+                  "cardinality": {
+                    "min": 1,
+                    "max": null,
+                    "raw": "1-*"
+                  },
+                  "items": [
+                    {
+                      "name": "Import MSID",
+                      "mandatory": true,
+                      "dataType": {
+                        "type": "integer",
+                        "length": 13
+                      },
+                      "dataTypeRaw": "integer(13)"
+                    },
+                    {
+                      "name": "Export MSID",
+                      "mandatory": false,
+                      "dataType": {
+                        "type": "integer",
+                        "length": 13
+                      },
+                      "dataTypeRaw": "integer(13)",
+                      "comments": "Mandatory if present in AMSID Pair Allocation to a Secondary BM Unit Flow"
+                    },
+                    {
+                      "name": "MSID Pair Indicator",
+                      "mandatory": true,
+                      "dataType": {
+                        "type": "text",
+                        "length": 1
+                      },
+                      "dataTypeRaw": "text(1)",
+                      "validSet": "MSID Pair Indicator",
+                      "validSetLinkedBy": "valid set with the same name"
+                    }
+                  ],
+                  "groups": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "flowId": "P0308",
+      "version": "001",
+      "name": "Rejection of AMSID Pair Allocation to a Secondary BM Unit",
+      "groups": [
+        {
+          "groupId": "PL1",
+          "name": "AMVLP and BM Unit Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "AMVLP Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            },
+            {
+              "name": "BM Unit Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 11
+              },
+              "dataTypeRaw": "text(11)",
+              "itemCatalogue": {
+                "id": "N0034",
+                "type": "text(11)"
+              },
+              "comments": "Secondary BM Unit"
+            }
+          ],
+          "groups": [
+            {
+              "groupId": "PL2",
+              "name": "AMSID Pair Details",
+              "level": 2,
+              "cardinality": {
+                "min": 1,
+                "max": null,
+                "raw": "1-*"
+              },
+              "items": [
+                {
+                  "name": "Import AMSID",
+                  "mandatory": true,
+                  "dataType": {
+                    "type": "integer",
+                    "length": 13
+                  },
+                  "dataTypeRaw": "integer(13)"
+                },
+                {
+                  "name": "Export AMSID",
+                  "mandatory": false,
+                  "dataType": {
+                    "type": "integer",
+                    "length": 13
+                  },
+                  "dataTypeRaw": "integer(13)",
+                  "comments": "Mandatory if present in AMSID Pair Allocation to a Secondary BM Unit Flow"
+                },
+                {
+                  "name": "AMSID Pair Differencing Indicator",
+                  "mandatory": true,
+                  "dataType": {
+                    "type": "boolean"
+                  },
+                  "dataTypeRaw": "boolean"
+                },
+                {
+                  "name": "AMSID Pair in Secondary BM Unit EFD",
+                  "mandatory": true,
+                  "dataType": {
+                    "type": "date"
+                  },
+                  "dataTypeRaw": "date"
+                },
+                {
+                  "name": "AMSID Pair in Secondary BM Unit ETD",
+                  "mandatory": false,
+                  "dataType": {
+                    "type": "date"
+                  },
+                  "dataTypeRaw": "date",
+                  "comments": "Mandatory if present in AMSID Pair Allocation to a Secondary BM Unit Flow"
+                }
+              ],
+              "groups": [
+                {
+                  "groupId": "PL3",
+                  "name": "Associated MSID Pairs",
+                  "level": 3,
+                  "cardinality": {
+                    "min": 1,
+                    "max": null,
+                    "raw": "1-*"
+                  },
+                  "items": [
+                    {
+                      "name": "Import MSID",
+                      "mandatory": true,
+                      "dataType": {
+                        "type": "integer",
+                        "length": 13
+                      },
+                      "dataTypeRaw": "integer(13)"
+                    },
+                    {
+                      "name": "Export MSID",
+                      "mandatory": false,
+                      "dataType": {
+                        "type": "integer",
+                        "length": 13
+                      },
+                      "dataTypeRaw": "integer(13)",
+                      "comments": "Mandatory if present in AMSID Pair Allocation to a Secondary BM Unit Flow"
+                    },
+                    {
+                      "name": "MSID Pair Indicator",
+                      "mandatory": true,
+                      "dataType": {
+                        "type": "text",
+                        "length": 1
+                      },
+                      "dataTypeRaw": "text(1)",
+                      "validSet": "MSID Pair Indicator",
+                      "validSetLinkedBy": "valid set with the same name"
+                    }
+                  ],
+                  "groups": []
+                },
+                {
+                  "groupId": "PL4",
+                  "name": "Rejection Reasons",
+                  "level": 3,
+                  "cardinality": {
+                    "min": 1,
+                    "max": null,
+                    "raw": "1-*"
+                  },
+                  "items": [
+                    {
+                      "name": "Rejection Reason",
+                      "mandatory": true,
+                      "dataType": {
+                        "type": "text",
+                        "length": 100
+                      },
+                      "dataTypeRaw": "text(100)",
+                      "itemCatalogue": {
+                        "id": "N0187",
+                        "type": "text(80)",
+                        "typeDiffers": true
+                      }
+                    }
+                  ],
+                  "groups": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "flowId": "P0309",
+      "version": "001",
+      "name": "Notification of use of AMSID Pair by another AMVLP",
+      "groups": [
+        {
+          "groupId": "PM1",
+          "name": "Allocation Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "Import AMSID",
+              "mandatory": true,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)"
+            },
+            {
+              "name": "Export AMSID",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "comments": "Where present"
+            },
+            {
+              "name": "AMSID Pair in Secondary BM Unit EFD",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            },
+            {
+              "name": "AMSID Pair in Secondary BM Unit ETD",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date"
+            },
+            {
+              "name": "AMVLP Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 4
+              },
+              "dataTypeRaw": "text(4)"
+            }
+          ],
+          "groups": []
+        }
+      ]
+    },
+    {
+      "flowId": "P0310",
+      "version": "001",
+      "name": "Missing Metering System Data",
+      "groups": [
+        {
+          "groupId": "MDM",
+          "name": "Missing MS Data Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "Settlement Date",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "itemCatalogue": {
+                "id": "N0200",
+                "type": "date"
+              }
+            },
+            {
+              "name": "Settlement Run Type",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 2
+              },
+              "dataTypeRaw": "text(2)",
+              "validSet": "Run Type",
+              "validSetLinkedBy": "item catalogue",
+              "itemCatalogue": {
+                "id": "N0202",
+                "type": "text(2)"
+              },
+              "comments": "Omit for HHDC"
+            },
+            {
+              "name": "GSP Group Id",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 2
+              },
+              "dataTypeRaw": "text(2)",
+              "itemCatalogue": {
+                "id": "N0116",
+                "type": "text(2)"
+              }
+            },
+            {
+              "name": "Metering System Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "itemCatalogue": {
+                "id": "N0142",
+                "type": "text(13)",
+                "typeDiffers": true
+              },
+              "comments": "MSIDs for HHDAs; AMSIDs for HHDCs"
+            },
+            {
+              "name": "Settlement Period",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 2
+              },
+              "dataTypeRaw": "integer(2)",
+              "itemCatalogue": {
+                "id": "N0201",
+                "type": "integer(2)"
+              }
+            },
+            {
+              "name": "Reason",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 100
+              },
+              "dataTypeRaw": "text(100)",
+              "comments": "Message could be:\n- No [D0385/D0390] data received to date; or\n- No Actual D0390 data received to date"
+            }
+          ],
+          "groups": []
+        }
+      ]
+    },
+    {
+      "flowId": "P0311",
+      "version": "001",
+      "name": "Invalid Metering System Data",
+      "groups": [
+        {
+          "groupId": "HDI",
+          "name": "Data File Additional Header",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": 1,
+            "raw": "1"
+          },
+          "items": [
+            {
+              "name": "Settlement Date",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "itemCatalogue": {
+                "id": "N0200",
+                "type": "date"
+              },
+              "comments": "For HHDA response"
+            },
+            {
+              "name": "Settlement Code",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 2
+              },
+              "dataTypeRaw": "text(2)",
+              "itemCatalogue": {
+                "id": "N0199",
+                "type": "text(2)"
+              },
+              "comments": "For HHDA response"
+            },
+            {
+              "name": "Run Number",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 7
+              },
+              "dataTypeRaw": "integer(7)",
+              "comments": "For HHDA response"
+            },
+            {
+              "name": "GSP Group",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 2
+              },
+              "dataTypeRaw": "text(2)",
+              "comments": "For HHDA response"
+            },
+            {
+              "name": "Creation Time",
+              "mandatory": true,
+              "dataType": {
+                "type": "datetime"
+              },
+              "dataTypeRaw": "datetime",
+              "itemCatalogue": {
+                "id": "N0058",
+                "type": "datetime"
+              }
+            }
+          ],
+          "groups": []
+        },
+        {
+          "groupId": "MDI",
+          "name": "Invalid MS Data Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "Settlement Date",
+              "mandatory": false,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "itemCatalogue": {
+                "id": "N0200",
+                "type": "date"
+              }
+            },
+            {
+              "name": "Settlement Run Type",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 2
+              },
+              "dataTypeRaw": "text(2)",
+              "validSet": "Run Type",
+              "validSetLinkedBy": "item catalogue",
+              "itemCatalogue": {
+                "id": "N0202",
+                "type": "text(2)"
+              },
+              "comments": "Omit for HHDC"
+            },
+            {
+              "name": "GSP Group Id",
+              "mandatory": false,
+              "dataType": {
+                "type": "text",
+                "length": 2
+              },
+              "dataTypeRaw": "text(2)",
+              "itemCatalogue": {
+                "id": "N0116",
+                "type": "text(2)"
+              }
+            },
+            {
+              "name": "Metering System Id",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "itemCatalogue": {
+                "id": "N0142",
+                "type": "text(13)",
+                "typeDiffers": true
+              },
+              "comments": "MSIDs for HHDAs; AMSIDs for HHDCs"
+            },
+            {
+              "name": "Settlement Period",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 2
+              },
+              "dataTypeRaw": "integer(2)",
+              "itemCatalogue": {
+                "id": "N0201",
+                "type": "integer(2)"
+              }
+            },
+            {
+              "name": "Reason",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 100
+              },
+              "dataTypeRaw": "text(100)",
+              "comments": "Message could be:\n- [Data Item] received is invalid\n- [Data Item] received is unexpected"
+            }
+          ],
+          "groups": []
+        }
+      ]
+    },
+    {
+      "flowId": "P0320",
+      "version": "001",
+      "name": "Loss of AMSID Pair Allocation Notification",
+      "groups": [
+        {
+          "groupId": "PZ1",
+          "name": "Allocation Details",
+          "level": 1,
+          "cardinality": {
+            "min": 1,
+            "max": null,
+            "raw": "1-*"
+          },
+          "items": [
+            {
+              "name": "BM Unit Id",
+              "mandatory": true,
+              "dataType": {
+                "type": "text",
+                "length": 11
+              },
+              "dataTypeRaw": "text(11)",
+              "itemCatalogue": {
+                "id": "N0034",
+                "type": "text(11)"
+              },
+              "comments": "Secondary BM Unit"
+            },
+            {
+              "name": "Import AMSID",
+              "mandatory": true,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)"
+            },
+            {
+              "name": "Export AMSID",
+              "mandatory": false,
+              "dataType": {
+                "type": "integer",
+                "length": 13
+              },
+              "dataTypeRaw": "integer(13)",
+              "comments": "Where present"
+            },
+            {
+              "name": "AMSID Pair Differencing Indicator",
+              "mandatory": true,
+              "dataType": {
+                "type": "boolean"
+              },
+              "dataTypeRaw": "boolean",
+              "comments": "Always 'F'"
+            },
+            {
+              "name": "AMSID Pair in Secondary BM Unit EFD",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "comments": "For losing AMVLP' Secondary BM Unit"
+            },
+            {
+              "name": "AMSID Pair in Secondary BM Unit ETD",
+              "mandatory": true,
+              "dataType": {
+                "type": "date"
+              },
+              "dataTypeRaw": "date",
+              "comments": "For losing AMVLP' Secondary BM Unit"
+            }
+          ],
+          "groups": []
+        }
+      ]
+    }
+  ],
+  "validSets": {
+    "Action Indicator": [
+      {
+        "value": "N",
+        "description": "New"
+      },
+      {
+        "value": "U",
+        "description": "Update"
+      },
+      {
+        "value": "C",
+        "description": "Change of Registrant"
+      },
+      {
+        "value": "D",
+        "description": "Delete"
+      }
+    ],
+    "Asset Metering Type": [
+      {
+        "value": 1,
+        "description": "Metering of circuits with a rated capacity greater than 100MVA"
+      },
+      {
+        "value": 2,
+        "description": "Metering of circuits with a rated capacity not exceeding 100MVA"
+      },
+      {
+        "value": 3,
+        "description": "Metering of circuits with a rated capacity not exceeding 10MVA"
+      },
+      {
+        "value": 4,
+        "description": "Metering of energy transfers with a Maximum Demand of up to (and including) 1MW"
+      },
+      {
+        "value": 5,
+        "description": "Metering (embedded within another device) for energy transfers with a Maximum Demand of up to (and including) 100kW."
+      }
+    ],
+    "MSID Pair Indicator": [
+      {
+        "value": "T",
+        "description": "MSID Pair is not an Associated MSID Pair to an AMSID Pair in a Secondary BM Unit"
+      },
+      {
+        "value": "A",
+        "description": "MSID Pair is an Associated MSID Pair to an AMSID Pair that will be used for the purposes of Asset Metering in a Secondary BM Unit"
+      },
+      {
+        "value": "D",
+        "description": "MSID Pair is an Associated MSID Pair to an AMSID Pair that will be used for the purposes for Asset Differencing."
+      }
+    ],
+    "Measurement Class Id": [
+      {
+        "value": "C",
+        "description": "Half Hourly metered in 100kW Premises"
+      },
+      {
+        "value": "E",
+        "description": "Half Hourly sub-100kW Non-Domestic Current Transformer"
+      },
+      {
+        "value": "F",
+        "description": "Half Hourly sub-100kW domestic"
+      },
+      {
+        "value": "G",
+        "description": "Half Hourly sub 100kW non-domestic whole-current"
+      }
+    ],
+    "Run Type": [
+      {
+        "value": "II"
+      },
+      {
+        "value": "SF"
+      },
+      {
+        "value": "R1"
+      },
+      {
+        "value": "R2"
+      },
+      {
+        "value": "R3"
+      },
+      {
+        "value": "RF"
+      },
+      {
+        "value": "D"
+      },
+      {
+        "value": "DF"
+      }
+    ]
+  },
+  "conversionNotes": [
+    "Row 25: ignored value 0 in unlabelled column W"
+  ]
+}
