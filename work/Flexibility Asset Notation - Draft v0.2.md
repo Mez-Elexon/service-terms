@@ -1,6 +1,7 @@
-# Flexibility Asset Notation – Draft v0.1
+# Flexibility Asset Notation – Draft v0.2
 
-> **Status:** DRAFT for review. Not BSC text.  
+> **Status:** DRAFT v0.2 for review. Not BSC text.  
+> **Changes from v0.1:** proposed rules S19a, S24a and S29a and the corrected S40 were accepted for drafting and are flagged for review; long equations were split over several lines and checked with MathJax.  
 > **Source:** CAA flexibility statements 1–72 (`flex_statements.txt`), formalised in the notation of BSC Annex X-2 (see `BSC Annex X-2 Technical Glossary V62.0.md`).  
 > **Approach (agreed):**
 > - **Style:** BSC index letters are reused where their meaning matches. New indices use the BSC's bracketed multi-letter style, e.g. (ai), (vv). Set operators are added only where a statement needs them.
@@ -12,6 +13,24 @@
 > - **Statement 5:** restated as "at most one" boundary point.
 >
 > **Layout:** each statement is quoted, then given in BSC run-together form (`code`), then rendered in LaTeX. Issues the notation exposed are collected in Part C.
+
+## Review checklist
+
+> [!IMPORTANT]
+> The items below were **accepted for drafting** but have **not been confirmed by CAA**. Each one is marked with a ⚠️ warning box where it appears.
+
+**Proposed rules and corrections (accepted for drafting, for review)**
+
+| Item | What it says | Why it is needed | Where |
+|---|---|---|---|
+| S19a | Asset meters at a boundary point are either nested or reach disjoint TRs (they form a tree) | S39 and the topology test in S42 do not hold without it | F4 |
+| S24a | Meters subtracted in one Difference arrangement must not be nested in each other | Without it, the Difference volume (V1) subtracts nested TRs twice and V3 fails | F6 |
+| S29a | Every Asset is measurable | S35 (composition overlap ⇒ measurement overlap) does not hold without it | F3 |
+| S40 (corrected) | An Asset Level Asset on K does not overlap a Difference Asset if K equals, or is nested behind, a subtracted meter | The statement as written is false when K sits behind a subtracted meter | F5 |
+
+**Drafting assumptions (accepted for drafting, for review):** F1, F2, F11, F12, F13, F14 and F15 in Part C.
+
+**Decisions still needed from CAA:** F7 (S32-Yes needs compatibility between control groups), F8 (Assets entered by delegation under 1b bypass the compatibility check), F9 (exclusivity rule for scenario 0b) and F10 (definition of the coordinating group).
 
 ---
 
@@ -269,7 +288,10 @@ p \in \mathrm{PTY},\quad (cu) \in \mathrm{CUS},\quad (sm) \in \mathrm{SM},\quad 
 `∪(cg)∈CG(bp)(ap) (cg) ∪ RG(bp)(ap) = TR(bp)(ap);  (cg) ∩ (cg′) = ∅;  (cg) ∩ RG(bp)(ap) = ∅`
 
 ```math
-\bigcup_{(cg) \in \mathrm{CG}_{(bp)(ap)}} (cg) \;\cup\; \mathrm{RG}_{(bp)(ap)} = \mathrm{TR}_{(bp)(ap)}, \qquad (cg) \cap (cg') = \varnothing, \qquad (cg) \cap \mathrm{RG}_{(bp)(ap)} = \varnothing
+\begin{aligned}
+&\bigcup_{(cg) \in \mathrm{CG}_{(bp)(ap)}} (cg) \;\cup\; \mathrm{RG}_{(bp)(ap)} = \mathrm{TR}_{(bp)(ap)} \\
+&(cg) \cap (cg') = \varnothing \ \ \text{for } (cg) \ne (cg'), \qquad (cg) \cap \mathrm{RG}_{(bp)(ap)} = \varnothing
+\end{aligned}
 ```
 
 ### 4. Measurement
@@ -314,7 +336,10 @@ K \in \mathrm{MTRA} \cap \mathrm{MTR}_{(bp)} \;\Rightarrow\; \mathrm{REACH}_{K(a
 K' \sqsubseteq K \;\Rightarrow\; \mathrm{REACH}_{K'(ap)} \subseteq \mathrm{REACH}_{K(ap)}
 ```
 
-**S19a [Rule – proposed, needed for S39 and S42; see F4]** Asset meters at a boundary point form a tree: two asset meters are either nested or reach disjoint TRs.
+**⚠️ S19a [Rule – proposed, needed for S39 and S42; see F4]** Asset meters at a boundary point form a tree: two asset meters are either nested or reach disjoint TRs.
+
+> [!WARNING]
+> **For review: proposed rule.** Not in the CAA statements. Accepted for drafting on 2026-11-20 and needs CAA confirmation before use (see F4 and the review checklist).
 
 `for K, K′ ∈ MTRA ∩ MTR(bp):  K′ ⊑ K  or  K ⊑ K′  or  REACH(K)(ap) ∩ REACH(K′)(ap) = ∅`
 
@@ -327,7 +352,10 @@ K' \sqsubseteq K \;\lor\; K \sqsubseteq K' \;\lor\; \mathrm{REACH}_{K(ap)} \cap 
 `SGN(ma)K ∈ {+1, 0, −1};   MTR(ma) = { K : SGN(ma)K ≠ 0 } ≠ ∅;   MTR(ma) ⊆ MTR(BPMA(ma))`
 
 ```math
-\mathrm{SGN}_{(ma)K} \in \{+1, 0, -1\}, \qquad \varnothing \ne \mathrm{MTR}_{(ma)} = \{K : \mathrm{SGN}_{(ma)K} \ne 0\} \subseteq \mathrm{MTR}_{\mathrm{BPMA}_{(ma)}}
+\begin{aligned}
+&\mathrm{SGN}_{(ma)K} \in \{+1, 0, -1\} \\
+&\varnothing \ne \mathrm{MTR}_{(ma)} = \{K : \mathrm{SGN}_{(ma)K} \ne 0\} \subseteq \mathrm{MTR}_{\mathrm{BPMA}_{(ma)}}
+\end{aligned}
 ```
 
 **S21 [Def]** Measurement perimeter: given by S22–S24 for each type.
@@ -351,7 +379,10 @@ K' \sqsubseteq K \;\lor\; K \sqsubseteq K' \;\lor\; \mathrm{REACH}_{K(ap)} \cap 
 `TYPE(ma) = AL:  MTR(ma) = { K },  K ∈ MTRA,  SGN(ma)K = +1;   PER(ma)(ap) = REACH(K)(ap)`
 
 ```math
-\mathrm{TYPE}_{(ma)} = \mathrm{AL}: \quad \mathrm{MTR}_{(ma)} = \{K\},\ K \in \mathrm{MTRA},\ \ \mathrm{PER}_{(ma)(ap)} = \mathrm{REACH}_{K(ap)}
+\begin{aligned}
+&\mathrm{TYPE}_{(ma)} = \mathrm{AL}: \quad \mathrm{MTR}_{(ma)} = \{K\},\ K \in \mathrm{MTRA} \\
+&\mathrm{PER}_{(ma)(ap)} = \mathrm{REACH}_{K(ap)}
+\end{aligned}
 ```
 
 **S24 [Rule]** Difference (S10.1A.2(e)(ii), "Asset Differencing").
@@ -363,7 +394,10 @@ K' \sqsubseteq K \;\lor\; K \sqsubseteq K' \;\lor\; \mathrm{REACH}_{K(ap)} \cap 
 \mathrm{TYPE}_{(ma)} = \mathrm{DIFF}: \quad \mathrm{PER}_{(ma)(ap)} = \mathrm{TR}_{(bp)(ap)} \setminus \bigcup_{K \in \mathrm{KSUB}_{(ma)}} \mathrm{REACH}_{K(ap)}
 ```
 
-**S24a [Rule – proposed, needed for V3; see F6]** No subtracted meter is nested behind another subtracted meter.
+**⚠️ S24a [Rule – proposed, needed for V3; see F6]** No subtracted meter is nested behind another subtracted meter.
+
+> [!WARNING]
+> **For review: proposed rule.** Not in the CAA statements. Accepted for drafting on 2026-11-20 and needs CAA confirmation before use (see F6 and the review checklist).
 
 `for K ≠ K′ in KSUB(ma):  REACH(K)(ap) ∩ REACH(K′)(ap) = ∅`
 
@@ -398,9 +432,11 @@ K \ne K' \in \mathrm{KSUB}_{(ma)} \;\Rightarrow\; \mathrm{REACH}_{K(ap)} \cap \m
 By type:
 
 ```math
-\text{POC: } \mathrm{QMA}_{(ma)j} = \mathrm{QM}_{\mathrm{KB}_{(bp)}j} \qquad
-\text{AL: } \mathrm{QMA}_{(ma)j} = \mathrm{QM}_{Kj} \qquad
-\text{DIFF: } \mathrm{QMA}_{(ma)j} = \mathrm{QM}_{\mathrm{KB}_{(bp)}j} - \sum_{K \in \mathrm{KSUB}_{(ma)}} \mathrm{QM}_{Kj}
+\begin{aligned}
+\text{POC:}\quad & \mathrm{QMA}_{(ma)j} = \mathrm{QM}_{\mathrm{KB}_{(bp)}j} \\
+\text{AL:}\quad & \mathrm{QMA}_{(ma)j} = \mathrm{QM}_{Kj} \\
+\text{DIFF:}\quad & \mathrm{QMA}_{(ma)j} = \mathrm{QM}_{\mathrm{KB}_{(bp)}j} - \sum_{K \in \mathrm{KSUB}_{(ma)}} \mathrm{QM}_{Kj}
+\end{aligned}
 ```
 
 **V2 [Def – volume of an Asset]**
@@ -449,7 +485,10 @@ By type:
 \mathrm{MEAS}_{(fa)(ap)} = \big[\,\mathrm{TRFA}_{(fa)(ap)} \subseteq \mathrm{PER}_{\mathrm{FMA}_{(fa)}(ap)}\,\big]
 ```
 
-**S29a [Rule – proposed, needed for S35; see F3]** Every Asset is measurable.
+**⚠️ S29a [Rule – proposed, needed for S35; see F3]** Every Asset is measurable.
+
+> [!WARNING]
+> **For review: proposed rule.** Not in the CAA statements. Accepted for drafting on 2026-11-20 and needs CAA confirmation before use (see F3 and the review checklist).
 
 `MEAS(fa)(ap) = 1   for every (fa)`
 
@@ -520,7 +559,7 @@ Let `FA(bp)(ap) = { (fa) : BPFA(fa) = (bp) }`.
 \mathrm{MOV}_{(fa)(fa')(ap)} = \big[\,\mathrm{PER}_{\mathrm{FMA}_{(fa)}(ap)} \cap \mathrm{PER}_{\mathrm{FMA}_{(fa')}(ap)} \ne \varnothing\,\big]
 ```
 
-**S35 [Derived, needs S29a]** Composition overlap implies measurement overlap. The reverse does not hold (Scenario 3).
+**S35 [Derived, needs ⚠️ S29a]** Composition overlap implies measurement overlap. The reverse does not hold (Scenario 3).
 
 `COV(fa)(fa′)(ap) = 1  ⇒  MOV(fa)(fa′)(ap) = 1`
 
@@ -556,7 +595,7 @@ S37–S41 assume non-empty perimeters, which S29a and S10 guarantee for any Asse
 \mathrm{TYPE}_{\mathrm{FMA}_{(fa)}} = \mathrm{POC},\ (fa') \in \mathrm{FA}_{(bp)(ap)} \;\Rightarrow\; \mathrm{MOV}_{(fa)(fa')(ap)} = 1
 ```
 
-**S39 [Derived, needs S19a]** Two Asset Level Assets on meters K and K′.
+**S39 [Derived, needs ⚠️ S19a]** Two Asset Level Assets on meters K and K′.
 
 `MOV = 1  ⇔  K = K′  or  K ⊑ K′  or  K′ ⊑ K`
 
@@ -564,7 +603,10 @@ S37–S41 assume non-empty perimeters, which S29a and S10 guarantee for any Asse
 \mathrm{MOV}_{(fa)(fa')(ap)} = 1 \iff K = K' \;\lor\; K \sqsubseteq K' \;\lor\; K' \sqsubseteq K
 ```
 
-**S40 [Derived – corrected; see F5]** Asset Level Asset on K against a Difference Asset (ma′).
+**⚠️ S40 [Derived – corrected; see F5]** Asset Level Asset on K against a Difference Asset (ma′).
+
+> [!WARNING]
+> **For review: corrected statement.** This replaces CAA statement 40 as written. Accepted for drafting on 2026-11-20 and needs CAA confirmation before use (see F5 and the review checklist).
 
 `MOV = 0  ⇔  K ∈ KSUB(ma′)  or  K ⊑ K″ for some K″ ∈ KSUB(ma′)`
 
@@ -622,7 +664,11 @@ A \text{ compatible} \iff \forall (fa) \ne (fa') \in A:\ \mathrm{MOV}_{(fa)(fa')
 `TRFA(fa) ⊆ PER(ma*),  TRFA(fa′) ⊆ PER(ma′*),  PER(ma*) ∩ PER(ma′*) = ∅,  and S26 respected`
 
 ```math
-\mathrm{REC}_{(fa)(fa')(ap)} = 1 \iff \exists (ma^{*}), (ma'^{*}):\ \mathrm{TRFA}_{(fa)} \subseteq \mathrm{PER}_{(ma^{*})},\ \mathrm{TRFA}_{(fa')} \subseteq \mathrm{PER}_{(ma'^{*})},\ \mathrm{PER}_{(ma^{*})} \cap \mathrm{PER}_{(ma'^{*})} = \varnothing
+\begin{aligned}
+&\mathrm{REC}_{(fa)(fa')(ap)} = 1 \iff \exists\, (ma^{*}), (ma'^{*}) \text{ over } \mathrm{MTR}^{+}_{(bp)} \text{ such that} \\
+&\qquad \mathrm{TRFA}_{(fa)(ap)} \subseteq \mathrm{PER}_{(ma^{*})(ap)}, \quad \mathrm{TRFA}_{(fa')(ap)} \subseteq \mathrm{PER}_{(ma'^{*})(ap)}, \\
+&\qquad \mathrm{PER}_{(ma^{*})(ap)} \cap \mathrm{PER}_{(ma'^{*})(ap)} = \varnothing
+\end{aligned}
 ```
 
 **S47 [Derived]** Composition overlap is never reconcilable.
@@ -640,7 +686,11 @@ A \text{ compatible} \iff \forall (fa) \ne (fa') \in A:\ \mathrm{MOV}_{(fa)(fa')
 `COV = 0,  MOV = 1:   REC = 1  ⇔  the meters in MTR⁺(bp) can separate TRFA(fa) from TRFA(fa′)`
 
 ```math
-\mathrm{COV} = 0,\ \mathrm{MOV} = 1:\quad \mathrm{REC} = 1 \iff \text{some meters in } \mathrm{MTR}^{+}_{(bp)} \text{ separate } \mathrm{TRFA}_{(fa)} \text{ from } \mathrm{TRFA}_{(fa')}
+\begin{aligned}
+&\mathrm{COV}_{(fa)(fa')(ap)} = 0,\ \ \mathrm{MOV}_{(fa)(fa')(ap)} = 1: \\
+&\qquad \mathrm{REC}_{(fa)(fa')(ap)} = 1 \iff \text{some meters in } \mathrm{MTR}^{+}_{(bp)} \\
+&\qquad\qquad \text{separate } \mathrm{TRFA}_{(fa)(ap)} \text{ from } \mathrm{TRFA}_{(fa')(ap)}
+\end{aligned}
 ```
 
 **S49 [Def]** Irreconcilable.
@@ -699,7 +749,12 @@ where
 `                   or [ there exists (dg) with SECDG(dg) = p, SMDG(dg) = (sm), (ap) ∈ APDG(dg), (tr) ∈ TRCC(CCDG(dg)) ]`
 
 ```math
-\mathrm{AUTH}_{p(tr)(sm)(ap)} = \big[\exists (cc):\ \mathrm{HOLDCC}_{(cc)} = p,\ (tr) \in \mathrm{TRCC}_{(cc)},\ (sm) \in \mathrm{SMCC}_{(cc)},\ (ap) \in \mathrm{APCC}_{(cc)}\big] \ \lor\ \big[\exists (dg):\ \mathrm{SECDG}_{(dg)} = p,\ \mathrm{SMDG}_{(dg)} = (sm),\ (ap) \in \mathrm{APDG}_{(dg)},\ (tr) \in \mathrm{TRCC}_{\mathrm{CCDG}_{(dg)}}\big]
+\begin{aligned}
+\mathrm{AUTH}_{p(tr)(sm)(ap)} = {} & \big[\exists (cc):\ \mathrm{HOLDCC}_{(cc)} = p,\ (tr) \in \mathrm{TRCC}_{(cc)}, \\
+& \qquad (sm) \in \mathrm{SMCC}_{(cc)},\ (ap) \in \mathrm{APCC}_{(cc)}\big] \\
+\lor\ & \big[\exists (dg):\ \mathrm{SECDG}_{(dg)} = p,\ \mathrm{SMDG}_{(dg)} = (sm), \\
+& \qquad (ap) \in \mathrm{APDG}_{(dg)},\ (tr) \in \mathrm{TRCC}_{\mathrm{CCDG}_{(dg)}}\big]
+\end{aligned}
 ```
 
 *SMCC(cc), the sub-markets a contract covers, is not in the statements. It is added because S56-1a needs it (F11).*
@@ -709,7 +764,10 @@ where
 `CUSCC(cc) = CUSBP(BPCC(cc))(ap)  and  TRCC(cc) ⊆ TR(BPCC(cc))(ap)   for every (ap) ∈ APCC(cc)`
 
 ```math
-(ap) \in \mathrm{APCC}_{(cc)} \;\Rightarrow\; \mathrm{CUSCC}_{(cc)} = \mathrm{CUSBP}_{\mathrm{BPCC}_{(cc)}(ap)},\ \ \mathrm{TRCC}_{(cc)} \subseteq \mathrm{TR}_{\mathrm{BPCC}_{(cc)}(ap)}
+\begin{aligned}
+(ap) \in \mathrm{APCC}_{(cc)} \;\Rightarrow\; & \mathrm{CUSCC}_{(cc)} = \mathrm{CUSBP}_{\mathrm{BPCC}_{(cc)}(ap)} \\
+& \mathrm{TRCC}_{(cc)} \subseteq \mathrm{TR}_{\mathrm{BPCC}_{(cc)}(ap)}
+\end{aligned}
 ```
 
 **S56 [Open]** How far contract exclusivity reaches. Let `NCC(tr)(sm)(ap) = Σ(cc) [ (tr) ∈ TRCC(cc), (sm) ∈ SMCC(cc), (ap) ∈ APCC(cc) ]`.
@@ -737,7 +795,10 @@ where
 `(dg) ↦ ( CCDG(dg), SECDG(dg), SMDG(dg), APDG(dg) );  the Primary is HOLDCC(CCDG(dg));  SECDG(dg) ≠ HOLDCC(CCDG(dg))`
 
 ```math
-(dg) \mapsto \big(\mathrm{CCDG}_{(dg)},\ \mathrm{SECDG}_{(dg)},\ \mathrm{SMDG}_{(dg)},\ \mathrm{APDG}_{(dg)}\big), \qquad \mathrm{SECDG}_{(dg)} \ne \mathrm{HOLDCC}_{\mathrm{CCDG}_{(dg)}}
+\begin{aligned}
+&(dg) \mapsto \big(\mathrm{CCDG}_{(dg)},\ \mathrm{SECDG}_{(dg)},\ \mathrm{SMDG}_{(dg)},\ \mathrm{APDG}_{(dg)}\big) \\
+&\mathrm{SECDG}_{(dg)} \ne \mathrm{HOLDCC}_{\mathrm{CCDG}_{(dg)}}
+\end{aligned}
 ```
 
 **S58 [Rule]** A delegation ends when its contract ends.
@@ -765,7 +826,11 @@ where
 `FACL(cl) = FACL(cl′),  FSPCL(cl) ≠ FSPCL(cl′),  SMCL(cl) = SMCL(cl′),  APCL(cl) ∩ APCL(cl′) ≠ ∅   ⇒  CMP(cl)(cl′) = 1`
 
 ```math
-\mathrm{FACL}_{(cl)} = \mathrm{FACL}_{(cl')},\ \mathrm{FSPCL}_{(cl)} \ne \mathrm{FSPCL}_{(cl')},\ \mathrm{SMCL}_{(cl)} = \mathrm{SMCL}_{(cl')},\ \mathrm{APCL}_{(cl)} \cap \mathrm{APCL}_{(cl')} \ne \varnothing \;\Rightarrow\; \mathrm{CMP}_{(cl)(cl')} = 1
+\begin{aligned}
+&\mathrm{FACL}_{(cl)} = \mathrm{FACL}_{(cl')},\quad \mathrm{FSPCL}_{(cl)} \ne \mathrm{FSPCL}_{(cl')}, \\
+&\mathrm{SMCL}_{(cl)} = \mathrm{SMCL}_{(cl')},\quad \mathrm{APCL}_{(cl)} \cap \mathrm{APCL}_{(cl')} \ne \varnothing \\
+&\qquad \Rightarrow\; \mathrm{CMP}_{(cl)(cl')} = 1
+\end{aligned}
 ```
 
 **S62 [Open]** As S61, but with SMCL(cl) ≠ SMCL(cl′). Write p = FSPCL(cl), p′ = FSPCL(cl′), (fa) = FACL(cl), and PRI(fa)(ap) for the holder(s) of the contracts covering TRFA(fa).
@@ -799,7 +864,11 @@ where
 `COMP(fa)(ap) = 1  ⇒  ASG(fa)(ap) ∈ { FSPCL(cl) : FACL(cl) = (fa) } ∪ { FSP groups } ∪ PRI(fa)(ap)`
 
 ```math
-\mathrm{COMP}_{(fa)(ap)} = 1 \;\Rightarrow\; \mathrm{ASG}_{(fa)(ap)} \in \{\mathrm{FSPCL}_{(cl)} : \mathrm{FACL}_{(cl)} = (fa)\} \cup \{\text{FSP groups}\} \cup \mathrm{PRI}_{(fa)(ap)}
+\begin{aligned}
+&\mathrm{COMP}_{(fa)(ap)} = 1 \;\Rightarrow \\
+&\qquad \mathrm{ASG}_{(fa)(ap)} \in \{\mathrm{FSPCL}_{(cl)} : \mathrm{FACL}_{(cl)} = (fa)\} \\
+&\qquad\qquad \cup\ \{\text{FSP groups}\} \ \cup\ \mathrm{PRI}_{(fa)(ap)}
+\end{aligned}
 ```
 
 **S64 [Def]** Allocation. The FSP group may be a single FSP. APAL is the set of activation periods inside the allocation's spot-time interval.
@@ -807,7 +876,10 @@ where
 `(al) ↦ ( FAAL(al), GRPAL(al) ⊆ PTY, TSAL(al), TEAL(al) );   APAL(al) = { (ap) : (ap) ⊆ [TSAL(al), TEAL(al)) }`
 
 ```math
-(al) \mapsto \big(\mathrm{FAAL}_{(al)},\ \mathrm{GRPAL}_{(al)} \subseteq \mathrm{PTY},\ \mathrm{TSAL}_{(al)},\ \mathrm{TEAL}_{(al)}\big), \qquad \mathrm{APAL}_{(al)} = \{(ap) : (ap) \subseteq [\mathrm{TSAL}_{(al)}, \mathrm{TEAL}_{(al)})\}
+\begin{aligned}
+&(al) \mapsto \big(\mathrm{FAAL}_{(al)},\ \mathrm{GRPAL}_{(al)} \subseteq \mathrm{PTY},\ \mathrm{TSAL}_{(al)},\ \mathrm{TEAL}_{(al)}\big) \\
+&\mathrm{APAL}_{(al)} = \{(ap) : (ap) \subseteq [\mathrm{TSAL}_{(al)}, \mathrm{TEAL}_{(al)})\}
+\end{aligned}
 ```
 
 **S65 [Rule]** Only compatible Assets can be allocated.
@@ -850,7 +922,10 @@ where
 `IENT(fa)(sm)p(ap) = [ there exists (un) with FSPUN(un) = p, SMUN(un) = (sm), (fa) ∈ FAUN(un)(ap) ]`
 
 ```math
-\mathrm{IENT}_{(fa)(sm)p(ap)} = \big[\exists (un):\ \mathrm{FSPUN}_{(un)} = p,\ \mathrm{SMUN}_{(un)} = (sm),\ (fa) \in \mathrm{FAUN}_{(un)(ap)}\big]
+\begin{aligned}
+\mathrm{IENT}_{(fa)(sm)p(ap)} = \big[\exists (un):\ & \mathrm{FSPUN}_{(un)} = p,\ \mathrm{SMUN}_{(un)} = (sm), \\
+& (fa) \in \mathrm{FAUN}_{(un)(ap)}\big]
+\end{aligned}
 ```
 
 **S70 [Rule]** An Asset may be in a Unit only under a valid registration, and only if it is allocated to the FSP, or (scenario 1b) delegated to it.
@@ -860,7 +935,15 @@ where
 `   or [ SCN = 1b and there exists (dg) with SECDG(dg) = FSPUN(un), SMDG(dg) = SMUN(un), (ap) ∈ APDG(dg) ]`
 
 ```math
-(fa) \in \mathrm{FAUN}_{(un)(ap)} \Rightarrow \exists (cl)\ \text{valid} \ \land \Big(\exists (al):\ \mathrm{FAAL}_{(al)} = (fa),\ \mathrm{FSPUN}_{(un)} \in \mathrm{GRPAL}_{(al)},\ (ap) \in \mathrm{APAL}_{(al)} \ \ \lor\ \ \mathrm{SCN} = 1b \land \exists (dg)\ \text{for } \mathrm{SMUN}_{(un)}\Big)
+\begin{aligned}
+& (fa) \in \mathrm{FAUN}_{(un)(ap)} \;\Rightarrow \\
+& \exists (cl):\ \mathrm{VAL}_{(cl)} = 1,\ \mathrm{FSPCL}_{(cl)} = \mathrm{FSPUN}_{(un)}, \\
+& \qquad \mathrm{FACL}_{(cl)} = (fa),\ \mathrm{SMCL}_{(cl)} = \mathrm{SMUN}_{(un)},\ (ap) \in \mathrm{APCL}_{(cl)} \\
+\text{and}\quad & \Big(\exists (al):\ \mathrm{FAAL}_{(al)} = (fa),\ \mathrm{FSPUN}_{(un)} \in \mathrm{GRPAL}_{(al)}, \\
+& \qquad (ap) \in \mathrm{APAL}_{(al)} \\
+& \quad \lor\ \big[\mathrm{SCN} = \text{1b} \ \land\ \exists (dg):\ \mathrm{SECDG}_{(dg)} = \mathrm{FSPUN}_{(un)}, \\
+& \qquad\quad \mathrm{SMDG}_{(dg)} = \mathrm{SMUN}_{(un)},\ (ap) \in \mathrm{APDG}_{(dg)}\big]\Big)
+\end{aligned}
 ```
 
 **S71 [Rule]** An Asset is in at most one Unit per sub-market per period (cf. S10.1A.3).
@@ -878,7 +961,10 @@ where
 `Σ(fa) [ Σp IENT(fa)(sm)p(ap) = 1 ] * [ (tr) ∈ PER(FMA(fa))(ap) ] ≤ 1`
 
 ```math
-\sum_{(fa)} \Big[\sum_{p} \mathrm{IENT}_{(fa)(sm)p(ap)} = 1\Big] \cdot \big[(tr) \in \mathrm{PER}_{\mathrm{FMA}_{(fa)}(ap)}\big] \le 1 \qquad \forall (sm), (ap), (tr)
+\begin{aligned}
+&\sum_{(fa)} \Big[\sum_{p} \mathrm{IENT}_{(fa)(sm)p(ap)} = 1\Big] \cdot \big[(tr) \in \mathrm{PER}_{\mathrm{FMA}_{(fa)}(ap)}\big] \le 1 \\
+&\qquad \forall (sm), (ap), (tr)
+\end{aligned}
 ```
 
 The volume form follows from V3. The total volume entered into (sm) counts each TR's flow at most once:
@@ -900,20 +986,20 @@ The volume form follows from V3. The total volume entered into (sm) counts each 
 
 ## Part C – Issues the notation exposed
 
-| # | Statements | Issue | Proposed handling in this draft |
-|---|---|---|---|
-| F1 | 5, 6 | "Exactly one" conflicts with a mobile TR that is in transit. | Restated as "at most one" (agreed). S5 becomes a special case of S6. |
-| F2 | 27, 31 | S27 pairs a *control group* with an arrangement, but a residual Asset pairs the *residual group*, which has no Load Controller. | Read S27 as FCG(fa) ∈ CG(bp)(ap) ∪ {RG(bp)(ap)}. Confirm. |
-| F3 | 29, 35 | S35 ("composition overlap ⇒ measurement overlap") holds only if both Assets are measurable. Nothing requires an Asset to be measurable. | Added S29a "every Asset is measurable". Confirm, or restrict S35. |
-| F4 | 18, 19, 39, 42 | S39 and the topology test in S42 need asset meters to be either nested or disjoint. The statements only say each reach is a subset. | Added S19a (asset meters form a tree). |
-| F5 | 40 | False when the Asset Level meter K sits behind a subtracted meter: there is no overlap even though K itself is not subtracted. | S40 corrected to "no overlap iff K equals or is nested behind a subtracted meter". |
-| F6 | 24, V1 | If two subtracted meters are nested, the Difference volume subtracts the inner TRs twice, although the perimeter (a set difference) does not. | Added S24a: subtracted meters must be disjoint. |
-| F7 | 32, 43, 44, 47, 72 | Under **S32-Yes**, two Assets of one control group share TRs, so they always composition-overlap. With S44 they can never both be compatible, and with S47 they are irreconcilable. | S32-Yes needs compatibility assessed between control groups (S32-Yes(ii)), plus at most one Asset per group per sub-market (S32-Yes(i)). |
-| F8 | 65, 70, 72 | Under 1b, S70 lets a *delegated* Asset enter a Unit without an allocation. S65 (compatibility) therefore does not cover it, and the S72 proof via 43, 65 and 67 has a gap. | Either require COMP for delegated entry too, or route delegations through allocation. Decision needed. |
-| F9 | 56, 62 | Scenario 0b appears in S62 but not in S56. | Need the 0b exclusivity rule. |
-| F10 | 62 | The "coordinating group" (1a) is not defined anywhere. | Introduced COORD(fa)(ap). Need its definition: per Asset, per boundary point, or per Primary? |
-| F11 | 54–56 | Whether a contract covers named sub-markets is not stated, but S56-1a counts contracts per sub-market. | Added SMCC(cc). Confirm. |
-| F12 | 64, 68 | Allocation is in spot time, but every other rule is per activation period. A re-allocation inside an activation period would split it. | Assumed re-allocation times fall on activation-period boundaries. Confirm. |
-| F13 | 1, 3, 17, 22 | A boundary point may have import and export MSIDs, but S22 says "the boundary meter". | One logical boundary meter per boundary point: K = MSID Pair for boundary meters, AMSID Pair for asset meters. This uses K at pair level, not single-MSID level as in Table X-4. |
-| F14 | 30, 54 | An inclusively measured Asset's volume includes TRs outside the Asset. S54 only requires authority over the Asset's own TRs. | Formalised as written. Flagging in case authority should cover the perimeter. |
-| F15 | 62-1b | "Lacks a delegation from the Primary": the Primary itself holds no delegation. | Treated the Primary as authorised (the DEL indicator). Confirm. |
+| # | Statements | Issue | Proposed handling in this draft | Status |
+|---|---|---|---|---|
+| F1 | 5, 6 | "Exactly one" conflicts with a mobile TR that is in transit. | Restated as "at most one" (agreed). S5 becomes a special case of S6. | Agreed |
+| F2 | 27, 31 | S27 pairs a *control group* with an arrangement, but a residual Asset pairs the *residual group*, which has no Load Controller. | Read S27 as FCG(fa) ∈ CG(bp)(ap) ∪ {RG(bp)(ap)}. Confirm. | ⚠️ For review |
+| F3 | 29, 35 | S35 ("composition overlap ⇒ measurement overlap") holds only if both Assets are measurable. Nothing requires an Asset to be measurable. | Added S29a "every Asset is measurable". Confirm, or restrict S35. | ⚠️ For review |
+| F4 | 18, 19, 39, 42 | S39 and the topology test in S42 need asset meters to be either nested or disjoint. The statements only say each reach is a subset. | Added S19a (asset meters form a tree). | ⚠️ For review |
+| F5 | 40 | False when the Asset Level meter K sits behind a subtracted meter: there is no overlap even though K itself is not subtracted. | S40 corrected to "no overlap iff K equals or is nested behind a subtracted meter". | ⚠️ For review |
+| F6 | 24, V1 | If two subtracted meters are nested, the Difference volume subtracts the inner TRs twice, although the perimeter (a set difference) does not. | Added S24a: subtracted meters must be disjoint. | ⚠️ For review |
+| F7 | 32, 43, 44, 47, 72 | Under **S32-Yes**, two Assets of one control group share TRs, so they always composition-overlap. With S44 they can never both be compatible, and with S47 they are irreconcilable. | S32-Yes needs compatibility assessed between control groups (S32-Yes(ii)), plus at most one Asset per group per sub-market (S32-Yes(i)). | ⚠️ Decision needed |
+| F8 | 65, 70, 72 | Under 1b, S70 lets a *delegated* Asset enter a Unit without an allocation. S65 (compatibility) therefore does not cover it, and the S72 proof via 43, 65 and 67 has a gap. | Either require COMP for delegated entry too, or route delegations through allocation. Decision needed. | ⚠️ Decision needed |
+| F9 | 56, 62 | Scenario 0b appears in S62 but not in S56. | Need the 0b exclusivity rule. | ⚠️ Decision needed |
+| F10 | 62 | The "coordinating group" (1a) is not defined anywhere. | Introduced COORD(fa)(ap). Need its definition: per Asset, per boundary point, or per Primary? | ⚠️ Decision needed |
+| F11 | 54–56 | Whether a contract covers named sub-markets is not stated, but S56-1a counts contracts per sub-market. | Added SMCC(cc). Confirm. | ⚠️ For review |
+| F12 | 64, 68 | Allocation is in spot time, but every other rule is per activation period. A re-allocation inside an activation period would split it. | Assumed re-allocation times fall on activation-period boundaries. Confirm. | ⚠️ For review |
+| F13 | 1, 3, 17, 22 | A boundary point may have import and export MSIDs, but S22 says "the boundary meter". | One logical boundary meter per boundary point: K = MSID Pair for boundary meters, AMSID Pair for asset meters. This uses K at pair level, not single-MSID level as in Table X-4. | ⚠️ For review |
+| F14 | 30, 54 | An inclusively measured Asset's volume includes TRs outside the Asset. S54 only requires authority over the Asset's own TRs. | Formalised as written. Flagging in case authority should cover the perimeter. | ⚠️ For review |
+| F15 | 62-1b | "Lacks a delegation from the Primary": the Primary itself holds no delegation. | Treated the Primary as authorised (the DEL indicator). Confirm. | ⚠️ For review |
