@@ -18,6 +18,7 @@ This folder holds only the cleaned source documents. Analysis outputs (the earli
 | BSC Section Q Balancing Services Activities | BSC Section Q | Full section text (version/date not in the copy) |
 | BSC Section S Supplier Volume Allocation | BSC Section S | Full section text (version/date not in the copy) |
 | BSC Section S Annex S-2 Supplier Volume Allocation Rules V35.0 | Annex S-2, effective 27/11/2025 | Full |
+| BSC Annex X-2 Technical Glossary V62.0 | Annex X-2: subscripts, summations, operators, timing conventions and glossaries (Tables X-1 to X-9), effective 29/10/2026 (added 2026-11-20) | Full; Symbol-font maths repaired; formulas also rendered as LaTeX; editorial notation guide at the end |
 | BSC Section T Settlement and Trading Charges V45.0 | Section T incl. Annexes T-1, T-2, effective 27/11/2025 | Full; equations in Annex T-1 paras 13.2–16 rebuilt |
 | BSC Baselining Methodology Document V3.0 | Code Subsidiary Document, effective 07/11/2024 | Full |
 | BSC Code of Practice 11 | CoP11 (balancing services asset metering) | Extract from Section 3 to the end |
@@ -53,3 +54,4 @@ This folder holds only the cleaned source documents. Analysis outputs (the earli
 4. **DNO Rules Part A, Default Baseline Methodology tables and nomination deadlines table; Part C qualification criteria tables.** These have merged cells, so they are given as cells in source order or as rows keyed on field codes, not as a guessed grid.
 5. **Images and diagrams were not captured.** This includes process diagrams, the FMR-SBM accuracy formulas (Net % Error, Absolute % Error, Effective Capacity) and the SMP screenshots. Each is marked where it occurred.
 6. **CP400 proposed legal text.** Tracked-change markup (deletions and insertions) was lost in the copy-paste, so the amended wording of CM Rule 8.3.3(f)(i) cannot be told apart from the old wording.
+7. **BSC Annex X-2, Tables X-4, X-5 and X-9.** The symbol column was split from the meaning column in the copy. They were re-paired in source order (the counts match in every block). The Table X-6 row "Time of Sunset" has an inferred cell split.
