@@ -199,6 +199,54 @@ table.st tr { scroll-margin-top: 16px; }
 .find { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; }
 .find .fid { font: 600 0.9rem var(--mono); color: var(--warn); }
 .find .fx { color: var(--muted); font-size: 0.88rem; }
+/* primer */
+.primer { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.pcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; display: grid; gap: 6px; align-content: start; min-width: 0; }
+.pcard .sym { font-size: 1.15rem; min-height: 1.8em; display: flex; align-items: center; }
+.pcard .say { font-weight: 600; }
+.pcard .think { color: var(--muted); font-size: 0.88rem; }
+.pcard .ex { background: var(--sunk); border-radius: 4px; padding: 6px 8px; display: grid; gap: 2px; overflow-x: auto; }
+.pcard .ex .r { font-size: 0.84rem; }
+
+/* knowledge graph */
+.graphwrap { overflow-x: auto; padding: 10px; }
+#kg { display: block; width: 100%; min-width: 760px; height: auto; }
+#kg .n rect { fill: var(--surface); stroke: var(--c); stroke-width: 1.5; }
+#kg .n text { font: 500 12.5px var(--body); fill: var(--ink); pointer-events: none; }
+#kg .n { cursor: pointer; }
+#kg .n:focus { outline: none; }
+#kg .n:focus rect, #kg .n.sel rect { stroke-width: 3; fill: var(--cs); }
+#kg .e path { fill: none; stroke: var(--muted); stroke-width: 1.1; opacity: 0.55; }
+#kg .e.d path { stroke-dasharray: 4 3; }
+#kg .el { font: 500 11px var(--body); fill: var(--ink); paint-order: stroke; stroke: var(--surface); stroke-width: 4px; stroke-linejoin: round; display: none; pointer-events: none; }
+#kg.focus .n { opacity: 0.28; }
+#kg.focus .e { opacity: 0.12; }
+#kg.focus .n.on { opacity: 1; }
+#kg.focus .e.on { opacity: 1; }
+#kg.focus .e.on path { stroke: var(--ink); opacity: 1; stroke-width: 1.6; }
+#kg.focus .el.on { display: block; }
+#kg .arrow { fill: var(--muted); }
+.kginfo { display: grid; gap: 10px; }
+.kginfo .kh { display: flex; flex-wrap: wrap; gap: 10px; align-items: baseline; }
+.kginfo ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; }
+.kginfo li button { background: none; border: 0; padding: 0; color: var(--measure); text-decoration: underline; font: inherit; cursor: pointer; }
+
+/* walkthrough */
+.walk { display: grid; gap: 18px; }
+.wsec { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: var(--radius); padding: 18px; display: grid; gap: 14px; min-width: 0; scroll-margin-top: 16px; }
+.wsec h3 { font-size: 1.15rem; display: flex; gap: 10px; align-items: baseline; }
+.wsec h3 .num { font: 600 0.9rem var(--mono); color: var(--c); }
+.newsyms { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
+.nsym { background: var(--cs); border-radius: 4px; padding: 8px 10px; display: grid; gap: 2px; min-width: 0; overflow-x: auto; }
+.nsym .r { font-size: 0.84rem; color: var(--ink); }
+.wexp { border-top: 1px solid var(--line); padding-top: 12px; display: grid; gap: 6px; min-width: 0; }
+.wexp .ch { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; }
+.wexp .id { font: 600 0.82rem var(--mono); color: var(--c); }
+.wexp .nm { font-weight: 600; }
+.wexp .rd { max-width: 78ch; }
+.wexp details summary { cursor: pointer; color: var(--measure); font-size: 0.85rem; width: max-content; }
+.wexp details[open] summary { margin-bottom: 6px; }
+.wexp details .tex { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
 footer { color: var(--muted); font-size: 0.8rem; padding-block: 24px 40px; border-top: 1px solid var(--line); }
 .mjfail .tex { font-family: var(--mono); font-size: 0.8rem; white-space: pre-wrap; }
 </style>
@@ -207,7 +255,7 @@ footer { color: var(--muted); font-size: 0.8rem; padding-block: 24px 40px; borde
   <div class="wrap">
     <span class="eyebrow" id="ver">Draft</span>
     <h1>Flexibility Core Model</h1>
-    <p class="lede">The 99 consolidated statements on boundary metering, Site Configurations, TR control and FSP authority, written as a core set of expressions in notation aligned with BSC Annex X-2. Each colour below marks one layer of the model and keeps that meaning throughout the page.</p>
+    <p class="lede">The 99 consolidated statements on boundary metering, Site Configurations, TR control and FSP authority, written as a core set of expressions in notation aligned with BSC Annex X-2. Start with <a href="#guide">Reading the notation</a> if set notation is new to you: each symbol is explained in plain words, then introduced again in the section where it is first used. Each colour marks one layer of the model throughout the page.</p>
     <div class="legend" aria-label="Model layers">
       <span class="chip l-measure"><span class="dot"></span>Measurement</span>
       <span class="chip l-control"><span class="dot"></span>Control</span>
@@ -221,7 +269,9 @@ footer { color: var(--muted); font-size: 0.8rem; padding-block: 24px 40px; borde
 <div class="wrap">
 <div class="layout">
   <nav class="rail" aria-label="Sections">
-    <a href="#overview">Overview</a>
+    <a href="#guide">Reading the notation</a>
+    <a href="#graph">Knowledge graph</a>
+    <a href="#walkthrough">Walkthrough</a>
     <a href="#explorer">Metering tree explorer</a>
     <a href="#who">Who can act</a>
     <a href="#differencing">Differencing</a>
@@ -233,61 +283,26 @@ footer { color: var(--muted); font-size: 0.8rem; padding-block: 24px 40px; borde
   </nav>
 
   <main>
-    <section id="overview">
-      <div class="sec-head"><span class="eyebrow">Overview</span><h2>The model at a glance</h2>
-        <p class="muted">Logical metering identities carry the measurement. Control groups carry the flexibility. An Asset is a control group seen through one measurement arrangement. Allocation and participation say who may use it, and where.</p></div>
-      <div class="panel map" role="img" aria-label="Object map: Boundary Point, MSID Pair, Site Configuration, AMSID Pairs and Asset Meters on the measurement side; TRs, control groups, residual group and Load Controller on the control side; Assets join a group to an arrangement; CFPC, delegation, registration, allocation, participation and Unit say who may use an Asset.">
-        <svg viewBox="0 0 960 380" xmlns="http://www.w3.org/2000/svg">
-          <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="arrowhead" d="M0,0 L10,5 L0,10 z"/></marker></defs>
-          <g class="l-measure"><rect class="zone" x="10" y="10" width="300" height="360" rx="8"/><text class="zt" x="24" y="32">MEASUREMENT</text>
-            <rect class="node" x="30" y="50" width="120" height="40" rx="5"/><text x="90" y="75" text-anchor="middle">Boundary Point b</text>
-            <rect class="node" x="170" y="50" width="120" height="40" rx="5"/><text x="230" y="75" text-anchor="middle">MSID Pair M_b</text>
-            <rect class="node" x="30" y="125" width="260" height="44" rx="5"/><text x="160" y="145" text-anchor="middle">Site Configuration c</text><text class="lbl" x="160" y="161" text-anchor="middle">MSIDs · AMSID Pairs · nesting (immutable ID)</text>
-            <rect class="node" x="170" y="200" width="120" height="36" rx="5"/><text x="230" y="223" text-anchor="middle">Site w</text>
-            <rect class="node" x="30" y="268" width="120" height="40" rx="5"/><text x="90" y="293" text-anchor="middle">AMSID Pair A</text>
-            <rect class="node" x="170" y="268" width="120" height="40" rx="5"/><text x="230" y="293" text-anchor="middle">Asset Meter m</text>
-            <line class="edge" x1="150" y1="70" x2="170" y2="70"/>
-            <line class="edge" x1="230" y1="125" x2="230" y2="92" marker-end="url(#ah)"/><text class="lbl" x="236" y="113">root</text>
-            <line class="edge" x1="90" y1="169" x2="90" y2="266" marker-end="url(#ah)"/><text class="lbl" x="96" y="222">nests (tree)</text>
-            <line class="edge dash" x1="230" y1="200" x2="230" y2="171" marker-end="url(#ah)"/><text class="lbl" x="236" y="190">groups</text>
-            <line class="edge" x1="150" y1="288" x2="168" y2="288" marker-end="url(#ah)"/><text class="lbl" x="160" y="332" text-anchor="middle">Asset Meter Allocation (A → m)</text>
-          </g>
-          <g class="l-control"><rect class="zone" x="330" y="10" width="290" height="170" rx="8"/><text class="zt" x="344" y="32">CONTROL</text>
-            <rect class="node" x="345" y="50" width="120" height="40" rx="5"/><text x="405" y="75" text-anchor="middle">TRs r</text>
-            <rect class="node" x="485" y="50" width="120" height="40" rx="5"/><text x="545" y="75" text-anchor="middle">Residual group R</text>
-            <rect class="node" x="345" y="120" width="120" height="40" rx="5"/><text x="405" y="145" text-anchor="middle">Control group g</text>
-            <rect class="node" x="485" y="120" width="120" height="40" rx="5"/><text x="545" y="145" text-anchor="middle">Load Controller</text>
-            <line class="edge" x1="405" y1="90" x2="405" y2="118" marker-end="url(#ah)"/>
-            <line class="edge" x1="465" y1="70" x2="483" y2="70" marker-end="url(#ah)"/><text class="lbl" x="545" y="104" text-anchor="middle">no Load Controller</text>
-            <line class="edge" x1="465" y1="140" x2="483" y2="140" marker-end="url(#ah)"/><text class="lbl" x="474" y="174" text-anchor="middle">exactly one</text>
-          </g>
-          <g class="l-asset"><rect class="zone" x="330" y="195" width="290" height="175" rx="8"/><text class="zt" x="344" y="217">ASSETS</text>
-            <rect class="node" x="345" y="235" width="260" height="44" rx="5"/><text x="475" y="255" text-anchor="middle">Asset a = (g, x)</text><text class="lbl" x="475" y="271" text-anchor="middle">siblings share g, differ in x</text>
-            <rect class="node" x="345" y="310" width="260" height="44" rx="5"/><text x="475" y="330" text-anchor="middle">Arrangement x</text><text class="lbl" x="475" y="346" text-anchor="middle">Bnd · Ast(A) · Res(X)</text>
-            <line class="edge" x1="475" y1="279" x2="475" y2="308" marker-end="url(#ah)"/>
-          </g>
-          <g class="l-who"><rect class="zone" x="640" y="10" width="310" height="360" rx="8"/><text class="zt" x="654" y="32">WHO</text>
-            <rect class="node" x="660" y="48" width="120" height="36" rx="5"/><text x="720" y="71" text-anchor="middle">CFPC φ</text>
-            <rect class="node" x="810" y="48" width="125" height="36" rx="5"/><text x="872" y="71" text-anchor="middle">Delegation δ</text>
-            <rect class="node" x="660" y="112" width="275" height="36" rx="5"/><text x="797" y="135" text-anchor="middle">Registration κ → Assignment</text>
-            <rect class="node" x="660" y="176" width="275" height="40" rx="5"/><text x="797" y="196" text-anchor="middle">Allocation λ (to the group)</text><text class="lbl" x="797" y="210" text-anchor="middle">cross-market, held in FMAR</text>
-            <rect class="node" x="660" y="244" width="275" height="40" rx="5"/><text x="797" y="264" text-anchor="middle">Participation π (per sub-market)</text><text class="lbl" x="797" y="278" text-anchor="middle">BSC: MSID / AMSID Pair Allocation</text>
-            <rect class="node" x="660" y="312" width="275" height="40" rx="5"/><text x="797" y="337" text-anchor="middle">Unit u · Secondary BM Unit i2</text>
-            <line class="edge" x1="780" y1="66" x2="808" y2="66" marker-end="url(#ah)"/>
-            <line class="edge" x1="720" y1="84" x2="720" y2="110" marker-end="url(#ah)"/>
-            <line class="edge" x1="872" y1="84" x2="872" y2="110" marker-end="url(#ah)"/>
-            <line class="edge" x1="797" y1="148" x2="797" y2="174" marker-end="url(#ah)"/>
-            <line class="edge" x1="797" y1="216" x2="797" y2="242" marker-end="url(#ah)"/>
-            <line class="edge" x1="797" y1="284" x2="797" y2="310" marker-end="url(#ah)"/>
-          </g>
-          <path class="edge dash" d="M370 50 C 330 18, 140 18, 108 48" marker-end="url(#ah)"/><text class="lbl" x="240" y="26" text-anchor="middle">behind (at most one, E8)</text>
-          <path class="edge" d="M345 332 H320 V147 H292" marker-end="url(#ah)"/><text class="lbl" x="318" y="240" text-anchor="middle" transform="rotate(-90 318 240)">lies in c</text>
-          <line class="edge" x1="405" y1="160" x2="420" y2="233" marker-end="url(#ah)"/>
-          <line class="edge" x1="660" y1="200" x2="430" y2="162" marker-end="url(#ah)"/><text class="lbl" x="606" y="186" text-anchor="end">allocates g</text>
-          <line class="edge" x1="660" y1="264" x2="607" y2="257" marker-end="url(#ah)"/>
-        </svg>
-      </div>
+    <section id="guide">
+      <div class="sec-head"><span class="eyebrow">Start here</span><h2>Reading the notation</h2>
+        <p class="muted">The model uses a handful of symbols from set notation. Most of it is the language of lists, lookups and true/false tests that engineers already use. Each card gives the symbol, how to say it, what it is like, and an example taken from the model.</p></div>
+      <div class="primer" id="primer"></div>
+      <div class="panel small"><p>BSC symbols are kept where they already exist: <b>K</b> for a metering identity (Table X-4), <b>j</b> for a Settlement Period, <b>i2</b> for a Secondary BM Unit and <b>p</b> for a party. Volumes keep the BSC’s run-together form, such as <span class="tex">\(QM_{Kj}\)</span>. Every expression has an ID: <b>D</b> for definitions, <b>E</b> for rules and derived results, <b>V</b> for volumes, <b>O</b> for open items and objectives.</p></div>
+    </section>
+
+    <section id="graph">
+      <div class="sec-head"><span class="eyebrow">Overview</span><h2>Knowledge graph</h2>
+        <p class="muted">The key objects and how they relate. Select a node, or tab to it and press Enter, to highlight its relationships and see its definition, symbol and statements. Arrows point from an object to the object it refers to.</p></div>
+      <div class="panel graphwrap"><svg id="kg" viewBox="0 0 1130 430" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Knowledge graph of the model’s objects"></svg></div>
+      <div class="panel kginfo" id="kginfo" aria-live="polite"></div>
       <div class="panel"><h3>Choices behind the model</h3><ol class="choices" id="choices"></ol></div>
+    </section>
+
+    <section id="walkthrough">
+      <div class="sec-head"><span class="eyebrow">Walkthrough</span><h2>The model, section by section</h2>
+        <p class="muted">The twelve sections follow your statement list. Each section explains its terms in plain words and introduces the symbols it needs. Under each expression, “Read it as” says what it means; the maths itself is behind “Show the maths”.</p>
+        <div class="presets"><button id="openall" type="button">Show all maths</button><button id="closeall" type="button">Hide all maths</button></div></div>
+      <div id="walk" class="walk"></div>
     </section>
 
     <section id="explorer">
@@ -415,6 +430,131 @@ window.MathJax = { tex: { packages: { "[+]": ["ams"] } }, svg: { fontCache: "glo
   $("#ver").textContent = M.version + " · " + M.date + " · for review";
   M.choices.forEach(c => $("#choices").append(el("li", { text: c })));
   M.open.forEach(c => $("#stillopen").append(el("li", { text: c })));
+
+  const typeset = node => { if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise([node]).catch(() => {}); };
+  const sectionTitle = sec => sec + ". " + M.sections[sec];
+
+  /* ---------------- Notation primer ---------------- */
+  M.primer.forEach(pm => $("#primer").append(el("div", { class: "pcard" }, [
+    el("div", { class: "sym tex", text: "\\(" + pm.sym + "\\)" }),
+    el("div", { class: "say", text: pm.say }),
+    el("p", { class: "think", text: pm.think }),
+    el("div", { class: "ex" }, [el("div", { class: "tex", text: "\\(" + pm.ex + "\\)" }), el("div", { class: "r", text: "reads: " + pm.read })])])));
+
+  /* ---------------- Knowledge graph ---------------- */
+  const NS = "http://www.w3.org/2000/svg";
+  const svgEl = (tag, attrs = {}) => { const n = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v); return n; };
+  const kg = $("#kg");
+  const NW = 160, NH = 36;
+  const P = id => { const n = M.nodes.find(x => x.id === id); return { x: 90 + n.col * 190, y: 40 + n.row * 80 }; };
+  const BENDS = { "ARR>MSIDP": [140, -40] };
+  const clip = (from, to) => {               // point where the line from 'from' to 'to' leaves the box at 'from'
+    const dx = to.x - from.x, dy = to.y - from.y;
+    const sx = dx ? (NW / 2 + 2) / Math.abs(dx) : Infinity, sy = dy ? (NH / 2 + 2) / Math.abs(dy) : Infinity;
+    const k = Math.min(sx, sy); return { x: from.x + dx * k, y: from.y + dy * k };
+  };
+  const defs = svgEl("defs");
+  const mk = svgEl("marker", { id: "kgah", viewBox: "0 0 10 10", refX: "9", refY: "5", markerWidth: "7", markerHeight: "7", orient: "auto-start-reverse" });
+  const mp = svgEl("path", { d: "M0,0 L10,5 L0,10 z", class: "arrow" }); mk.append(mp); defs.append(mk); kg.append(defs);
+  const edgeG = svgEl("g"), nodeG = svgEl("g"), labelG = svgEl("g"); kg.append(edgeG, nodeG, labelG);
+  const edgeEls = [];
+  M.edges.forEach(e => {
+    const g = svgEl("g", { class: "e" + (e.dashed ? " d" : "") });
+    const A = P(e.a), B = P(e.b);
+    let d, lx, ly;
+    if (e.a === e.b) {
+      const x0 = A.x + NW / 2, y0 = A.y;
+      d = `M${x0} ${y0 - 10} C ${x0 + 46} ${y0 - 34}, ${x0 + 46} ${y0 + 34}, ${x0 + 2} ${y0 + 12}`; lx = x0 + 40; ly = y0 + 4;
+    } else {
+      const bend = BENDS[e.a + ">" + e.b];
+      if (bend) {
+        const c = { x: (A.x + B.x) / 2 + bend[0], y: (A.y + B.y) / 2 + bend[1] };
+        const s1 = clip(A, c), s2 = clip(B, c);
+        d = `M${s1.x} ${s1.y} Q ${c.x} ${c.y} ${s2.x} ${s2.y}`; lx = 0.25 * s1.x + 0.5 * c.x + 0.25 * s2.x; ly = 0.25 * s1.y + 0.5 * c.y + 0.25 * s2.y;
+      } else {
+        const s1 = clip(A, B), s2 = clip(B, A);
+        d = `M${s1.x} ${s1.y} L ${s2.x} ${s2.y}`; lx = (s1.x + s2.x) / 2; ly = (s1.y + s2.y) / 2;
+      }
+    }
+    g.append(svgEl("path", { d, "marker-end": "url(#kgah)" }));
+    const t = svgEl("text", { x: lx, y: ly - 4, "text-anchor": "middle", class: "el" }); t.textContent = e.label; labelG.append(t);
+    edgeG.append(g); edgeEls.push({ e, g, t });
+  });
+  const nodeEls = {};
+  M.nodes.forEach(n => {
+    const { x, y } = P(n.id);
+    const g = svgEl("g", { class: "n " + "l-" + n.layer, tabindex: "0", role: "button", "aria-label": n.label + ": " + n.defn });
+    g.append(svgEl("rect", { x: x - NW / 2, y: y - NH / 2, width: NW, height: NH, rx: 6 }));
+    const t = svgEl("text", { x, y: y + 4.5, "text-anchor": "middle" }); t.textContent = n.label; g.append(t);
+    g.addEventListener("click", ev => { ev.stopPropagation(); select(n.id); });
+    g.addEventListener("keydown", ev => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); select(n.id); } });
+    g.addEventListener("mouseenter", () => highlight(n.id));
+    g.addEventListener("mouseleave", () => highlight(selected));
+    nodeG.append(g); nodeEls[n.id] = g;
+  });
+  let selected = null;
+  function highlight(id) {
+    kg.classList.toggle("focus", !!id);
+    Object.values(nodeEls).forEach(g => g.classList.remove("on", "sel"));
+    edgeEls.forEach(({ g, t }) => { g.classList.remove("on"); t.classList.remove("on"); });
+    if (!id) return;
+    nodeEls[id].classList.add("on");
+    if (selected) nodeEls[selected].classList.add("sel");
+    edgeEls.forEach(({ e, g, t }) => { if (e.a === id || e.b === id) { g.classList.add("on"); t.classList.add("on"); nodeEls[e.a].classList.add("on"); nodeEls[e.b].classList.add("on"); } });
+  }
+  function select(id) {
+    selected = id; highlight(id);
+    const n = M.nodes.find(x => x.id === id), info = $("#kginfo"); info.textContent = "";
+    const label = nid => M.nodes.find(x => x.id === nid).label;
+    const rel = (txt, nid) => { const li = el("li"); const parts = txt.split("§"); li.append(document.createTextNode(parts[0]));
+      const b = el("button", { type: "button", text: label(nid) }); b.addEventListener("click", () => { select(nid); nodeEls[nid].focus(); }); li.append(b, document.createTextNode(parts[1] || "")); return li; };
+    info.append(el("div", { class: "kh" }, [el("h3", { text: n.label }), el("span", { class: "chip l-" + n.layer }, [el("span", { class: "dot" }), document.createTextNode({ measure: "Measurement", control: "Control", asset: "Assets", who: "Who" }[n.layer])]),
+      el("span", { class: "tex", text: "\\(" + n.sym + "\\)" })]));
+    info.append(el("p", { text: n.defn }));
+    const out = M.edges.filter(e => e.a === id && e.b !== id), inc = M.edges.filter(e => e.b === id && e.a !== id), self = M.edges.filter(e => e.a === id && e.b === id);
+    const ul = el("ul");
+    out.forEach(e => ul.append(rel(n.label + " " + e.label + " §", e.b)));
+    inc.forEach(e => ul.append(rel("§ " + e.label + " " + n.label, e.a)));
+    self.forEach(e => ul.append(el("li", { text: "An " + n.label + " " + e.label + " another " + n.label + " (the metering tree)" })));
+    info.append(el("div", {}, [el("span", { class: "eyebrow", text: "Relationships" }), ul]));
+    const sr = el("div", { class: "srefs" }, [el("span", { class: "small muted", text: "Statements:" })]);
+    n.stmts.forEach(k => { const b = el("button", { class: "sref", text: String(k), "aria-label": "Go to statement " + k }); b.addEventListener("click", () => jump("s-" + k)); sr.append(b); });
+    info.append(sr);
+    typeset(info);
+  }
+  kg.addEventListener("click", () => { selected = null; highlight(null); });
+  select("ASSET");
+
+  /* ---------------- Walkthrough ---------------- */
+  const walk = $("#walk");
+  Object.entries(M.sections).forEach(([sec, title]) => {
+    const art = el("article", { class: "wsec " + layerOf(+sec), id: "w-" + sec });
+    art.append(el("h3", {}, [el("span", { class: "num", text: sec }), document.createTextNode(title)]));
+    art.append(el("p", { text: M.intro[sec] }));
+    const ns = M.notation.filter(n => String(n.sec) === sec);
+    if (ns.length) {
+      art.append(el("span", { class: "eyebrow", text: "New symbols in this section" }));
+      const g = el("div", { class: "newsyms" });
+      ns.forEach(n => g.append(el("div", { class: "nsym" }, [el("div", { class: "tex", text: "\\(" + n.sym + "\\)" }), el("div", { class: "r", text: n.reads })])));
+      art.append(g);
+    }
+    M.expressions.filter(e => String(e.sec) === sec).forEach(e => {
+      const row = el("div", { class: "wexp", id: "wx-" + e.id });
+      row.append(el("div", { class: "ch" }, [el("span", { class: "id", text: e.id }), el("span", { class: "nm", text: e.name }), el("span", { class: "kind k-" + e.kind, text: e.kind })]));
+      row.append(el("p", { class: "rd" }, [el("b", { text: "Read it as: " }), document.createTextNode(e.read)]));
+      const sr = el("div", { class: "srefs" }, [el("span", { class: "small muted", text: "Statements:" })]);
+      e.stmts.forEach(k => { const st = M.statements.find(x => x.n === k);
+        const b = el("button", { class: "sref", text: String(k), title: st ? st.text : "", "aria-label": "Go to statement " + k }); b.addEventListener("click", () => jump("s-" + k)); sr.append(b); });
+      row.append(sr);
+      const det = el("details", {}, [el("summary", { text: "Show the maths" }), el("div", { class: "tex", text: "$$" + e.tex + "$$" })]);
+      if (e.note) det.append(el("p", { class: "nt small muted", text: e.note }));
+      row.append(det);
+      art.append(row);
+    });
+    walk.append(art);
+  });
+  $("#openall").addEventListener("click", () => walk.querySelectorAll("details").forEach(d => d.open = true));
+  $("#closeall").addEventListener("click", () => walk.querySelectorAll("details").forEach(d => d.open = false));
 
   /* ---------------- Explorer ---------------- */
   const TREE = { T: null, A1: "T", A2: "A1", A3: "T" };
